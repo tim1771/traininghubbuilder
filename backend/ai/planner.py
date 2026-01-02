@@ -73,6 +73,11 @@ class CoursePlanner:
         Use the following background context from the website:
         {context[:8000]}
 
+        CRITICAL FORMATTING REQUIREMENTS:
+        - EVERY sentence MUST end with proper punctuation (. ! or ?)
+        - Write in complete, grammatically correct sentences
+        - Use markdown formatting for headers (##), bold (**text**), and lists
+        
         Format the output in clean Markdown.
         Include:
         - A clear introduction
@@ -80,18 +85,57 @@ class CoursePlanner:
         - Code snippets if relevant (use ```blocks)
         - A "Key Takeaways" summary at the end.
         
-        Do NOT output JSON. Output pure Markdown.
+        Do NOT output JSON. Output pure Markdown with proper punctuation.
         """
 
         response = self.client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[
-                {"role": "system", "content": "You are a helpful technical writer."},
+                {"role": "system", "content": "You are a helpful technical writer who always uses proper punctuation."},
                 {"role": "user", "content": prompt}
             ]
         )
 
-        return response.choices[0].message.content
+        content = response.choices[0].message.content
+        
+        # Post-process to ensure proper punctuation
+        content = self._ensure_proper_punctuation(content)
+        
+        return content
+    
+    def _ensure_proper_punctuation(self, text):
+        """Ensure all sentences end with proper punctuation."""
+        import re
+        
+        # Split into lines to preserve markdown structure
+        lines = text.split('\n')
+        fixed_lines = []
+        
+        for line in lines:
+            # Skip empty lines and markdown headers
+            if not line.strip() or line.strip().startswith('#'):
+                fixed_lines.append(line)
+                continue
+            
+            # Skip lines that are list items
+            if re.match(r'^\s*[-*+]\s', line) or re.match(r'^\s*\d+\.\s', line):
+                # For list items, ensure they end with punctuation
+                line = line.rstrip()
+                if line and not re.search(r'[.!?:)]$', line):
+                    line += '.'
+                fixed_lines.append(line)
+                continue
+            
+            # For regular text lines, ensure they end with punctuation
+            line = line.rstrip()
+            if line and not re.search(r'[.!?]$', line):
+                # Don't add period if line ends with a colon (might be before a list)
+                if not line.endswith(':'):
+                    line += '.'
+            
+            fixed_lines.append(line)
+        
+        return '\n'.join(fixed_lines)
 
     async def generate_quiz(self, lesson_content: str):
         if not self.client:
