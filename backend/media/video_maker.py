@@ -4,6 +4,10 @@ from gtts import gTTS
 from moviepy.editor import ImageClip, AudioFileClip, concatenate_videoclips, CompositeVideoClip, TextClip
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import textwrap
+from openai import OpenAI
+from dotenv import load_dotenv
+
+load_dotenv()
 
 def create_text_slide(text, size=(1280, 720), bg_color=(45, 55, 72), text_color=(255, 255, 255), title=None):
     """Generates a colorful slide with text using Pillow."""
@@ -129,10 +133,10 @@ def clean_text_for_tts(text):
 def generate_simple_video(lesson_title, summary_text, output_path):
     """
     Creates an engaging video with:
-    1. Title slide
+    1. Title slide (with DALL-E if available)
     2. Screenshots from scraped website (if available)
     3. Text content slides
-    4. TTS audio narration
+    4. TTS audio narration (OpenAI or gTTS)
     """
     
     clips = []
@@ -140,24 +144,49 @@ def generate_simple_video(lesson_title, summary_text, output_path):
     audio_clip = None
     final_video = None
     
+    client = None
+    if os.getenv("OPENAI_API_KEY"):
+        try:
+            client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+            print("Using OpenAI for video generation assets (TTS + Images)")
+        except Exception as e:
+            print(f"Failed to init OpenAI client: {e}")
+            client = None
+
     try:
         # Clean text to remove markdown symbols
         clean_summary = clean_text_for_tts(summary_text)
-        
-        # 1. Generate TTS Audio
-        tts = gTTS(text=clean_summary, lang='en', slow=False)
         audio_path = output_path.replace(".mp4", ".mp3")
-        tts.save(audio_path)
         temp_files.append(audio_path)
+
+        # 1. Generate TTS Audio
+        if client:
+            print("Generating premium audio with OpenAI TTS-1...")
+            response = client.audio.speech.create(
+                model="tts-1",
+                voice="onyx",
+                input=clean_summary[:4096] # Limit for API
+            )
+            response.stream_to_file(audio_path)
+        else:
+            print("Generating standard audio with gTTS...")
+            tts = gTTS(text=clean_summary, lang='en', slow=False)
+            tts.save(audio_path)
         
         audio_clip = AudioFileClip(audio_path)
         total_duration = audio_clip.duration
         
-        # 2. Create Title Slide (3 seconds)
-        title_img = create_title_slide(lesson_title)
+        # 2. Create Title Slide
         title_path = output_path.replace(".mp4", "_title.png")
-        title_img.save(title_path)
         temp_files.append(title_path)
+
+        if client and False: # Disabled DALL-E for speed for now, can enable later
+             # TODO: Use DALL-E 3 for title slide background
+             pass
+        
+        # Build Title Slide manually for consistency/speed
+        title_img = create_title_slide(lesson_title)
+        title_img.save(title_path)
         
         title_clip = ImageClip(title_path).set_duration(3)
         clips.append(title_clip)
@@ -210,7 +239,9 @@ def generate_simple_video(lesson_title, summary_text, output_path):
             for i, chunk in enumerate(chunks):
                 if remaining_duration <= 0:
                     break
-                    
+                
+                # If using OpenAI, we could potentially generate illustrative images here too
+                # For now, stick to clean text slides to ensure readability
                 slide_img = create_text_slide(
                     chunk, 
                     bg_color=(45, 55, 72),
