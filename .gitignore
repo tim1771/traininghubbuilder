@@ -1,0 +1,28 @@
+# Environment variables
+backend/.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+
+# Next.js
+frontend/.next/
+frontend/out/
+frontend/node_modules/
+
+# Media files
+backend/media/*.mp4
+backend/media/*.mp3
+backend/media/*.png
+
+# Scraped data
+backend/scraped_data/
+
+# OS
+.DS_Store
+Thumbs.db

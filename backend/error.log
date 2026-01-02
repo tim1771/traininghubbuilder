@@ -1,0 +1,34 @@
+Traceback (most recent call last):
+  File "C:\Users\Tuf Gamer\Desktop\Antigravity Stuff\Training Hub Builder\backend\main.py", line 69, in launch_browser
+    await browser_manager.launch(headless=pkt.headless, auth_state_path=auth_path)
+  File "C:\Users\Tuf Gamer\Desktop\Antigravity Stuff\Training Hub Builder\backend\scraper\browser.py", line 13, in launch
+    self.playwright = await async_playwright().start()
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Tuf Gamer\Desktop\Antigravity Stuff\Training Hub Builder\backend\venv\Lib\site-packages\playwright\async_api\_context_manager.py", line 51, in start
+    return await self.__aenter__()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Tuf Gamer\Desktop\Antigravity Stuff\Training Hub Builder\backend\venv\Lib\site-packages\playwright\async_api\_context_manager.py", line 46, in __aenter__
+    playwright = AsyncPlaywright(next(iter(done)).result())
+                                 ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\Tuf Gamer\Desktop\Antigravity Stuff\Training Hub Builder\backend\venv\Lib\site-packages\playwright\_impl\_transport.py", line 120, in connect
+    self._proc = await asyncio.create_subprocess_exec(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<9 lines>...
+    )
+    ^
+  File "C:\Python313\Lib\asyncio\subprocess.py", line 224, in create_subprocess_exec
+    transport, protocol = await loop.subprocess_exec(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        stderr=stderr, **kwds)
+        ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\asyncio\base_events.py", line 1802, in subprocess_exec
+    transport = await self._make_subprocess_transport(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        protocol, popen_args, False, stdin, stdout, stderr,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        bufsize, **kwargs)
+        ^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\asyncio\base_events.py", line 539, in _make_subprocess_transport
+    raise NotImplementedError
+NotImplementedError

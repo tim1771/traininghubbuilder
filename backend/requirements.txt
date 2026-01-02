@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+playwright
+moviepy
+beautifulsoup4
+requests
+python-multipart
+jinja2
+python-dotenv
+openai
