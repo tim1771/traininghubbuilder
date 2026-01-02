@@ -1,82 +1,106 @@
 {
-  "course_title": "Mastering Dog Dollars: Pro Dog Walking Business Management",
-  "description": "Transform your dog walking business with this comprehensive course on utilizing Dog Dollars, covering bookings, scheduling, client management, and more.",
+  "course_title": "Mastering Dog Walking Business Management with Dog Dollars",
+  "description": "Learn how to run your dog walking business like a pro with Dog Dollars, a comprehensive platform for managing bookings, schedules, walkers, clients, payments, and report cards.",
   "modules": [
     {
-      "title": "Introduction to Dog Dollars",
+      "title": "Getting Started with Dog Dollars",
       "lessons": [
         {
-          "title": "Overview of Dog Dollars",
-          "description": "Introduction to the Dog Dollars platform and its features for managing dog walking businesses."
+          "title": "Introduction to Dog Dollars",
+          "description": "Overview of Dog Dollars features and benefits for dog walking businesses"
         },
         {
-          "title": "Setting Up Your Account",
-          "description": "Step-by-step guide on signing up and setting up your Dog Dollars account for the first time."
+          "title": "Signing Up and Setting Up Your Account",
+          "description": "Step-by-step guide to creating an account and setting up your business profile"
+        },
+        {
+          "title": "Navigating the Dashboard",
+          "description": "Tour of the Dog Dollars dashboard and key features"
         }
       ]
     },
     {
-      "title": "Scheduling and Bookings",
+      "title": "Client and Booking Management",
       "lessons": [
         {
-          "title": "Smart Scheduling",
-          "description": "How to use schedule blocks, recurring bookings, and the drag-and-drop calendar for efficient management."
+          "title": "Managing Clients and Their Pets",
+          "description": "How to add, edit, and manage client and pet information"
         },
         {
-          "title": "Managing Bookings",
-          "description": "Handling bookings, including creating, editing, and canceling them within the Dog Dollars platform."
+          "title": "Creating and Managing Bookings",
+          "description": "How to schedule and manage bookings, including recurring bookings and schedule blocks"
+        },
+        {
+          "title": "Using the Drag-and-Drop Calendar",
+          "description": "Tips and tricks for using the drag-and-drop calendar to manage your bookings"
         }
       ]
     },
     {
-      "title": "Client Management",
+      "title": "Walker and Staff Management",
       "lessons": [
         {
-          "title": "Client Profiles",
-          "description": "Creating and managing client profiles, including their pets, preferences, and booking history."
+          "title": "Adding and Managing Walkers",
+          "description": "How to add, edit, and manage walker information and assignments"
         },
         {
-          "title": "Visit Report Cards",
-          "description": "How to send professional report cards with photos, potty reports, and notes after every walk."
+          "title": "Using the Mobile App",
+          "description": "How walkers can use the mobile app to check in, take photos, and leave notes"
+        },
+        {
+          "title": "Managing Walker Schedules and Assignments",
+          "description": "How to assign bookings to walkers and manage their schedules"
         }
       ]
     },
     {
-      "title": "Payments and Invoicing",
+      "title": "Invoicing and Payments",
       "lessons": [
         {
-          "title": "Invoicing and Payments",
-          "description": "Understanding how to generate invoices automatically and accept online payments through Dog Dollars."
+          "title": "Generating Invoices and Managing Payments",
+          "description": "How to generate invoices and manage online payments"
         },
         {
-          "title": "GPS Tracking and Photo Updates",
-          "description": "Using optional GPS tracking and photo updates to enhance the client experience."
+          "title": "Connecting Your Stripe Account",
+          "description": "How to connect your Stripe account to Dog Dollars for seamless payments"
+        },
+        {
+          "title": "Managing Refunds and Cancellations",
+          "description": "How to handle refunds and cancellations in Dog Dollars"
         }
       ]
     },
     {
-      "title": "Business Analytics and Growth",
+      "title": "Reporting and Analytics",
       "lessons": [
         {
-          "title": "Business Insights",
-          "description": "How to use Dog Dollars' analytics to track revenue, walker performance, and client retention."
+          "title": "Using Report Cards",
+          "description": "How to create and send report cards to clients, including photos and notes"
         },
         {
-          "title": "Scaling Your Business",
-          "description": "Strategies for growing your dog walking business using Dog Dollars' features and insights."
+          "title": "Understanding Business Analytics",
+          "description": "How to use Dog Dollars analytics to track revenue, walker performance, and client retention"
+        },
+        {
+          "title": "Customizing Your Reporting",
+          "description": "How to customize your reporting to meet your business needs"
         }
       ]
     },
     {
-      "title": "Pricing and Plans",
+      "title": "Advanced Features and Settings",
       "lessons": [
         {
-          "title": "Understanding Pricing Plans",
-          "description": "Overview of Dog Dollars' pricing plans, including Starter, Pro, and Growth, and how to choose the right plan for your business."
+          "title": "Using GPS Tracking",
+          "description": "How to use GPS tracking to provide clients with detailed walk information"
         },
         {
-          "title": "Customizing Your Plan",
-          "description": "How to customize your Dog Dollars plan as your business grows, including adding staff seats and upgrading features."
+          "title": "Customizing Your Domain",
+          "description": "How to customize your domain and branding in Dog Dollars"
+        },
+        {
+          "title": "Advanced Settings and Configuration",
+          "description": "How to configure advanced settings, including notification preferences and walk packages"
         }
       ]
     }
