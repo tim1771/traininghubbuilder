@@ -97,6 +97,35 @@ def get_screenshots():
         return screenshots[:5]  # Limit to 5 screenshots
     return []
 
+def clean_text_for_tts(text):
+    """Remove markdown and special characters that TTS shouldn't read aloud."""
+    import re
+    
+    # Remove markdown headers (##, ###, etc.)
+    text = re.sub(r'#{1,6}\s*', '', text)
+    
+    # Remove markdown bold/italic markers
+    text = re.sub(r'\*\*([^*]+)\*\*', r'\1', text)  # **bold**
+    text = re.sub(r'\*([^*]+)\*', r'\1', text)      # *italic*
+    text = re.sub(r'__([^_]+)__', r'\1', text)      # __bold__
+    text = re.sub(r'_([^_]+)_', r'\1', text)        # _italic_
+    
+    # Remove markdown links but keep the text
+    text = re.sub(r'\[([^\]]+)\]\([^\)]+\)', r'\1', text)  # [text](url)
+    
+    # Remove markdown code blocks
+    text = re.sub(r'```[^`]*```', '', text)
+    text = re.sub(r'`([^`]+)`', r'\1', text)
+    
+    # Remove bullet points and list markers
+    text = re.sub(r'^\s*[-*+]\s+', '', text, flags=re.MULTILINE)
+    text = re.sub(r'^\s*\d+\.\s+', '', text, flags=re.MULTILINE)
+    
+    # Remove extra whitespace
+    text = re.sub(r'\s+', ' ', text)
+    
+    return text.strip()
+
 def generate_simple_video(lesson_title, summary_text, output_path):
     """
     Creates an engaging video with:
@@ -112,8 +141,11 @@ def generate_simple_video(lesson_title, summary_text, output_path):
     final_video = None
     
     try:
+        # Clean text to remove markdown symbols
+        clean_summary = clean_text_for_tts(summary_text)
+        
         # 1. Generate TTS Audio
-        tts = gTTS(text=summary_text, lang='en', slow=False)
+        tts = gTTS(text=clean_summary, lang='en', slow=False)
         audio_path = output_path.replace(".mp4", ".mp3")
         tts.save(audio_path)
         temp_files.append(audio_path)
