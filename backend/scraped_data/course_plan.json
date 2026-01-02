@@ -1,82 +1,43 @@
 {
-  "course_title": "Mastering Dog Walking Business Management",
-  "description": "Learn how to efficiently manage your dog walking business with Dog Dollars, covering bookings, scheduling, client management, payments, and more.",
+  "course_title": "Website Development and Design",
+  "description": "Learn how to create functional and visually appealing websites with our comprehensive training course",
   "modules": [
     {
-      "title": "Introduction to Dog Walking Business Management",
+      "title": "Introduction to Web Development",
       "lessons": [
         {
-          "title": "Getting Started with Dog Dollars",
-          "description": "Overview of the Dog Dollars platform and its features for efficient dog walking business management."
+          "title": "Getting Started with HTML",
+          "description": "Learn the basics of HTML and how to structure a website"
         },
         {
-          "title": "Setting Up Your Business",
-          "description": "Guided setup of your dog walking business on the Dog Dollars platform."
+          "title": "Introduction to CSS",
+          "description": "Understand how to use CSS to style and layout your website"
         }
       ]
     },
     {
-      "title": "Client and Booking Management",
+      "title": "Website Design Principles",
       "lessons": [
         {
-          "title": "Managing Client Information",
-          "description": "How to keep track of client details, preferences, and booking history within Dog Dollars."
+          "title": "Understanding User Experience",
+          "description": "Learn how to design a website that is user-friendly and accessible"
         },
         {
-          "title": "Smart Scheduling for Bookings",
-          "description": "Using Dog Dollars' scheduling features for efficient booking management."
+          "title": "Visual Design Elements",
+          "description": "Discover how to use color, typography, and imagery to enhance your website's design"
         }
       ]
     },
     {
-      "title": "Payment and Invoicing",
+      "title": "Advanced Web Development Topics",
       "lessons": [
         {
-          "title": "Invoicing and Online Payments",
-          "description": "How to generate invoices and receive payments through Dog Dollars."
+          "title": "Introduction to JavaScript",
+          "description": "Learn how to use JavaScript to add interactivity to your website"
         },
         {
-          "title": "Managing Revenue and Expenses",
-          "description": "Tracking financials and understanding the financial health of your dog walking business."
-        }
-      ]
-    },
-    {
-      "title": "Report Cards and Communication",
-      "lessons": [
-        {
-          "title": "Creating and Sending Report Cards",
-          "description": "How to create professional report cards with photos and notes after each walk."
-        },
-        {
-          "title": "Effective Communication with Clients",
-          "description": "Best practices for keeping clients informed about their pets through photos, updates, and notifications."
-        }
-      ]
-    },
-    {
-      "title": "Advanced Features and Analytics",
-      "lessons": [
-        {
-          "title": "GPS Tracking for Transparency",
-          "description": "Using GPS tracking to provide clients with detailed information about their pets' walks."
-        },
-        {
-          "title": "Business Analytics for Growth",
-          "description": "How to use Dog Dollars' analytics tools to track business performance and make informed decisions."
-        }
-      ]
-    },
-    {
-      "title": "Scaling Your Business",
-      "lessons": [
-        {
-          "title": "Choosing the Right Plan for Your Business",
-          "description": "Understanding Dog Dollars' pricing plans and selecting the best fit for your growing business."
-        },
-        {
-          "title": "Advanced Features for Established Businesses",
-          "description": "Utilizing advanced features such as custom domains, walk packages, and bundles for a professional edge."
+          "title": "Responsive Web Design",
+          "description": "Understand how to create a website that adapts to different screen sizes and devices"
         }
       ]
     }

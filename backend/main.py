@@ -88,9 +88,14 @@ async def navigate(pkt: NavigateRequest):
     if not browser_manager.page:
         raise HTTPException(status_code=400, detail="Browser not started")
     try:
-        print(f"Navigating to {pkt.url}")
-        await browser_manager.page.goto(pkt.url)
-        return {"status": "navigated", "url": pkt.url}
+        # Ensure URL has protocol
+        url = pkt.url
+        if not url.startswith('http://') and not url.startswith('https://'):
+            url = 'https://' + url
+            
+        print(f"Navigating to {url}")
+        await browser_manager.page.goto(url, wait_until="networkidle", timeout=30000)
+        return {"status": "navigated", "url": url}
     except Exception as e:
         with open("error.log", "w") as f:
             traceback.print_exc(file=f)
@@ -237,9 +242,10 @@ async def create_lesson_video(req: VideoRequest):
         os.makedirs("media")
 
     try:
-        # Use AI to summarize text for the script first (optional, but good for brevity)
-        # For now, just use first 300 chars or passed text if short
-        script = req.text_content[:500] + "..." 
+        # Use more content for longer videos (aim for ~3 minutes)
+        # Average TTS speed is ~150 words per minute, so 450 words = 3 minutes
+        # Roughly 2000-2500 characters = 400-500 words
+        script = req.text_content[:2500] if len(req.text_content) > 2500 else req.text_content
         
         # Run in threadpool to avoid blocking async loop with heavy processing
         await asyncio.to_thread(generate_simple_video, req.title, script, output_path)
