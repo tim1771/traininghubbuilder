@@ -247,12 +247,20 @@ async def create_lesson_video(req: VideoRequest):
         # Roughly 2000-2500 characters = 400-500 words
         script = req.text_content[:2500] if len(req.text_content) > 2500 else req.text_content
         
+        print(f"Starting video generation for: {req.title}")
+        
         # Run in threadpool to avoid blocking async loop with heavy processing
         await asyncio.to_thread(generate_simple_video, req.title, script, output_path)
         
+        print(f"Video generation finished! File: {output_path}")
+        print(f"Returning video URL: /media/{video_filename}")
+        
         # Return URL (we need to mount static files)
-        return {"status": "created", "video_url": f"/media/{video_filename}"}
+        response = {"status": "created", "video_url": f"/media/{video_filename}"}
+        print(f"Response: {response}")
+        return response
     except Exception as e:
+        print(f"ERROR in video endpoint: {e}")
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 

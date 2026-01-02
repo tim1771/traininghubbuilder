@@ -108,6 +108,8 @@ def generate_simple_video(lesson_title, summary_text, output_path):
     
     clips = []
     temp_files = []
+    audio_clip = None
+    final_video = None
     
     try:
         # 1. Generate TTS Audio
@@ -193,30 +195,50 @@ def generate_simple_video(lesson_title, summary_text, output_path):
                 remaining_duration -= clip_duration
         
         # 5. Concatenate all clips
+        print(f"Creating video with {len(clips)} clips...")
         final_video = concatenate_videoclips(clips, method="compose")
         final_video = final_video.set_audio(audio_clip)
         final_video.fps = 24
         
         # 6. Write video file
+        print(f"Writing video to {output_path}...")
         final_video.write_videofile(
             output_path, 
             codec="libx264", 
             audio_codec="aac",
             fps=24,
-            preset='ultrafast'
+            preset='ultrafast',
+            threads=4
         )
+        print(f"Video generation complete: {output_path}")
         
-        # Cleanup
-        final_video.close()
-        audio_clip.close()
+    except Exception as e:
+        print(f"ERROR in video generation: {e}")
+        import traceback
+        traceback.print_exc()
+        raise
         
     finally:
+        # Cleanup clips and audio
+        try:
+            if final_video:
+                final_video.close()
+            if audio_clip:
+                audio_clip.close()
+            for clip in clips:
+                try:
+                    clip.close()
+                except:
+                    pass
+        except Exception as e:
+            print(f"Error closing clips: {e}")
+        
         # Clean up temp files
         for temp_file in temp_files:
             try:
                 if os.path.exists(temp_file):
                     os.remove(temp_file)
-            except:
-                pass
+            except Exception as e:
+                print(f"Could not remove temp file {temp_file}: {e}")
     
     return output_path

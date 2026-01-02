@@ -184,6 +184,10 @@ function LessonContent() {
         setVideoUrl(null); // Clear any existing video
 
         try {
+            // Create abort controller with 2 minute timeout
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 120000); // 120 seconds
+
             const res = await fetch("/api/ai/video", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -191,7 +195,11 @@ function LessonContent() {
                     title: lessonTitle,
                     text_content: content
                 }),
+                signal: controller.signal
             });
+
+            clearTimeout(timeoutId);
+
             const data = await res.json();
             if (data.video_url) {
                 // Video is ready, display it
@@ -199,8 +207,12 @@ function LessonContent() {
             } else {
                 alert("Internal Video Error: " + (data.detail || "Unknown"));
             }
-        } catch (e) {
-            alert("Video generation failed: " + e);
+        } catch (e: any) {
+            if (e.name === 'AbortError') {
+                alert("Video generation timed out. Please try again with shorter content.");
+            } else {
+                alert("Video generation failed: " + e);
+            }
         } finally {
             setGeneratingVideo(false);
         }
