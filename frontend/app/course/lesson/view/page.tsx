@@ -151,7 +151,7 @@ function LessonContent() {
         setLoading(true);
         setError("");
 
-        // Reset specific states when generating new content
+        // Reset video states when generating new content
         setVideoUrl(null);
         setGeneratingVideo(false);
 
@@ -181,6 +181,8 @@ function LessonContent() {
     const generateVideo = async () => {
         if (!content) return;
         setGeneratingVideo(true);
+        setVideoUrl(null); // Clear any existing video
+
         try {
             const res = await fetch("/api/ai/video", {
                 method: "POST",
@@ -192,6 +194,7 @@ function LessonContent() {
             });
             const data = await res.json();
             if (data.video_url) {
+                // Video is ready, display it
                 setVideoUrl(data.video_url);
             } else {
                 alert("Internal Video Error: " + (data.detail || "Unknown"));
@@ -273,8 +276,25 @@ function LessonContent() {
                         </div>
                     ) : (
                         <>
+                            {/* Video Generation Loading Overlay */}
+                            {generatingVideo && (
+                                <div className="mb-12 rounded-xl overflow-hidden shadow-2xl border-4 border-purple-500/30 bg-gradient-to-br from-purple-900/90 to-indigo-900/90 p-12">
+                                    <div className="flex flex-col items-center justify-center space-y-6">
+                                        <div className="relative">
+                                            <div className="w-20 h-20 border-4 border-purple-400 border-t-transparent rounded-full animate-spin"></div>
+                                            <div className="absolute inset-0 flex items-center justify-center text-3xl">🎬</div>
+                                        </div>
+                                        <div className="text-center">
+                                            <h3 className="text-2xl font-bold text-white mb-2">Generating Your Video...</h3>
+                                            <p className="text-purple-200">Please wait while we create your AI-powered lesson video</p>
+                                            <p className="text-purple-300 text-sm mt-2">This may take 30-60 seconds</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
                             {/* Video Player Section */}
-                            {videoUrl && (
+                            {videoUrl && !generatingVideo && (
                                 <div className="mb-12 rounded-xl overflow-hidden shadow-2xl border-4 border-purple-500/30 animate-fade-in-down">
                                     <video controls className="w-full aspect-video bg-black" src={`http://localhost:8000${videoUrl}`}>
                                         Your browser does not support the video tag.
