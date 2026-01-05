@@ -1,13 +1,38 @@
 import os
 import glob
 from gtts import gTTS
-from moviepy.editor import ImageClip, AudioFileClip, concatenate_videoclips, CompositeVideoClip, TextClip
+from moviepy.editor import ImageClip, AudioFileClip, concatenate_videoclips, CompositeVideoClip, TextClip, vfx
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import textwrap
 from openai import OpenAI
 from dotenv import load_dotenv
+import requests
+from io import BytesIO
 
 load_dotenv()
+
+def download_image(url, save_path):
+    response = requests.get(url)
+    img = Image.open(BytesIO(response.content))
+    img.save(save_path)
+    return save_path
+
+def generate_ai_presenter(client, output_path):
+    """Generates a professional AI instructor image using DALL-E 3."""
+    try:
+        print("Generating AI Presenter with DALL-E 3...")
+        response = client.images.generate(
+            model="dall-e-3",
+            prompt="A professional, friendly tech instructor looking directly at the camera, studio lighting, blurred modern office background, high quality, photorealistic, 4k, head and shoulders shot",
+            size="1024x1024",
+            quality="standard",
+            n=1,
+        )
+        url = response.data[0].url
+        return download_image(url, output_path)
+    except Exception as e:
+        print(f"DALL-E Generation failed: {e}")
+        return None
 
 def create_text_slide(text, size=(1280, 720), bg_color=(45, 55, 72), text_color=(255, 255, 255), title=None):
     """Generates a colorful slide with text using Pillow."""
@@ -23,248 +48,210 @@ def create_text_slide(text, size=(1280, 720), bg_color=(45, 55, 72), text_color=
         body_font = ImageFont.load_default()
 
     y_offset = 100
-    
-    # Draw title if provided
     if title:
-        # Add gradient background for title
+        # Gradient header
         for i in range(150):
             alpha = int(255 * (1 - i/150))
             d.rectangle([(0, i), (size[0], i+1)], fill=(99, 102, 241, alpha))
         
-        title_lines = textwrap.wrap(title, width=25)
-        for line in title_lines:
-            try:
-                w = d.textlength(line, font=title_font)
-            except:
-                w = len(line) * 40
-            x = (size[0] - w) / 2
-            # Shadow effect
-            d.text((x+3, y_offset+3), line, fill=(0, 0, 0, 128), font=title_font)
-            d.text((x, y_offset), line, fill=(255, 255, 255), font=title_font)
-            y_offset += 90
-        
-        y_offset += 50
+        d.text((50, 50), title, fill=(255, 255, 255), font=title_font)
+        y_offset += 100
 
-    # Wrap and draw body text
-    lines = textwrap.wrap(text, width=35)
-    for line in lines[:8]:  # Limit to 8 lines
-        try:
-            w = d.textlength(line, font=body_font)
-        except:
-            w = len(line) * 25
-        x = (size[0] - w) / 2
-        d.text((x, y_offset), line, fill=text_color, font=body_font)
+    # Body text
+    lines = textwrap.wrap(text, width=40)
+    for line in lines[:8]:
+        d.text((50, y_offset), line, fill=text_color, font=body_font)
         y_offset += 60
 
     return img
 
 def create_title_slide(title, size=(1280, 720)):
-    """Creates an attractive title slide with gradient background."""
+    """Creates a title slide."""
     img = Image.new('RGB', size, color=(30, 30, 30))
     d = ImageDraw.Draw(img)
     
-    # Create gradient background
+    # Simple gradient
     for y in range(size[1]):
-        r = int(99 + (139 - 99) * y / size[1])
-        g = int(102 + (92 - 102) * y / size[1])
-        b = int(241 + (246 - 241) * y / size[1])
-        d.rectangle([(0, y), (size[0], y+1)], fill=(r, g, b))
+        r = int(20 + y/20)
+        d.rectangle([(0, y), (size[0], y+1)], fill=(r, 30, 50))
     
     try:
-        font = ImageFont.truetype("arial.ttf", 96)
-    except IOError:
+        font = ImageFont.truetype("arial.ttf", 80)
+    except:
         font = ImageFont.load_default()
-    
-    # Wrap title
+        
     lines = textwrap.wrap(title, width=20)
-    y = (size[1] - len(lines) * 120) / 2
-    
+    y = (size[1] - len(lines)*100)/2
     for line in lines:
-        try:
-            w = d.textlength(line, font=font)
-        except:
-            w = len(line) * 50
-        x = (size[0] - w) / 2
-        # Shadow
-        d.text((x+4, y+4), line, fill=(0, 0, 0, 180), font=font)
-        # Main text
-        d.text((x, y), line, fill=(255, 255, 255), font=font)
-        y += 120
+        w = d.textlength(line, font=font)
+        d.text(((size[0]-w)/2, y), line, fill='white', font=font)
+        y += 100
     
     return img
 
 def get_screenshots():
-    """Get all screenshots from scraped_data folder."""
+    """Get screenshots."""
     screenshot_dir = os.path.join(os.path.dirname(__file__), "..", "scraped_data")
     if os.path.exists(screenshot_dir):
         screenshots = glob.glob(os.path.join(screenshot_dir, "*.png"))
-        return screenshots[:5]  # Limit to 5 screenshots
+        return screenshots[:5]
     return []
 
 def clean_text_for_tts(text):
-    """Remove markdown and special characters that TTS shouldn't read aloud."""
     import re
-    
-    # Remove markdown headers (##, ###, etc.)
     text = re.sub(r'#{1,6}\s*', '', text)
-    
-    # Remove markdown bold/italic markers
-    text = re.sub(r'\*\*([^*]+)\*\*', r'\1', text)  # **bold**
-    text = re.sub(r'\*([^*]+)\*', r'\1', text)      # *italic*
-    text = re.sub(r'__([^_]+)__', r'\1', text)      # __bold__
-    text = re.sub(r'_([^_]+)_', r'\1', text)        # _italic_
-    
-    # Remove markdown links but keep the text
-    text = re.sub(r'\[([^\]]+)\]\([^\)]+\)', r'\1', text)  # [text](url)
-    
-    # Remove markdown code blocks
-    text = re.sub(r'```[^`]*```', '', text)
-    text = re.sub(r'`([^`]+)`', r'\1', text)
-    
-    # Remove bullet points and list markers
-    text = re.sub(r'^\s*[-*+]\s+', '', text, flags=re.MULTILINE)
-    text = re.sub(r'^\s*\d+\.\s+', '', text, flags=re.MULTILINE)
-    
-    # Remove extra whitespace
-    text = re.sub(r'\s+', ' ', text)
-    
+    text = re.sub(r'\*\*([^*]+)\*\*', r'\1', text)
+    text = re.sub(r'\[([^\]]+)\]\([^\)]+\)', r'\1', text)
     return text.strip()
+
+def zoom_in_effect(clip, zoom_ratio=0.04):
+    def effect(get_frame, t):
+        img = Image.fromarray(get_frame(t))
+        base_size = img.size
+        new_size = [
+            int(base_size[0] * (1 + (zoom_ratio * t))),
+            int(base_size[1] * (1 + (zoom_ratio * t)))
+        ]
+        img = img.resize(new_size, Image.LANCZOS)
+        x = (new_size[0] - base_size[0]) // 2
+        y = (new_size[1] - base_size[1]) // 2
+        img = img.crop([x, y, x + base_size[0], y + base_size[1]])
+        return np.array(img)
+    return clip.fl(effect)
 
 def generate_simple_video(lesson_title, summary_text, output_path):
     """
-    Creates an engaging video with:
-    1. Title slide (with DALL-E if available)
-    2. Screenshots from scraped website (if available)
-    3. Text content slides
-    4. TTS audio narration (OpenAI or gTTS)
+    Creates a 'Screen Recording' style video:
+    1. AI Instructor (Picture-in-Picture)
+    2. Dynamic Slides/Screenshots (Main content)
     """
+    import numpy as np # Needed for array manipulation in moviepy usually, but Pillow handles most.
     
     clips = []
     temp_files = []
     audio_clip = None
     final_video = None
+    presenter_img_path = None
     
     client = None
     if os.getenv("OPENAI_API_KEY"):
         try:
             client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-            print("Using OpenAI for video generation assets (TTS + Images)")
-        except Exception as e:
-            print(f"Failed to init OpenAI client: {e}")
+            print("Using OpenAI for Premium Video")
+        except:
             client = None
 
     try:
-        # Clean text to remove markdown symbols
+        # CLEAN TEXT
         clean_summary = clean_text_for_tts(summary_text)
         audio_path = output_path.replace(".mp4", ".mp3")
         temp_files.append(audio_path)
 
-        # 1. Generate TTS Audio
+        # 1. AUDIO GENERATION
         if client:
-            print("Generating premium audio with OpenAI TTS-1...")
+            print("Generating Neural Audio...")
             response = client.audio.speech.create(
                 model="tts-1",
                 voice="onyx",
-                input=clean_summary[:4096] # Limit for API
+                input=clean_summary[:4096]
             )
             response.stream_to_file(audio_path)
         else:
-            print("Generating standard audio with gTTS...")
-            tts = gTTS(text=clean_summary, lang='en', slow=False)
+            tts = gTTS(text=clean_summary, lang='en')
             tts.save(audio_path)
         
         audio_clip = AudioFileClip(audio_path)
         total_duration = audio_clip.duration
-        
-        # 2. Create Title Slide
-        title_path = output_path.replace(".mp4", "_title.png")
-        temp_files.append(title_path)
 
-        if client and False: # Disabled DALL-E for speed for now, can enable later
-             # TODO: Use DALL-E 3 for title slide background
-             pass
+        # 2. GENERATE PRESENTER (One time per video)
+        if client:
+            presenter_path = output_path.replace(".mp4", "_presenter.png")
+            # Check if we already have a generic presenter cached to save credits/time? 
+            # For now, generate new one to be safe.
+            if not os.path.exists("media/cached_presenter.png"):
+                 generate_ai_presenter(client, "media/cached_presenter.png")
+            
+            if os.path.exists("media/cached_presenter.png"):
+                presenter_img_path = "media/cached_presenter.png"
+
+        # 3. BUILD CONTENT VISUALS
+        visual_clips = []
         
-        # Build Title Slide manually for consistency/speed
+        # A. Title Slide
         title_img = create_title_slide(lesson_title)
-        title_img.save(title_path)
+        title_p = output_path.replace(".mp4", "_title.png")
+        title_img.save(title_p)
+        temp_files.append(title_p)
+        visual_clips.append(ImageClip(title_p).set_duration(3))
         
-        title_clip = ImageClip(title_path).set_duration(3)
-        clips.append(title_clip)
+        remaining_time = total_duration - 3
         
-        remaining_duration = total_duration - 3
-        
-        # 3. Get screenshots and create clips
+        # B. Screenshots & Content
         screenshots = get_screenshots()
+        chunks = summary_text.split('. ') # Split by sentence roughly
+        
+        # Strategy: Alternate between screenshots and text points
+        # If we have screenshots, show them for longer.
         
         if screenshots:
-            # Use screenshots with text overlays
-            screenshot_duration = min(4, remaining_duration / max(len(screenshots), 1))
-            
-            for screenshot in screenshots:
-                if remaining_duration <= 0:
-                    break
-                    
-                try:
-                    # Resize screenshot to fit
-                    img = Image.open(screenshot)
-                    img = img.resize((1280, 720), Image.Resampling.LANCZOS)
-                    
-                    # Add semi-transparent overlay
-                    overlay = Image.new('RGBA', img.size, (0, 0, 0, 100))
-                    img = img.convert('RGBA')
-                    img = Image.alpha_composite(img, overlay)
-                    
-                    temp_screenshot = output_path.replace(".mp4", f"_screenshot_{len(clips)}.png")
-                    img.convert('RGB').save(temp_screenshot)
-                    temp_files.append(temp_screenshot)
-                    
-                    clip_duration = min(screenshot_duration, remaining_duration)
-                    screenshot_clip = ImageClip(temp_screenshot).set_duration(clip_duration)
-                    clips.append(screenshot_clip)
-                    remaining_duration -= clip_duration
-                    
-                except Exception as e:
-                    print(f"Error processing screenshot {screenshot}: {e}")
-                    continue
-        
-        # 4. Create text content slides for remaining time
-        if remaining_duration > 0:
-            # Split summary into chunks
-            words = summary_text.split()
-            chunk_size = 50
-            chunks = [' '.join(words[i:i+chunk_size]) for i in range(0, len(words), chunk_size)]
-            
-            slide_duration = remaining_duration / max(len(chunks), 1)
-            
-            for i, chunk in enumerate(chunks):
-                if remaining_duration <= 0:
-                    break
+            # Show screenshots with simple zoom
+            shot_duration = remaining_time / len(screenshots) if len(screenshots) > 0 else 4
+            for shot in screenshots:
+                if remaining_time <= 0: break
                 
-                # If using OpenAI, we could potentially generate illustrative images here too
-                # For now, stick to clean text slides to ensure readability
-                slide_img = create_text_slide(
-                    chunk, 
-                    bg_color=(45, 55, 72),
-                    text_color=(255, 255, 255),
-                    title=f"Key Point {i+1}" if i > 0 else None
-                )
-                slide_path = output_path.replace(".mp4", f"_slide_{i}.png")
-                slide_img.save(slide_path)
-                temp_files.append(slide_path)
+                # Resize and Add Effect
+                img = Image.open(shot).resize((1280, 720), Image.Resampling.LANCZOS)
+                shot_p = output_path.replace(".mp4", f"_shot_{len(visual_clips)}.png")
+                img.save(shot_p)
+                temp_files.append(shot_p)
                 
-                clip_duration = min(slide_duration, remaining_duration)
-                slide_clip = ImageClip(slide_path).set_duration(clip_duration)
-                clips.append(slide_clip)
-                remaining_duration -= clip_duration
-        
-        # 5. Concatenate all clips
-        print(f"Creating video with {len(clips)} clips...")
-        final_video = concatenate_videoclips(clips, method="compose")
-        final_video = final_video.set_audio(audio_clip)
+                dur = min(shot_duration, remaining_time)
+                # Create clip
+                clip = ImageClip(shot_p).set_duration(dur)
+                # Add mild zoom "Ken Burns"
+                clip = clip.resize(lambda t: 1 + 0.04 * t) 
+                
+                visual_clips.append(clip)
+                remaining_time -= dur
+        else:
+            # Fallback to Text Slides
+            chunk_dur = remaining_time / 4
+            for i in range(4):
+                if remaining_time <= 0: break
+                slide = create_text_slide("Learn More in the Course...", title=lesson_title)
+                slide_p = output_path.replace(".mp4", f"_slide_{i}.png")
+                slide.save(slide_p)
+                temp_files.append(slide_p)
+                visual_clips.append(ImageClip(slide_p).set_duration(chunk_dur))
+                remaining_time -= chunk_dur
+
+        # Concatenate visuals
+        main_video = concatenate_videoclips(visual_clips, method="compose")
+        # Ensure it matches audio exactly
+        if main_video.duration < total_duration:
+            # Extend last frame
+            main_video = main_video.set_duration(total_duration)
+        else:
+            main_video = main_video.subclip(0, total_duration)
+            
+        final_layers = [main_video]
+
+        # 4. ADD PRESENTER OVERLAY (Picture in Picture)
+        if presenter_img_path:
+            # Load presenter
+            p_clip = ImageClip(presenter_img_path).set_duration(total_duration)
+            # Resize to small circle or box
+            p_clip = p_clip.resize(height=250)
+            # Position bottom right
+            p_clip = p_clip.set_position(("right", "bottom"))
+            # Optional: Add a border? (We'll keep it simple for now)
+            
+            final_layers.append(p_clip)
+
+        final_video = CompositeVideoClip(final_layers).set_audio(audio_clip)
         final_video.fps = 24
-        
-        # 6. Write video file
-        print(f"Writing video to {output_path}...")
+
+        print(f"Writing Premium Video to {output_path}...")
         final_video.write_videofile(
             output_path, 
             codec="libx264", 
@@ -273,35 +260,21 @@ def generate_simple_video(lesson_title, summary_text, output_path):
             preset='ultrafast',
             threads=4
         )
-        print(f"Video generation complete: {output_path}")
         
     except Exception as e:
-        print(f"ERROR in video generation: {e}")
+        print(f"ERROR: {e}")
         import traceback
         traceback.print_exc()
         raise
-        
     finally:
-        # Cleanup clips and audio
         try:
-            if final_video:
-                final_video.close()
-            if audio_clip:
-                audio_clip.close()
-            for clip in clips:
-                try:
-                    clip.close()
-                except:
-                    pass
-        except Exception as e:
-            print(f"Error closing clips: {e}")
-        
-        # Clean up temp files
-        for temp_file in temp_files:
-            try:
-                if os.path.exists(temp_file):
-                    os.remove(temp_file)
-            except Exception as e:
-                print(f"Could not remove temp file {temp_file}: {e}")
-    
+            if final_video: final_video.close()
+            if audio_clip: audio_clip.close()
+        except:
+            pass
+        # Cleanup temps
+        for f in temp_files:
+            try: os.remove(f)
+            except: pass
+            
     return output_path

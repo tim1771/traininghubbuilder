@@ -1,30 +1,43 @@
 {
-  "course_title": "Mastering Dog Walking Business with Dog Dollars",
-  "description": "Learn how to efficiently manage and grow your dog walking business using the Dog Dollars platform, covering bookings, schedules, client management, payments, and more.",
+  "course_title": "Running a Successful Dog Walking Business",
+  "description": "Learn how to manage and grow your dog walking business with Dog Dollars, a comprehensive platform for bookings, schedules, walkers, clients, payments, and report cards.",
   "modules": [
     {
       "title": "Introduction to Dog Walking Business Management",
       "lessons": [
         {
           "title": "Getting Started with Dog Dollars",
-          "description": "Overview of the Dog Dollars platform, its features, and how to sign up for a free trial."
+          "description": "Learn how to sign up for Dog Dollars, navigate the platform, and start managing your dog walking business"
         },
         {
           "title": "Setting Up Your Business Profile",
-          "description": "How to create and customize your business profile, including adding staff seats, clients, and pets."
+          "description": "Discover how to create a custom domain, add your business information, and configure your settings for success"
         }
       ]
     },
     {
-      "title": "Scheduling and Client Management",
+      "title": "Client and Booking Management",
       "lessons": [
         {
-          "title": "Smart Scheduling with Dog Dollars",
-          "description": "Using schedule blocks, recurring bookings, and the drag-and-drop calendar to manage your bookings efficiently."
+          "title": "Managing Client Information and Preferences",
+          "description": "Understand how to store client data, track preferences, and use this information to improve your services"
         },
         {
-          "title": "Managing Client Information and Preferences",
-          "description": "How to keep track of client details, including their pets, preferences, and booking history."
+          "title": "Creating and Managing Bookings",
+          "description": "Learn how to schedule bookings, use recurring bookings, and manage your calendar for efficient time management"
+        }
+      ]
+    },
+    {
+      "title": "walker and Staff Management",
+      "lessons": [
+        {
+          "title": "Adding and Managing Walkers",
+          "description": "Find out how to add walkers to your team, assign them to bookings, and track their performance"
+        },
+        {
+          "title": "Using the Mobile App for Walkers",
+          "description": "Discover how walkers can use the mobile app to check-in, send photos, and leave notes for clients"
         }
       ]
     },
@@ -32,38 +45,25 @@
       "title": "Payments, Invoicing, and Reporting",
       "lessons": [
         {
-          "title": "Invoicing and Online Payments",
-          "description": "How to generate invoices automatically and receive online payments through Dog Dollars."
+          "title": "Automating Invoicing and Payments",
+          "description": "Learn how to generate automatic invoices, accept online payments, and track your revenue"
         },
         {
-          "title": "Creating and Sending Report Cards",
-          "description": "Using Dog Dollars to send beautiful report cards with photos, potty reports, and notes after every walk."
+          "title": "Using Report Cards and Photos",
+          "description": "Understand how to send beautiful report cards with photos and notes to keep clients engaged and informed"
         }
       ]
     },
     {
-      "title": "Advanced Features and Analytics",
+      "title": "Business Analytics and Growth",
       "lessons": [
         {
-          "title": "GPS Tracking and Photo Updates",
-          "description": "How to use GPS tracking to show clients where their pets went on their adventure and sharing photos during walks."
-        },
-        {
-          "title": "Business Analytics and Performance Tracking",
-          "description": "Using Dog Dollars analytics to track revenue, walker performance, and client retention."
-        }
-      ]
-    },
-    {
-      "title": "Growing Your Business with Dog Dollars",
-      "lessons": [
-        {
-          "title": "Marketing Strategies for Dog Walking Businesses",
-          "description": "Tips and strategies for marketing your dog walking business and attracting new clients."
+          "title": "Tracking Revenue and Performance",
+          "description": "Discover how to use business analytics to track your revenue, walker performance, and client retention"
         },
         {
           "title": "Scaling Your Business with Dog Dollars",
-          "description": "How to use Dog Dollars to manage growth, including adding staff seats, custom domains, and advanced analytics."
+          "description": "Learn how to use Dog Dollars to grow your business, including tips for expanding your team and services"
         }
       ]
     }
