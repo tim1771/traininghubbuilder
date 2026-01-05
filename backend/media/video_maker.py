@@ -106,6 +106,21 @@ def clean_text_for_tts(text):
     text = re.sub(r'\[([^\]]+)\]\([^\)]+\)', r'\1', text)
     return text.strip()
 
+def zoom_in_effect(clip, zoom_ratio=0.04):
+    def effect(get_frame, t):
+        img = Image.fromarray(get_frame(t))
+        base_size = img.size
+        new_size = [
+            int(base_size[0] * (1 + (zoom_ratio * t))),
+            int(base_size[1] * (1 + (zoom_ratio * t)))
+        ]
+        img = img.resize(new_size, Image.Resampling.LANCZOS)
+        x = (new_size[0] - base_size[0]) // 2
+        y = (new_size[1] - base_size[1]) // 2
+        img = img.crop([x, y, x + base_size[0], y + base_size[1]])
+        return np.array(img)
+    return clip.fl(effect)
+
 def generate_engaging_script(client, title, raw_text):
     """Rewrites content into a high-energy YouTuber style script."""
     try:
