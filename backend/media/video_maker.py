@@ -149,58 +149,83 @@ def generate_sora_clip(client, prompt, output_path):
     }
     
     try:
-        print(f"REQUESTING SORA CLIP: {prompt[:50]}...")
-        # 1. Submit Generation Request
-        payload = {
-            "model": "sora-2",
-            "prompt": f"Realism style, high definition, cinematic lighting. {prompt}",
-            "seconds": "8", # Generate 8 second clips
-            "size": "1280x720"
-        }
-        
-        response = requests.post(API_URL, headers=headers, json=payload)
-        if response.status_code != 200:
-            print(f"Sora Request Failed: {response.text}")
-            with open("sora_debug.log", "w") as log:
-                log.write(f"Status: {response.status_code}\nResponse: {response.text}")
-            return None
+        with open("sora_trace.log", "w") as log:
+            log.write(f"Starting Sora Request for: {prompt[:30]}...\n")
             
-        video_id = response.json().get("id")
-        print(f"Sora Task ID: {video_id}. Polling for completion...")
-        
-        # 2. Poll for Completion
-        # Sora takes time, so we need to wait.
-        status = "queued"
-        video_url = None
-        
-        for _ in range(30): # Wait up to 5 minutes (30 * 10s)
-            time.sleep(10)
-            status_res = requests.get(f"{API_URL}/{video_id}", headers=headers)
-            if status_res.status_code == 200:
-                data = status_res.json()
-                status = data.get("status")
-                if status == "completed":
-                    video_url = data.get("video_url") # Hypothetical field based on typical async APIs (or 'result' field)
-                    # If field is different in reality, we'd need to debug, but assuming standard OpenAI 'result' or 'output'
-                    if not video_url and 'result' in data:
-                        video_url = data['result'].get('url')
-                    break
-                elif status == "failed":
-                    print("Sora Generation Failed.")
-                    return None
+            print(f"REQUESTING SORA CLIP: {prompt[:50]}...")
+            # 1. Submit Generation Request
+            payload = {
+                "model": "sora-2",
+                "prompt": f"Realism style, high definition, cinematic lighting. {prompt}",
+                "seconds": "8", # Generate 8 second clips
+                "size": "1280x720"
+            }
+            
+            log.write(f"Payload: {payload}\n")
+            
+            response = requests.post(API_URL, headers=headers, json=payload)
+            log.write(f"Response Status: {response.status_code}\n")
+            
+            if response.status_code != 200:
+                print(f"Sora Request Failed: {response.text}")
+                log.write(f"Error Body: {response.text}\n")
+                return None
+                
+            video_id = response.json().get("id")
+            print(f"Sora Task ID: {video_id}. Polling for completion...")
+            log.write(f"Task ID: {video_id}\n")
+            
+            # 2. Poll for Completion
+            # Sora takes time, so we need to wait.
+            status = "queued"
+            video_url = None
+            
+            for i in range(30): # Wait up to 5 minutes (30 * 10s)
+                time.sleep(10)
+                status_res = requests.get(f"{API_URL}/{video_id}", headers=headers)
+                log.write(f"Poll {i}: {status_res.status_code} - ")
+                
+                if status_res.status_code == 200:
+                    data = status_res.json()
+                    status = data.get("status")
+                    log.write(f"Status: {status}\n")
+                    
+                    if status == "completed":
+                        log.write(f"COMPLETION DATA: {data}\n")
+                        video_url = data.get("video_url")
+                        
+                        if not video_url: video_url = data.get("url")
+                        if not video_url and 'result' in data: video_url = data['result'].get('url')
+                        
+                        # Handle OpenAI Standard 'data' list format
+                        if not video_url and 'data' in data:
+                             if isinstance(data['data'], list) and len(data['data']) > 0:
+                                 video_url = data['data'][0].get('url')
+                        
+                        log.write(f"Video URL found: {video_url}\n")
+                        break
+                    elif status == "failed":
+                        print("Sora Generation Failed.")
+                        log.write(f"FAILED. Error details: {data}\n")
+                        return None
+                else:
+                    log.write(f"Polling Error Body: {status_res.text}\n")
+            
+            if video_url:
+                print(f"Downloading Sora Clip from {video_url[:50]}...")
+                # 3. Download Video
+                v_res = requests.get(video_url)
+                with open(output_path, 'wb') as f:
+                    f.write(v_res.content)
+                log.write("Download complete.\n")
+                return output_path
             else:
-                print(f"Polling Error: {status_res.status_code}")
-        
-        if video_url:
-            print(f"Downloading Sora Clip from {video_url[:50]}...")
-            # 3. Download Video
-            v_res = requests.get(video_url)
-            with open(output_path, 'wb') as f:
-                f.write(v_res.content)
-            return output_path
+                log.write("Timed out or no URL.\n")
             
     except Exception as e:
         print(f"Sora Error: {e}")
+        with open("sora_trace.log", "a") as log:
+             log.write(f"Exception: {e}\n")
         return None
     return None
 

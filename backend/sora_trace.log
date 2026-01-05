@@ -1,0 +1,17 @@
+Starting Sora Request for: A realistic tutorial presenter...
+Payload: {'model': 'sora-2', 'prompt': 'Realism style, high definition, cinematic lighting. A realistic tutorial presenter demonstrating Getting Started with Dog Dollars on a laptop, over the shoulder shot, detailed screen, office environment', 'seconds': '8', 'size': '1280x720'}
+Response Status: 200
+Task ID: video_695be97d510c8193b63e78c5472827ef0c494d355d2ca08d
+Poll 0: 200 - Status: in_progress
+Poll 1: 200 - Status: in_progress
+Poll 2: 200 - Status: queued
+Poll 3: 200 - Status: queued
+Poll 4: 200 - Status: queued
+Poll 5: 200 - Status: queued
+Poll 6: 200 - Status: queued
+Poll 7: 200 - Status: in_progress
+Poll 8: 200 - Status: in_progress
+Poll 9: 200 - Status: in_progress
+Poll 10: 200 - Status: completed
+Video URL found: None
+Timed out or no URL.
