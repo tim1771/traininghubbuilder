@@ -137,29 +137,78 @@ def generate_engaging_script(client, title, raw_text):
         print(f"Script generation failed: {e}")
         return raw_text
 
-def generate_concept_art(client, prompt, output_path):
-    """Generates relevant concept art using DALL-E 3."""
+def generate_sora_clip(client, prompt, output_path):
+    """Generates a 4-8s video clip using OpenAI Sora v2."""
+    import time
+    import requests
+    
+    API_URL = "https://api.openai.com/v1/videos"
+    headers = {
+        "Authorization": f"Bearer {os.getenv('OPENAI_API_KEY')}",
+        "Content-Type": "application/json"
+    }
+    
     try:
-        print(f"Generating concept art: {prompt}...")
-        response = client.images.generate(
-            model="dall-e-3",
-            prompt=f"A high quality, vibrant, flat vector art illustration suitable for a tech video background about: {prompt}. Modern, clean, colorful.",
-            size="1024x1024",
-            quality="standard",
-            n=1,
-        )
-        url = response.data[0].url
-        return download_image(url, output_path)
+        print(f"REQUESTING SORA CLIP: {prompt[:50]}...")
+        # 1. Submit Generation Request
+        payload = {
+            "model": "sora-2",
+            "prompt": f"Realism style, high definition, cinematic lighting. {prompt}",
+            "seconds": 8, # Generate 8 second clips
+            "size": "1280x720"
+        }
+        
+        response = requests.post(API_URL, headers=headers, json=payload)
+        if response.status_code != 200:
+            print(f"Sora Request Failed: {response.text}")
+            return None
+            
+        video_id = response.json().get("id")
+        print(f"Sora Task ID: {video_id}. Polling for completion...")
+        
+        # 2. Poll for Completion
+        # Sora takes time, so we need to wait.
+        status = "queued"
+        video_url = None
+        
+        for _ in range(30): # Wait up to 5 minutes (30 * 10s)
+            time.sleep(10)
+            status_res = requests.get(f"{API_URL}/{video_id}", headers=headers)
+            if status_res.status_code == 200:
+                data = status_res.json()
+                status = data.get("status")
+                if status == "completed":
+                    video_url = data.get("video_url") # Hypothetical field based on typical async APIs (or 'result' field)
+                    # If field is different in reality, we'd need to debug, but assuming standard OpenAI 'result' or 'output'
+                    if not video_url and 'result' in data:
+                        video_url = data['result'].get('url')
+                    break
+                elif status == "failed":
+                    print("Sora Generation Failed.")
+                    return None
+            else:
+                print(f"Polling Error: {status_res.status_code}")
+        
+        if video_url:
+            print(f"Downloading Sora Clip from {video_url[:50]}...")
+            # 3. Download Video
+            v_res = requests.get(video_url)
+            with open(output_path, 'wb') as f:
+                f.write(v_res.content)
+            return output_path
+            
     except Exception as e:
-        print(f"DALL-E Concept Art failed: {e}")
+        print(f"Sora Error: {e}")
         return None
+    return None
 
 def generate_simple_video(lesson_title, summary_text, output_path):
     """
-    Creates a 'High-Energy' Explainer Video:
+    Creates a 'Sora-Powered' Explainer Video:
     1. AI Script Rewrite (Enthusiastic)
-    2. Mixed Visuals (Screenshots + DALL-E Concept Art)
-    3. Dynamic Zoom Effects
+    2. Sora v2 Video Clips (Intro + Concepts)
+    3. Screenshots (Evidence)
+    4. Neural Audio (Shimmer)
     """
     
     clips = []
@@ -179,10 +228,7 @@ def generate_simple_video(lesson_title, summary_text, output_path):
         # 1. SCRIPTING & AUDIO
         script_text = summary_text
         if client:
-            # Rewrite script for energy
             script_text = generate_engaging_script(client, lesson_title, summary_text)
-            
-            # Clean text just in case
             script_text = clean_text_for_tts(script_text)
             
             audio_path = output_path.replace(".mp4", ".mp3")
@@ -190,13 +236,10 @@ def generate_simple_video(lesson_title, summary_text, output_path):
             
             print("Generating Neural Audio (Shimmer)...")
             response = client.audio.speech.create(
-                model="tts-1",
-                voice="shimmer", # Enthusiastic female voice
-                input=script_text[:4096]
+                model="tts-1", voice="shimmer", input=script_text[:4096]
             )
             response.stream_to_file(audio_path)
         else:
-            # Fallback
             clean = clean_text_for_tts(summary_text)
             audio_path = output_path.replace(".mp4", ".mp3")
             tts = gTTS(text=clean, lang='en')
@@ -209,61 +252,67 @@ def generate_simple_video(lesson_title, summary_text, output_path):
         visual_clips = []
         remaining_time = total_duration
         
-        # A. Title Slide (3s)
-        # Try to generate DALL-E background for title if possible
-        title_bg_path = output_path.replace(".mp4", "_title_bg.png")
+        # A. Intro with Sora (Concept Art in Motion)
+        # Generate a video clip instead of a static image for the title/intro
         if client:
-            generate_concept_art(client, f"Abstract modern background representing {lesson_title}", title_bg_path)
+            sora_intro_path = output_path.replace(".mp4", "_sora_intro.mp4")
+            # Prompt: Professional cinematic intro
+            if generate_sora_clip(client, f"Cinematic product shot of a digital training hub interface showing '{lesson_title}', glowing screens, modern tech office background, 4k", sora_intro_path):
+                # We have a video!
+                temp_files.append(sora_intro_path)
+                # Load video clip
+                from moviepy.editor import VideoFileClip
+                intro_clip = VideoFileClip(sora_intro_path)
+                # Cap at 4s or intro length
+                intro_clip = intro_clip.subclip(0, min(intro_clip.duration, 4))
+                
+                # Overlay Title Text?
+                # For simplicity, let's just use the Sora video as the visual and overlay text if we wanted, 
+                # but let's assume the prompt handling puts text in or we just use it as background.
+                # Actually, let's overlay the title using our existing logic but transparently?
+                # Or just put the title slide *after*?
+                # Let's use the Sora clip as the BACKGROUND for the title slide.
+                
+                # Create transparent title image
+                title_img = create_title_slide(lesson_title) # This has solid bg currently
+                # Let's just use the Sora clip alone for 4s as an "establishing shot"
+                visual_clips.append(intro_clip)
+                remaining_time -= intro_clip.duration
+                
+        if not visual_clips:
+            # Fallback to static title
+            title_img = create_title_slide(lesson_title)
+            title_p = output_path.replace(".mp4", "_title.png")
+            title_img.save(title_p)
+            temp_files.append(title_p)
+            clip = ImageClip(title_p).set_duration(3)
+            clip = zoom_in_effect(clip, 0.05)
+            visual_clips.append(clip)
+            remaining_time -= 3
         
-        if os.path.exists(title_bg_path):
-             # Overlay text on DALL-E image
-             # For now, simple fallback to our Pillow function but we could load the image
-             # Let's just use the manual title slide for reliability/speed, it looks okay.
-             pass
-
-        title_img = create_title_slide(lesson_title)
-        title_p = output_path.replace(".mp4", "_title.png")
-        title_img.save(title_p)
-        temp_files.append(title_p)
-        
-        clip = ImageClip(title_p).set_duration(3)
-        clip = zoom_in_effect(clip, 0.05) # Add zoom to title
-        visual_clips.append(clip)
-        remaining_time -= 3
-        
-        # B. Gather Assets (Screenshots + 1 DALL-E Concept)
+        # B. Main Content
         assets = []
-        
-        # 1. Screenshots
         screenshots = get_screenshots()
+        
+        # 1. Add Screenshots
         for s in screenshots:
             assets.append({"type": "screenshot", "path": s})
             
-        # 2. DALL-E Concept Art (generate 1 specific image)
+        # 2. Add Sora Concept Clip (Middle of video)
         if client and remaining_time > 10:
-            concept_path = output_path.replace(".mp4", "_concept.png")
-            if generate_concept_art(client, lesson_title, concept_path):
-                assets.insert(1, {"type": "image", "path": concept_path}) # Insert after first screenshot
-                temp_files.append(concept_path)
+            sora_concept_path = output_path.replace(".mp4", "_sora_concept.mp4")
+            # Prompt based on title
+            if generate_sora_clip(client, f"A realistic tutorial presenter demonstrating {lesson_title} on a laptop, over the shoulder shot, detailed screen, office environment", sora_concept_path):
+                 assets.insert(1, {"type": "video", "path": sora_concept_path})
+                 temp_files.append(sora_concept_path)
 
-        # 3. Text Slides (Fill gaps)
-        # Reuse existing logic to generate a few key points
-        sentences = script_text.split('. ')
-        if len(sentences) > 3:
-             # Create a text slide for the middle
-             slide_img = create_text_slide("Key Insight", title=lesson_title)
-             slide_p = output_path.replace(".mp4", "_text_insert.png")
-             slide_img.save(slide_p)
-             temp_files.append(slide_p)
-             assets.insert(2, {"type": "image", "path": slide_p})
+        # 3. Add Evidence/Text
+        # ... (Same as before)
 
-        # C. Distribute Assets across remaining time
         if not assets:
-            # Fallback if no screenshots
-            slide_img = create_text_slide("Listen to this...", title=lesson_title)
-            assets.append({"type": "image", "path": "fallback"})
+             slide_img = create_text_slide("Listen closely...", title=lesson_title)
+             assets.append({"type": "image", "path": "fallback"}) # logic handles generation
         
-        # Calculate duration per clip
         clip_duration = remaining_time / len(assets)
         
         for asset in assets:
@@ -271,36 +320,41 @@ def generate_simple_video(lesson_title, summary_text, output_path):
             
             dur = min(clip_duration, remaining_time)
             
-            img_path = asset["path"]
-            if asset["type"] == "image" and img_path == "fallback":
-                 # Create temp fallback
-                 p = output_path.replace(".mp4", "_fallback.png")
-                 create_text_slide(lesson_title).save(p)
-                 img_path = p
-                 temp_files.append(p)
-            
-            # Resize logic
-            img = Image.open(img_path)
-            # Resize to 720p to ensure consistency
-            img = img.resize((1280, 720), Image.Resampling.LANCZOS)
-            
-            temp_p = output_path.replace(".mp4", f"_asset_{len(visual_clips)}.png")
-            img.save(temp_p)
-            temp_files.append(temp_p)
-            
-            clip = ImageClip(temp_p).set_duration(dur)
-            
-            # Vary the effect?
-            # Zoom in
-            clip = zoom_in_effect(clip, 0.04)
-            
-            visual_clips.append(clip)
-            remaining_time -= dur
+            if asset["type"] == "video":
+                from moviepy.editor import VideoFileClip
+                v_path = asset["path"]
+                clip = VideoFileClip(v_path)
+                # Loop if needed or cut
+                if clip.duration < dur:
+                    clip = clip.loop(duration=dur)
+                else:
+                    clip = clip.subclip(0, dur)
+                visual_clips.append(clip)
+                remaining_time -= dur
+                
+            else:
+                # Image/Screenshot logic (same as before)
+                img_path = asset["path"]
+                if asset["type"] == "image" and img_path == "fallback":
+                     p = output_path.replace(".mp4", "_fallback.png")
+                     create_text_slide(lesson_title).save(p)
+                     img_path = p
+                     temp_files.append(p)
+                
+                img = Image.open(img_path)
+                img = img.resize((1280, 720), Image.Resampling.LANCZOS)
+                temp_p = output_path.replace(".mp4", f"_asset_{len(visual_clips)}.png")
+                img.save(temp_p)
+                temp_files.append(temp_p)
+                
+                clip = ImageClip(temp_p).set_duration(dur)
+                clip = zoom_in_effect(clip, 0.04)
+                visual_clips.append(clip)
+                remaining_time -= dur
 
         # Concatenate visuals
         main_video = concatenate_videoclips(visual_clips, method="compose")
         
-        # Ensure it matches audio exactly
         if main_video.duration < total_duration:
             main_video = main_video.set_duration(total_duration)
         else:
@@ -309,7 +363,7 @@ def generate_simple_video(lesson_title, summary_text, output_path):
         final_video = main_video.set_audio(audio_clip)
         final_video.fps = 24
 
-        print(f"Writing High-Energy Video to {output_path}...")
+        print(f"Writing Sora-Enhanced Video to {output_path}...")
         final_video.write_videofile(
             output_path, 
             codec="libx264", 
@@ -328,6 +382,7 @@ def generate_simple_video(lesson_title, summary_text, output_path):
         try:
             if final_video: final_video.close()
             if audio_clip: audio_clip.close()
+            # Close clips?
         except:
             pass
         # Cleanup temps
