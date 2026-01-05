@@ -208,8 +208,10 @@ def generate_simple_video(lesson_title, summary_text, output_path):
                 dur = min(shot_duration, remaining_time)
                 # Create clip
                 clip = ImageClip(shot_p).set_duration(dur)
-                # Add mild zoom "Ken Burns"
-                clip = clip.resize(lambda t: 1 + 0.04 * t) 
+                
+                # Use custom Zoom Effect (Ken Burns)
+                # We avoid clip.resize() because it uses deprecated PIL.Image.ANTIALIAS
+                clip = zoom_in_effect(clip, zoom_ratio=0.04)
                 
                 visual_clips.append(clip)
                 remaining_time -= dur
@@ -222,6 +224,8 @@ def generate_simple_video(lesson_title, summary_text, output_path):
                 slide_p = output_path.replace(".mp4", f"_slide_{i}.png")
                 slide.save(slide_p)
                 temp_files.append(slide_p)
+                
+                # Simple static slide for fallback
                 visual_clips.append(ImageClip(slide_p).set_duration(chunk_dur))
                 remaining_time -= chunk_dur
 
@@ -240,11 +244,25 @@ def generate_simple_video(lesson_title, summary_text, output_path):
         if presenter_img_path:
             # Load presenter
             p_clip = ImageClip(presenter_img_path).set_duration(total_duration)
-            # Resize to small circle or box
-            p_clip = p_clip.resize(height=250)
+            # Resize presenter safely (scaling down usually doesn't trigger the ANTIALIAS crash in same way, strictly speaking resizing creates a new clip but let's be careful)
+            # We will use resize by value which might be safe, or just use our custom resize if needed.
+            # MoviePy's resize with a float/function triggers the issue. Resize with tuple/int might be safer or just rely on ImageClip loading it.
+            
+            # Use Pillow to resize presenter image upfront to avoid MoviePy resize issues
+            p_img = Image.open(presenter_img_path)
+            # Target height 250, keep aspect ratio
+            aspect = p_img.width / p_img.height
+            new_w = int(250 * aspect)
+            p_img = p_img.resize((new_w, 250), Image.Resampling.LANCZOS)
+            
+            p_resized_path = output_path.replace(".mp4", "_presenter_small.png")
+            p_img.save(p_resized_path)
+            temp_files.append(p_resized_path)
+            
+            p_clip = ImageClip(p_resized_path).set_duration(total_duration)
+            
             # Position bottom right
             p_clip = p_clip.set_position(("right", "bottom"))
-            # Optional: Add a border? (We'll keep it simple for now)
             
             final_layers.append(p_clip)
 
