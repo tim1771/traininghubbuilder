@@ -1,0 +1,9 @@
+Status: 400
+Response: {
+  "error": {
+    "message": "Invalid type for 'seconds': expected one of '4', '8', or '12', but got an integer instead.",
+    "type": "invalid_request_error",
+    "param": "seconds",
+    "code": "invalid_type"
+  }
+}

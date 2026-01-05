@@ -154,13 +154,15 @@ def generate_sora_clip(client, prompt, output_path):
         payload = {
             "model": "sora-2",
             "prompt": f"Realism style, high definition, cinematic lighting. {prompt}",
-            "seconds": 8, # Generate 8 second clips
+            "seconds": "8", # Generate 8 second clips
             "size": "1280x720"
         }
         
         response = requests.post(API_URL, headers=headers, json=payload)
         if response.status_code != 200:
             print(f"Sora Request Failed: {response.text}")
+            with open("sora_debug.log", "w") as log:
+                log.write(f"Status: {response.status_code}\nResponse: {response.text}")
             return None
             
         video_id = response.json().get("id")
