@@ -9,6 +9,8 @@ from dotenv import load_dotenv
 import requests
 from io import BytesIO
 
+import numpy as np # Needed for array manipulation in moviepy usually, but Pillow handles most.
+
 load_dotenv()
 
 def download_image(url, save_path):
@@ -125,7 +127,6 @@ def generate_simple_video(lesson_title, summary_text, output_path):
     1. AI Instructor (Picture-in-Picture)
     2. Dynamic Slides/Screenshots (Main content)
     """
-    import numpy as np # Needed for array manipulation in moviepy usually, but Pillow handles most.
     
     clips = []
     temp_files = []
