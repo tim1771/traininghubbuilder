@@ -106,33 +106,51 @@ def clean_text_for_tts(text):
     text = re.sub(r'\[([^\]]+)\]\([^\)]+\)', r'\1', text)
     return text.strip()
 
-def zoom_in_effect(clip, zoom_ratio=0.04):
-    def effect(get_frame, t):
-        img = Image.fromarray(get_frame(t))
-        base_size = img.size
-        new_size = [
-            int(base_size[0] * (1 + (zoom_ratio * t))),
-            int(base_size[1] * (1 + (zoom_ratio * t)))
-        ]
-        img = img.resize(new_size, Image.LANCZOS)
-        x = (new_size[0] - base_size[0]) // 2
-        y = (new_size[1] - base_size[1]) // 2
-        img = img.crop([x, y, x + base_size[0], y + base_size[1]])
-        return np.array(img)
-    return clip.fl(effect)
+def generate_engaging_script(client, title, raw_text):
+    """Rewrites content into a high-energy YouTuber style script."""
+    try:
+        print("Rewriting script for high energy...")
+        response = client.chat.completions.create(
+            model="gpt-4",  # or gpt-3.5-turbo if 4 not available
+            messages=[
+                {"role": "system", "content": "You are an expert video scriptwriter for a high-energy tech education channel. Rewrite the provided text into a short, punchy, enthusiastic script for a spoken video. Use rhetorical questions, excitement, and clear calls to action. Keep it under 250 words. Do NOT include visual directions like [Curtain Up]. Just the spoken text."},
+                {"role": "user", "content": f"Topic: {title}\n\nContent: {raw_text[:2000]}"}
+            ]
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        print(f"Script generation failed: {e}")
+        return raw_text
+
+def generate_concept_art(client, prompt, output_path):
+    """Generates relevant concept art using DALL-E 3."""
+    try:
+        print(f"Generating concept art: {prompt}...")
+        response = client.images.generate(
+            model="dall-e-3",
+            prompt=f"A high quality, vibrant, flat vector art illustration suitable for a tech video background about: {prompt}. Modern, clean, colorful.",
+            size="1024x1024",
+            quality="standard",
+            n=1,
+        )
+        url = response.data[0].url
+        return download_image(url, output_path)
+    except Exception as e:
+        print(f"DALL-E Concept Art failed: {e}")
+        return None
 
 def generate_simple_video(lesson_title, summary_text, output_path):
     """
-    Creates a 'Screen Recording' style video:
-    1. AI Instructor (Picture-in-Picture)
-    2. Dynamic Slides/Screenshots (Main content)
+    Creates a 'High-Energy' Explainer Video:
+    1. AI Script Rewrite (Enthusiastic)
+    2. Mixed Visuals (Screenshots + DALL-E Concept Art)
+    3. Dynamic Zoom Effects
     """
     
     clips = []
     temp_files = []
     audio_clip = None
     final_video = None
-    presenter_img_path = None
     
     client = None
     if os.getenv("OPENAI_API_KEY"):
@@ -143,134 +161,140 @@ def generate_simple_video(lesson_title, summary_text, output_path):
             client = None
 
     try:
-        # CLEAN TEXT
-        clean_summary = clean_text_for_tts(summary_text)
-        audio_path = output_path.replace(".mp4", ".mp3")
-        temp_files.append(audio_path)
-
-        # 1. AUDIO GENERATION
+        # 1. SCRIPTING & AUDIO
+        script_text = summary_text
         if client:
-            print("Generating Neural Audio...")
+            # Rewrite script for energy
+            script_text = generate_engaging_script(client, lesson_title, summary_text)
+            
+            # Clean text just in case
+            script_text = clean_text_for_tts(script_text)
+            
+            audio_path = output_path.replace(".mp4", ".mp3")
+            temp_files.append(audio_path)
+            
+            print("Generating Neural Audio (Shimmer)...")
             response = client.audio.speech.create(
                 model="tts-1",
-                voice="onyx",
-                input=clean_summary[:4096]
+                voice="shimmer", # Enthusiastic female voice
+                input=script_text[:4096]
             )
             response.stream_to_file(audio_path)
         else:
-            tts = gTTS(text=clean_summary, lang='en')
+            # Fallback
+            clean = clean_text_for_tts(summary_text)
+            audio_path = output_path.replace(".mp4", ".mp3")
+            tts = gTTS(text=clean, lang='en')
             tts.save(audio_path)
         
         audio_clip = AudioFileClip(audio_path)
         total_duration = audio_clip.duration
-
-        # 2. GENERATE PRESENTER (One time per video)
-        if client:
-            presenter_path = output_path.replace(".mp4", "_presenter.png")
-            # Check if we already have a generic presenter cached to save credits/time? 
-            # For now, generate new one to be safe.
-            if not os.path.exists("media/cached_presenter.png"):
-                 generate_ai_presenter(client, "media/cached_presenter.png")
-            
-            if os.path.exists("media/cached_presenter.png"):
-                presenter_img_path = "media/cached_presenter.png"
-
-        # 3. BUILD CONTENT VISUALS
-        visual_clips = []
         
-        # A. Title Slide
+        # 2. GENERATE VISUAL ASSETS
+        visual_clips = []
+        remaining_time = total_duration
+        
+        # A. Title Slide (3s)
+        # Try to generate DALL-E background for title if possible
+        title_bg_path = output_path.replace(".mp4", "_title_bg.png")
+        if client:
+            generate_concept_art(client, f"Abstract modern background representing {lesson_title}", title_bg_path)
+        
+        if os.path.exists(title_bg_path):
+             # Overlay text on DALL-E image
+             # For now, simple fallback to our Pillow function but we could load the image
+             # Let's just use the manual title slide for reliability/speed, it looks okay.
+             pass
+
         title_img = create_title_slide(lesson_title)
         title_p = output_path.replace(".mp4", "_title.png")
         title_img.save(title_p)
         temp_files.append(title_p)
-        visual_clips.append(ImageClip(title_p).set_duration(3))
         
-        remaining_time = total_duration - 3
+        clip = ImageClip(title_p).set_duration(3)
+        clip = zoom_in_effect(clip, 0.05) # Add zoom to title
+        visual_clips.append(clip)
+        remaining_time -= 3
         
-        # B. Screenshots & Content
+        # B. Gather Assets (Screenshots + 1 DALL-E Concept)
+        assets = []
+        
+        # 1. Screenshots
         screenshots = get_screenshots()
-        chunks = summary_text.split('. ') # Split by sentence roughly
+        for s in screenshots:
+            assets.append({"type": "screenshot", "path": s})
+            
+        # 2. DALL-E Concept Art (generate 1 specific image)
+        if client and remaining_time > 10:
+            concept_path = output_path.replace(".mp4", "_concept.png")
+            if generate_concept_art(client, lesson_title, concept_path):
+                assets.insert(1, {"type": "image", "path": concept_path}) # Insert after first screenshot
+                temp_files.append(concept_path)
+
+        # 3. Text Slides (Fill gaps)
+        # Reuse existing logic to generate a few key points
+        sentences = script_text.split('. ')
+        if len(sentences) > 3:
+             # Create a text slide for the middle
+             slide_img = create_text_slide("Key Insight", title=lesson_title)
+             slide_p = output_path.replace(".mp4", "_text_insert.png")
+             slide_img.save(slide_p)
+             temp_files.append(slide_p)
+             assets.insert(2, {"type": "image", "path": slide_p})
+
+        # C. Distribute Assets across remaining time
+        if not assets:
+            # Fallback if no screenshots
+            slide_img = create_text_slide("Listen to this...", title=lesson_title)
+            assets.append({"type": "image", "path": "fallback"})
         
-        # Strategy: Alternate between screenshots and text points
-        # If we have screenshots, show them for longer.
+        # Calculate duration per clip
+        clip_duration = remaining_time / len(assets)
         
-        if screenshots:
-            # Show screenshots with simple zoom
-            shot_duration = remaining_time / len(screenshots) if len(screenshots) > 0 else 4
-            for shot in screenshots:
-                if remaining_time <= 0: break
-                
-                # Resize and Add Effect
-                img = Image.open(shot).resize((1280, 720), Image.Resampling.LANCZOS)
-                shot_p = output_path.replace(".mp4", f"_shot_{len(visual_clips)}.png")
-                img.save(shot_p)
-                temp_files.append(shot_p)
-                
-                dur = min(shot_duration, remaining_time)
-                # Create clip
-                clip = ImageClip(shot_p).set_duration(dur)
-                
-                # Use custom Zoom Effect (Ken Burns)
-                # We avoid clip.resize() because it uses deprecated PIL.Image.ANTIALIAS
-                clip = zoom_in_effect(clip, zoom_ratio=0.04)
-                
-                visual_clips.append(clip)
-                remaining_time -= dur
-        else:
-            # Fallback to Text Slides
-            chunk_dur = remaining_time / 4
-            for i in range(4):
-                if remaining_time <= 0: break
-                slide = create_text_slide("Learn More in the Course...", title=lesson_title)
-                slide_p = output_path.replace(".mp4", f"_slide_{i}.png")
-                slide.save(slide_p)
-                temp_files.append(slide_p)
-                
-                # Simple static slide for fallback
-                visual_clips.append(ImageClip(slide_p).set_duration(chunk_dur))
-                remaining_time -= chunk_dur
+        for asset in assets:
+            if remaining_time <= 0: break
+            
+            dur = min(clip_duration, remaining_time)
+            
+            img_path = asset["path"]
+            if asset["type"] == "image" and img_path == "fallback":
+                 # Create temp fallback
+                 p = output_path.replace(".mp4", "_fallback.png")
+                 create_text_slide(lesson_title).save(p)
+                 img_path = p
+                 temp_files.append(p)
+            
+            # Resize logic
+            img = Image.open(img_path)
+            # Resize to 720p to ensure consistency
+            img = img.resize((1280, 720), Image.Resampling.LANCZOS)
+            
+            temp_p = output_path.replace(".mp4", f"_asset_{len(visual_clips)}.png")
+            img.save(temp_p)
+            temp_files.append(temp_p)
+            
+            clip = ImageClip(temp_p).set_duration(dur)
+            
+            # Vary the effect?
+            # Zoom in
+            clip = zoom_in_effect(clip, 0.04)
+            
+            visual_clips.append(clip)
+            remaining_time -= dur
 
         # Concatenate visuals
         main_video = concatenate_videoclips(visual_clips, method="compose")
+        
         # Ensure it matches audio exactly
         if main_video.duration < total_duration:
-            # Extend last frame
             main_video = main_video.set_duration(total_duration)
         else:
             main_video = main_video.subclip(0, total_duration)
-            
-        final_layers = [main_video]
 
-        # 4. ADD PRESENTER OVERLAY (Picture in Picture)
-        if presenter_img_path:
-            # Load presenter
-            p_clip = ImageClip(presenter_img_path).set_duration(total_duration)
-            # Resize presenter safely (scaling down usually doesn't trigger the ANTIALIAS crash in same way, strictly speaking resizing creates a new clip but let's be careful)
-            # We will use resize by value which might be safe, or just use our custom resize if needed.
-            # MoviePy's resize with a float/function triggers the issue. Resize with tuple/int might be safer or just rely on ImageClip loading it.
-            
-            # Use Pillow to resize presenter image upfront to avoid MoviePy resize issues
-            p_img = Image.open(presenter_img_path)
-            # Target height 250, keep aspect ratio
-            aspect = p_img.width / p_img.height
-            new_w = int(250 * aspect)
-            p_img = p_img.resize((new_w, 250), Image.Resampling.LANCZOS)
-            
-            p_resized_path = output_path.replace(".mp4", "_presenter_small.png")
-            p_img.save(p_resized_path)
-            temp_files.append(p_resized_path)
-            
-            p_clip = ImageClip(p_resized_path).set_duration(total_duration)
-            
-            # Position bottom right
-            p_clip = p_clip.set_position(("right", "bottom"))
-            
-            final_layers.append(p_clip)
-
-        final_video = CompositeVideoClip(final_layers).set_audio(audio_clip)
+        final_video = main_video.set_audio(audio_clip)
         final_video.fps = 24
 
-        print(f"Writing Premium Video to {output_path}...")
+        print(f"Writing High-Energy Video to {output_path}...")
         final_video.write_videofile(
             output_path, 
             codec="libx264", 
