@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
   },
   // Increase timeout for long-running requests like video generation
   experimental: {
-    proxyTimeout: 180000, // 3 minutes in milliseconds
+    proxyTimeout: 600000, // 10 minutes in milliseconds
   },
 };
 

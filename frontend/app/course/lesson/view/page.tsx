@@ -184,9 +184,9 @@ function LessonContent() {
         setVideoUrl(null); // Clear any existing video
 
         try {
-            // Create abort controller with 2 minute timeout
+            // Create abort controller with 10 minute timeout for premium video rendering
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 120000); // 120 seconds
+            const timeoutId = setTimeout(() => controller.abort(), 600000); // 600 seconds (10 mins)
 
             const res = await fetch("/api/ai/video", {
                 method: "POST",
