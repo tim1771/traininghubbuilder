@@ -1,136 +1,208 @@
 {
-  "title": "Dog Dollars - Run your dog walking business like a pro",
-  "url": "https://dogdollars.ca/",
-  "text_content": "Dog Dollars - Run your dog walking business like a pro Dog Dollars Features Pricing Demo Calculator Toggle theme Log in Start Free Trial Trusted by 500+ dog walking businesses Run your dog walking business like a pro Bookings, schedules, walkers, clients, payments, and report cards — all in one beautiful platform designed for growing pet care businesses. Start Free Trial Watch Demo 14-day free trial No credit card required Cancel anytime Everything you need to grow your business From scheduling to payments, we've got every aspect of your dog walking business covered. Smart Scheduling Schedule blocks, recurring bookings, and drag-and-drop calendar make managing your week effortless. Client Management Keep track of all your clients, their pets, preferences, and booking history in one place. Visit Report Cards Send beautiful report cards with photos, potty reports, and notes after every walk. Invoicing & Payments Automatic invoice generation and online payments make getting paid simple and fast. GPS Tracking Optional GPS tracking shows clients exactly where their pups went on their adventure. Photo Updates Snap and share photos during walks so pet parents never miss a moment. Smart Notifications Automated reminders for upcoming walks, payment due dates, and booking confirmations. Business Analytics Track revenue, walker performance, and client retention with powerful insights. Loved by pet care professionals See what dog walking businesses are saying about Dog Dollars. \"Dog Dollars transformed my business. I went from juggling spreadsheets to managing 50+ clients effortlessly. The report cards alone have gotten me so many referrals!\" Sarah Mitchell Owner, Pawsome Walks \"The scheduling features save me hours every week. My team knows exactly where to be, and clients love the automatic updates. Absolute game-changer.\" David Chen Founder, Urban Paws Co. \"As a walker, the mobile app is incredibly intuitive. Check-ins, photos, and notes take seconds. Pet parents always comment on how professional our service feels.\" Emily Rodriguez Lead Walker, Happy Tails Simple, transparent pricing Start free for 14 days. No credit card required. Monthly Annual Save 20% Starter $5.99 /month Perfect for solo dog walkers just getting started. 1 staff seat Unlimited clients & pets Booking management Basic reports Email notifications Custom domain Walk packages Advanced analytics Start Free Trial Most Popular Pro $9.99 /month For growing businesses with a small team. Up to 5 staff seats Unlimited clients & pets Booking management Detailed reports Email & SMS notifications Walk packages & bundles Automated reminders Custom domain Start Free Trial Growth $14.99 /month For established businesses ready to scale. Unlimited staff seats Unlimited clients & pets Booking management Advanced reports All notification types Walk packages & bundles Custom domain support Advanced analytics Start Free Trial Frequently asked questions Everything you need to know about Dog Dollars. How does the 14-day free trial work? Can I switch plans later? How do clients book walks? Is my data secure? Can I connect my own Stripe account for payments? Do my walkers need to download an app? What about GPS tracking? How do report cards work? Ready to transform your dog walking business? Join 500+ pet care professionals already using Dog Dollars to grow their business. Start Your Free Trial See It In Action Dog Dollars Run your dog walking business like a pro — bookings, schedules, walkers, clients, payments, and report cards. Product Features Pricing Demo Calculator Company About Blog Careers Contact Legal Terms of Service Privacy Policy Support Help Center API Docs Status © 2026 Dog Dollars. All rights reserved.",
-  "screenshot": "scraped_data\\screenshot_1767623944.png",
+  "title": "Supabase | The Postgres Development Platform.",
+  "url": "https://supabase.com/",
+  "text_content": "Supabase | The Postgres Development Platform. Product Developers Solutions Pricing Docs Blog 96.1K Sign in Start your project Open main menu Supabase Wrapped 2025: The year in review Supabase Wrapped 2025 Build in a weekend Scale to millions Supabase is the Postgres development platform. Start your project with a Postgres database, Authentication, instant APIs, Edge Functions, Realtime subscriptions, Storage, and Vector embeddings. Start your project Request a demo Trusted by fast-growing companies worldwide Postgres Database Every project is a full Postgres database , the world's most trusted relational database. 100% portable Built-in Auth with RLS Easy to extend Authentication Add user sign ups and logins , securing your data with Row Level Security. Edge Functions Easily write custom code without deploying or scaling servers. $ supabase functions deploy Storage Store, organize, and serve large files, from videos to images. Realtime Build multiplayer experiences with real-time data synchronization. Vector Integrate your favorite ML-models to store, index and search vector embeddings . OpenAI logo OpenAI Hugging Face logo Hugging Face Data APIs Instant ready-to-use Restful APIs . Use one or all. Best of breed products. Integrated as a platform. Use Supabase with any framework Customer Stories Trusted by the world’s most innovative companies. See how Supabase empowers companies of all sizes to accelerate their growth and streamline their work. View all stories View Events Maergo's Express Delivery: How Supabase Helped Achieve Scalability, Speed, and Cost Saving Bootstrapped founder builds an AI app with Supabase and scales to $1M in 5 months. Scaling securely: one million users in 7 months protected with Supabase Auth Maergo's Express Delivery: How Supabase Helped Achieve Scalability, Speed, and Cost Saving Bootstrapped founder builds an AI app with Supabase and scales to $1M in 5 months. Scaling securely: one million users in 7 months protected with Supabase Auth Maergo's Express Delivery: How Supabase Helped Achieve Scalability, Speed, and Cost Saving Bootstrapped founder builds an AI app with Supabase and scales to $1M in 5 months. Scaling securely: one million users in 7 months protected with Supabase Auth Start building in seconds Kickstart your next project with templates built by us and our community. View all examples Official GitHub library Next.js logo Stripe logo Vercel logo Stripe Subscriptions Starter The all-in-one subscription starter kit for high-performance SaaS applications, powered by Stripe, Supabase, and Vercel. View Template Next.js logo Vercel logo Next.js Starter A Next.js App Router template configured with cookie-based auth using Supabase, TypeScript and Tailwind CSS. View Template Next.js logo OpenAI logo Vercel logo AI Chatbot An open-source AI chatbot app template built with Next.js, the Vercel AI SDK, OpenAI, and Supabase. View Template LangChain logo Next.js logo LangChain + Next.js Starter Starter template and example use-cases for LangChain projects in Next.js, including chat, agents, and retrieval. View Template Flutter logo Flutter User Management Get started with Supabase and Flutter by building a user management app with auth, file storage, and database. View Template Expo logo Expo React Native Starter An extended version of create-t3-turbo implementing authentication on both the web and mobile applications. View Template Next.js logo Stripe logo Vercel logo Stripe Subscriptions Starter The all-in-one subscription starter kit for high-performance SaaS applications, powered by Stripe, Supabase, and Vercel. View Template Next.js logo Vercel logo Next.js Starter A Next.js App Router template configured with cookie-based auth using Supabase, TypeScript and Tailwind CSS. View Template Next.js logo OpenAI logo Vercel logo AI Chatbot An open-source AI chatbot app template built with Next.js, the Vercel AI SDK, OpenAI, and Supabase. View Template LangChain logo Next.js logo LangChain + Next.js Starter Starter template and example use-cases for LangChain projects in Next.js, including chat, agents, and retrieval. View Template Flutter logo Flutter User Management Get started with Supabase and Flutter by building a user management app with auth, file storage, and database. View Template Expo logo Expo React Native Starter An extended version of create-t3-turbo implementing authentication on both the web and mobile applications. View Template Stay productive and manage your app without leaving the dashboard Table Editor SQL Editor RLS Policies Full CRUD Materialized Views Foreign Tables Partitioned Tables Easy as a spreadsheet Join the community Discover what our community has to say about their Supabase experience. Join us on Discord @nerdburn It’s fun, feels lightweight, and really quick to spin up user auth and a few tables. Almost too easy! Highly recommend. @patrickc Very impressed by @supabase's growth. For new startups, they seem to have gone from \"promising\" to \"standard\" in remarkably short order. @Aliahsan_sfv Okay, I finally tried Supabase today and wow... why did I wait so long? 😅 Went from 'how do I even start' to having auth + database + real-time updates working in like 20 minutes. Sometimes the hype is actually justified! #Supabase @yatsiv_yuriy Supabase is the best product experience I've had in years.\nNot just tech - taste.\nFrom docs to latency to the URL structure that makes you think \"oh, that's obvious\"\nFeels like every other platform should study how they built it\n@supabase I love you @adeelibr @supabase shout out, their MCP is awesome. It's helping me create better row securities and telling me best practises for setting up a supabase app @TyronBache Really impressed with @supabase's Assistant.\n\nIt has helped me troubleshoot and solve complex CORS Configuration issues on Pinger. @MinimEditor I’ve always used Supabase just as a database.\n\nYesterday, I helped debug a founder’s vibe-coding project built with React + React Router — no backend server.\nThe “backend” was entirely Supabase Edge Functions as the API.\nFirst time using Supabase this way.\nImpressive. @orlandopedro_ Love @supabase custom domains\n\nmakes the auth so much better @sdusteric Loving #Supabase MCP. Claude Code would not only plan what data we should save but also figure out a migration script by checking what the schema looks like on Supabase via MCP. @SteinlageScott I love @supabase's built-in Advisors. The security and performance linters improve everything and boost my confidence in what I'm building! @BowTiedQilin Working with @supabase has been one of the best dev experiences I've had lately.\n\nIncredibly easy to set up, great documentation, and so many fewer hoops to jump through than the competition.\n\nI definitely plan to use it on any and all future projects. @adm_lawson Love supabse edge functions. Cursor+Supabase+MCP+Docker desktop is all I need @gokul_i First time running @supabase in local. It just works. Very good DX imo. @dadooos_ Run supabase locally and just wow in silence! I am impressed! This is the kind of tooling I would want for my team. @Rodrigo66799141 After a week of diving deep into Supabase for my new SaaS project, I'm really impressed with its Auth and RLS features. It makes security much simpler for solo founders. #buildinpublic #SaaS @xthemadgeniusx Lately been using Supabase over AWS/ GCP for products to save on costs and rapid builds(Vibe Code) that do not need all the Infra and the hefty costs that come with AWS/ GCP out the door. Great solution overall. @pontusab I love everything about Supabase. @viratt_mankali Love how Supabase makes full stack features this easy. Using it with Next.js and loving the experience! @nerdburn It’s fun, feels lightweight, and really quick to spin up user auth and a few tables. Almost too easy! Highly recommend. @patrickc Very impressed by @supabase's growth. For new startups, they seem to have gone from \"promising\" to \"standard\" in remarkably short order. @Aliahsan_sfv Okay, I finally tried Supabase today and wow... why did I wait so long? 😅 Went from 'how do I even start' to having auth + database + real-time updates working in like 20 minutes. Sometimes the hype is actually justified! #Supabase @yatsiv_yuriy Supabase is the best product experience I've had in years.\nNot just tech - taste.\nFrom docs to latency to the URL structure that makes you think \"oh, that's obvious\"\nFeels like every other platform should study how they built it\n@supabase I love you @adeelibr @supabase shout out, their MCP is awesome. It's helping me create better row securities and telling me best practises for setting up a supabase app @TyronBache Really impressed with @supabase's Assistant.\n\nIt has helped me troubleshoot and solve complex CORS Configuration issues on Pinger. @MinimEditor I’ve always used Supabase just as a database.\n\nYesterday, I helped debug a founder’s vibe-coding project built with React + React Router — no backend server.\nThe “backend” was entirely Supabase Edge Functions as the API.\nFirst time using Supabase this way.\nImpressive. @orlandopedro_ Love @supabase custom domains\n\nmakes the auth so much better @sdusteric Loving #Supabase MCP. Claude Code would not only plan what data we should save but also figure out a migration script by checking what the schema looks like on Supabase via MCP. @SteinlageScott I love @supabase's built-in Advisors. The security and performance linters improve everything and boost my confidence in what I'm building! @BowTiedQilin Working with @supabase has been one of the best dev experiences I've had lately.\n\nIncredibly easy to set up, great documentation, and so many fewer hoops to jump through than the competition.\n\nI definitely plan to use it on any and all future projects. @adm_lawson Love supabse edge functions. Cursor+Supabase+MCP+Docker desktop is all I need @gokul_i First time running @supabase in local. It just works. Very good DX imo. @dadooos_ Run supabase locally and just wow in silence! I am impressed! This is the kind of tooling I would want for my team. @Rodrigo66799141 After a week of diving deep into Supabase for my new SaaS project, I'm really impressed with its Auth and RLS features. It makes security much simpler for solo founders. #buildinpublic #SaaS @xthemadgeniusx Lately been using Supabase over AWS/ GCP for products to save on costs and rapid builds(Vibe Code) that do not need all the Infra and the hefty costs that come with AWS/ GCP out the door. Great solution overall. @pontusab I love everything about Supabase. @viratt_mankali Love how Supabase makes full stack features this easy. Using it with Next.js and loving the experience! @nerdburn It’s fun, feels lightweight, and really quick to spin up user auth and a few tables. Almost too easy! Highly recommend. @patrickc Very impressed by @supabase's growth. For new startups, they seem to have gone from \"promising\" to \"standard\" in remarkably short order. @Aliahsan_sfv Okay, I finally tried Supabase today and wow... why did I wait so long? 😅 Went from 'how do I even start' to having auth + database + real-time updates working in like 20 minutes. Sometimes the hype is actually justified! #Supabase @yatsiv_yuriy Supabase is the best product experience I've had in years.\nNot just tech - taste.\nFrom docs to latency to the URL structure that makes you think \"oh, that's obvious\"\nFeels like every other platform should study how they built it\n@supabase I love you @adeelibr @supabase shout out, their MCP is awesome. It's helping me create better row securities and telling me best practises for setting up a supabase app @TyronBache Really impressed with @supabase's Assistant.\n\nIt has helped me troubleshoot and solve complex CORS Configuration issues on Pinger. @MinimEditor I’ve always used Supabase just as a database.\n\nYesterday, I helped debug a founder’s vibe-coding project built with React + React Router — no backend server.\nThe “backend” was entirely Supabase Edge Functions as the API.\nFirst time using Supabase this way.\nImpressive. @orlandopedro_ Love @supabase custom domains\n\nmakes the auth so much better @sdusteric Loving #Supabase MCP. Claude Code would not only plan what data we should save but also figure out a migration script by checking what the schema looks like on Supabase via MCP. @SteinlageScott I love @supabase's built-in Advisors. The security and performance linters improve everything and boost my confidence in what I'm building! @BowTiedQilin Working with @supabase has been one of the best dev experiences I've had lately.\n\nIncredibly easy to set up, great documentation, and so many fewer hoops to jump through than the competition.\n\nI definitely plan to use it on any and all future projects. @adm_lawson Love supabse edge functions. Cursor+Supabase+MCP+Docker desktop is all I need @gokul_i First time running @supabase in local. It just works. Very good DX imo. @dadooos_ Run supabase locally and just wow in silence! I am impressed! This is the kind of tooling I would want for my team. @Rodrigo66799141 After a week of diving deep into Supabase for my new SaaS project, I'm really impressed with its Auth and RLS features. It makes security much simpler for solo founders. #buildinpublic #SaaS @xthemadgeniusx Lately been using Supabase over AWS/ GCP for products to save on costs and rapid builds(Vibe Code) that do not need all the Infra and the hefty costs that come with AWS/ GCP out the door. Great solution overall. @pontusab I love everything about Supabase. @viratt_mankali Love how Supabase makes full stack features this easy. Using it with Next.js and loving the experience! @nerdburn It’s fun, feels lightweight, and really quick to spin up user auth and a few tables. Almost too easy! Highly recommend. @patrickc Very impressed by @supabase's growth. For new startups, they seem to have gone from \"promising\" to \"standard\" in remarkably short order. @Aliahsan_sfv Okay, I finally tried Supabase today and wow... why did I wait so long? 😅 Went from 'how do I even start' to having auth + database + real-time updates working in like 20 minutes. Sometimes the hype is actually justified! #Supabase @yatsiv_yuriy Supabase is the best product experience I've had in years.\nNot just tech - taste.\nFrom docs to latency to the URL structure that makes you think \"oh, that's obvious\"\nFeels like every other platform should study how they built it\n@supabase I love you @adeelibr @supabase shout out, their MCP is awesome. It's helping me create better row securities and telling me best practises for setting up a supabase app @TyronBache Really impressed with @supabase's Assistant.\n\nIt has helped me troubleshoot and solve complex CORS Configuration issues on Pinger. @MinimEditor I’ve always used Supabase just as a database.\n\nYesterday, I helped debug a founder’s vibe-coding project built with React + React Router — no backend server.\nThe “backend” was entirely Supabase Edge Functions as the API.\nFirst time using Supabase this way.\nImpressive. @orlandopedro_ Love @supabase custom domains\n\nmakes the auth so much better @sdusteric Loving #Supabase MCP. Claude Code would not only plan what data we should save but also figure out a migration script by checking what the schema looks like on Supabase via MCP. @SteinlageScott I love @supabase's built-in Advisors. The security and performance linters improve everything and boost my confidence in what I'm building! @BowTiedQilin Working with @supabase has been one of the best dev experiences I've had lately.\n\nIncredibly easy to set up, great documentation, and so many fewer hoops to jump through than the competition.\n\nI definitely plan to use it on any and all future projects. @adm_lawson Love supabse edge functions. Cursor+Supabase+MCP+Docker desktop is all I need @gokul_i First time running @supabase in local. It just works. Very good DX imo. @dadooos_ Run supabase locally and just wow in silence! I am impressed! This is the kind of tooling I would want for my team. @Rodrigo66799141 After a week of diving deep into Supabase for my new SaaS project, I'm really impressed with its Auth and RLS features. It makes security much simpler for solo founders. #buildinpublic #SaaS @xthemadgeniusx Lately been using Supabase over AWS/ GCP for products to save on costs and rapid builds(Vibe Code) that do not need all the Infra and the hefty costs that come with AWS/ GCP out the door. Great solution overall. @pontusab I love everything about Supabase. @viratt_mankali Love how Supabase makes full stack features this easy. Using it with Next.js and loving the experience! Open source from day one Supabase is built in the open because we believe great developer tools should be transparent, inspectable, and owned by the community. Read, contribute, self-host. You're never locked in, and always in control. @supabase 96.1K Top 100 GitHub repos Build in a weekend, scale to millions Start your project Request a demo Footer We protect your data. More on Security SOC2 Type 2 Certified HIPAA Compliant Twitter GitHub Discord Youtube Product Database Auth Functions Realtime Storage Vector Cron Pricing Launch Week Solutions AI Builders No Code Beginners Developers Postgres Devs Vibe Coders Hackathon Contestants Startups Agencies Enterprise Innovation Teams Resources Blog Support System Status Become a Partner Integrations Brand Assets Security & Compliance DPA SOC2 HIPAA Developers Documentation Supabase UI Changelog Careers Contributing Open Source SupaSquad DevTo RSS Company Company General Availability Terms of Service Privacy Policy Privacy Settings Acceptable Use Policy Support Policy Service Level Agreement Humans.txt Lawyers.txt Security.txt © Supabase Inc Toggle theme",
+  "screenshot": "scraped_data\\screenshot_1768416398.png",
   "links": [
     {
-      "text": "Dog Dollars",
+      "text": "",
       "href": "/"
-    },
-    {
-      "text": "Features",
-      "href": "/features"
     },
     {
       "text": "Pricing",
       "href": "/pricing"
     },
     {
-      "text": "Demo",
-      "href": "/demo"
-    },
-    {
-      "text": "Calculator",
-      "href": "/calculator"
-    },
-    {
-      "text": "Log in",
-      "href": "/login"
-    },
-    {
-      "text": "Start Free Trial",
-      "href": "/signup"
-    },
-    {
-      "text": "Start Free Trial",
-      "href": "/signup"
-    },
-    {
-      "text": "Watch Demo",
-      "href": "/demo"
-    },
-    {
-      "text": "Start Free Trial",
-      "href": "/signup"
-    },
-    {
-      "text": "Start Free Trial",
-      "href": "/signup"
-    },
-    {
-      "text": "Start Free Trial",
-      "href": "/signup"
-    },
-    {
-      "text": "Start Your Free Trial",
-      "href": "/signup"
-    },
-    {
-      "text": "See It In Action",
-      "href": "/demo"
-    },
-    {
-      "text": "Dog Dollars",
-      "href": "/"
-    },
-    {
-      "text": "",
-      "href": "https://instagram.com/GetDogDollars"
-    },
-    {
-      "text": "",
-      "href": "https://www.facebook.com/profile.php?id=61584670665055"
-    },
-    {
-      "text": "",
-      "href": "https://x.com/DogDollars7183"
-    },
-    {
-      "text": "",
-      "href": "https://www.pinterest.com/0fg2uya1xczqv53g0y7n7emc5ifko/dogs/"
-    },
-    {
-      "text": "Features",
-      "href": "/features"
-    },
-    {
-      "text": "Pricing",
-      "href": "/pricing"
-    },
-    {
-      "text": "Demo",
-      "href": "/demo"
-    },
-    {
-      "text": "Calculator",
-      "href": "/calculator"
-    },
-    {
-      "text": "About",
-      "href": "/about"
+      "text": "Docs",
+      "href": "/docs"
     },
     {
       "text": "Blog",
       "href": "/blog"
     },
     {
-      "text": "Careers",
-      "href": "/careers"
+      "text": "96.1K",
+      "href": "https://github.com/supabase/supabase"
     },
     {
-      "text": "Contact",
-      "href": "/contact"
+      "text": "Sign in",
+      "href": "https://supabase.com/dashboard"
     },
     {
-      "text": "Terms of Service",
-      "href": "/legal/terms"
+      "text": "Start your project",
+      "href": "https://supabase.com/dashboard"
     },
     {
-      "text": "Privacy Policy",
-      "href": "/legal/privacy"
+      "text": "Supabase Wrapped 2025: The year in reviewSupabase Wrapped 2025",
+      "href": "/wrapped"
     },
     {
-      "text": "Help Center",
-      "href": "/help"
+      "text": "Start your project",
+      "href": "https://supabase.com/dashboard"
     },
     {
-      "text": "API Docs",
-      "href": "/docs"
+      "text": "Request a demo",
+      "href": "/contact/sales"
     },
     {
-      "text": "Status",
-      "href": "/status"
+      "text": "Postgres DatabaseEvery project isa full Postgres database, the world's most trusted relational database.100% portableBuilt-in Auth with RLSEasy to extend",
+      "href": "/database"
+    },
+    {
+      "text": "AuthenticationAdd user sign ups and logins,securing your data with Row Level Security.",
+      "href": "/auth"
+    },
+    {
+      "text": "Edge FunctionsEasily write custom codewithout deploying or scaling servers.$supabasefunctionsdeploy",
+      "href": "/edge-functions"
+    },
+    {
+      "text": "StorageStore, organize, and servelarge files, from videos to images.",
+      "href": "/storage"
+    },
+    {
+      "text": "RealtimeBuild multiplayer experienceswith real-time data synchronization.",
+      "href": "/realtime"
+    },
+    {
+      "text": "VectorIntegrate your favorite ML-models tostore, index and search vector embeddings.OpenAI logoOpenAIHugging Face logoHugging Face",
+      "href": "/modules/vector"
+    },
+    {
+      "text": "Data APIsInstant ready-to-useRestful APIs.",
+      "href": "https://supabase.com/docs/guides/api"
+    },
+    {
+      "text": "",
+      "href": "https://supabase.com/docs/guides/getting-started/quickstarts/reactjs"
+    },
+    {
+      "text": "",
+      "href": "https://supabase.com/docs/guides/getting-started/quickstarts/nextjs"
+    },
+    {
+      "text": "",
+      "href": "https://supabase.com/docs/guides/getting-started/quickstarts/redwoodjs"
+    },
+    {
+      "text": "",
+      "href": "https://supabase.com/docs/guides/getting-started/quickstarts/flutter"
+    },
+    {
+      "text": "",
+      "href": "https://supabase.com/docs/guides/getting-started/quickstarts/kotlin"
+    },
+    {
+      "text": "",
+      "href": "https://supabase.com/docs/guides/getting-started/quickstarts/sveltekit"
+    },
+    {
+      "text": "",
+      "href": "https://supabase.com/docs/guides/getting-started/quickstarts/solidjs"
+    },
+    {
+      "text": "",
+      "href": "https://supabase.com/docs/guides/getting-started/quickstarts/vue"
+    },
+    {
+      "text": "",
+      "href": "https://supabase.com/docs/guides/getting-started/quickstarts/nuxtjs"
+    },
+    {
+      "text": "",
+      "href": "https://supabase.com/docs/guides/getting-started/quickstarts/refine"
+    },
+    {
+      "text": "View all stories",
+      "href": "/customers"
+    },
+    {
+      "text": "View Events",
+      "href": "/events"
+    },
+    {
+      "text": "",
+      "href": "/customers/next-door-lending"
+    },
+    {
+      "text": "Maergo's Express Delivery: How Supabase Helped Achieve Scalability, Speed, and Cost Saving",
+      "href": "/customers/maergo"
+    },
+    {
+      "text": "",
+      "href": "/customers/shotgun"
+    },
+    {
+      "text": "Bootstrapped founder builds an AI app with Supabase and scales to $1M in 5 months.",
+      "href": "/customers/chatbase"
+    },
+    {
+      "text": "",
+      "href": "/customers/mobbin"
+    },
+    {
+      "text": "",
+      "href": "/customers/happyteams"
+    },
+    {
+      "text": "Scaling securely: one million users in 7 months protected with Supabase Auth",
+      "href": "/customers/pebblely"
+    },
+    {
+      "text": "",
+      "href": "/customers/next-door-lending"
+    },
+    {
+      "text": "Maergo's Express Delivery: How Supabase Helped Achieve Scalability, Speed, and Cost Saving",
+      "href": "/customers/maergo"
+    },
+    {
+      "text": "",
+      "href": "/customers/shotgun"
+    },
+    {
+      "text": "Bootstrapped founder builds an AI app with Supabase and scales to $1M in 5 months.",
+      "href": "/customers/chatbase"
+    },
+    {
+      "text": "",
+      "href": "/customers/mobbin"
+    },
+    {
+      "text": "",
+      "href": "/customers/happyteams"
+    },
+    {
+      "text": "Scaling securely: one million users in 7 months protected with Supabase Auth",
+      "href": "/customers/pebblely"
+    },
+    {
+      "text": "",
+      "href": "/customers/next-door-lending"
+    },
+    {
+      "text": "Maergo's Express Delivery: How Supabase Helped Achieve Scalability, Speed, and Cost Saving",
+      "href": "/customers/maergo"
+    },
+    {
+      "text": "",
+      "href": "/customers/shotgun"
+    },
+    {
+      "text": "Bootstrapped founder builds an AI app with Supabase and scales to $1M in 5 months.",
+      "href": "/customers/chatbase"
+    },
+    {
+      "text": "",
+      "href": "/customers/mobbin"
+    },
+    {
+      "text": "",
+      "href": "/customers/happyteams"
+    },
+    {
+      "text": "Scaling securely: one million users in 7 months protected with Supabase Auth",
+      "href": "/customers/pebblely"
     }
   ]
 }

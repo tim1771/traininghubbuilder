@@ -1,69 +1,60 @@
 {
-  "course_title": "Running a Successful Dog Walking Business",
-  "description": "Learn how to manage and grow your dog walking business with Dog Dollars, a comprehensive platform for bookings, schedules, walkers, clients, payments, and report cards.",
+  "course_title": "Building Scalable Applications with Supabase",
+  "description": "Learn how to build scalable applications using Supabase, a Postgres development platform that provides a suite of tools for building robust and secure applications.",
   "modules": [
     {
-      "title": "Introduction to Dog Walking Business Management",
+      "title": "Introduction to Supabase",
       "lessons": [
         {
-          "title": "Getting Started with Dog Dollars",
-          "description": "Learn how to sign up for Dog Dollars, navigate the platform, and start managing your dog walking business"
+          "title": "What is Supabase?",
+          "description": "Introduction to Supabase, its features, and benefits"
         },
         {
-          "title": "Setting Up Your Business Profile",
-          "description": "Discover how to create a custom domain, add your business information, and configure your settings for success"
+          "title": "Setting up a Supabase Project",
+          "description": "Step-by-step guide to setting up a new Supabase project"
         }
       ]
     },
     {
-      "title": "Client and Booking Management",
+      "title": "Supabase Core Features",
       "lessons": [
         {
-          "title": "Managing Client Information and Preferences",
-          "description": "Understand how to store client data, track preferences, and use this information to improve your services"
+          "title": "Postgres Database",
+          "description": "Understanding the Postgres database in Supabase, including data modeling and schema design"
         },
         {
-          "title": "Creating and Managing Bookings",
-          "description": "Learn how to schedule bookings, use recurring bookings, and manage your calendar for efficient time management"
+          "title": "Authentication and Authorization",
+          "description": "Implementing user authentication and authorization using Supabase's built-in auth features"
+        },
+        {
+          "title": "Edge Functions",
+          "description": "Building serverless functions using Supabase Edge Functions"
         }
       ]
     },
     {
-      "title": "walker and Staff Management",
+      "title": "Advanced Supabase Topics",
       "lessons": [
         {
-          "title": "Adding and Managing Walkers",
-          "description": "Find out how to add walkers to your team, assign them to bookings, and track their performance"
+          "title": "Realtime Data Synchronization",
+          "description": "Implementing real-time data synchronization using Supabase's Realtime features"
         },
         {
-          "title": "Using the Mobile App for Walkers",
-          "description": "Discover how walkers can use the mobile app to check-in, send photos, and leave notes for clients"
+          "title": "Vector Embeddings and Machine Learning",
+          "description": "Using Supabase's vector embeddings and machine learning capabilities to build intelligent applications"
         }
       ]
     },
     {
-      "title": "Payments, Invoicing, and Reporting",
+      "title": "Building Applications with Supabase",
       "lessons": [
         {
-          "title": "Automating Invoicing and Payments",
-          "description": "Learn how to generate automatic invoices, accept online payments, and track your revenue"
+          "title": "Building a User Management System",
+          "description": "Step-by-step guide to building a user management system using Supabase"
         },
         {
-          "title": "Using Report Cards and Photos",
-          "description": "Understand how to send beautiful report cards with photos and notes to keep clients engaged and informed"
-        }
-      ]
-    },
-    {
-      "title": "Business Analytics and Growth",
-      "lessons": [
-        {
-          "title": "Tracking Revenue and Performance",
-          "description": "Discover how to use business analytics to track your revenue, walker performance, and client retention"
-        },
-        {
-          "title": "Scaling Your Business with Dog Dollars",
-          "description": "Learn how to use Dog Dollars to grow your business, including tips for expanding your team and services"
+          "title": "Integrating Supabase with Other Tools and Services",
+          "description": "Integrating Supabase with popular frameworks and libraries, such as Next.js and React"
         }
       ]
     }

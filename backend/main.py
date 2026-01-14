@@ -37,6 +37,7 @@ from fastapi.staticfiles import StaticFiles
 if not os.path.exists("media"):
     os.makedirs("media")
 app.mount("/media", StaticFiles(directory="media"), name="media")
+app.mount("/scraped_data", StaticFiles(directory="scraped_data"), name="scraped_data")
 
 # Global State
 browser_manager = BrowserManager()
@@ -262,7 +263,10 @@ async def create_lesson_video(req: VideoRequest):
     except Exception as e:
         print(f"ERROR in video endpoint: {e}")
         traceback.print_exc()
-        raise HTTPException(status_code=500, detail=str(e))
+        error_msg = str(e)
+        if "insufficient_quota" in error_msg or "billing_hard_limit" in error_msg:
+             error_msg = "OpenAI Quota/Billing Error: Your account has hit its limit. It can take up to 30-60 minutes for OpenAI to recognize your limit increase. Please check your usage at platform.openai.com/usage"
+        raise HTTPException(status_code=500, detail=error_msg)
 
 
 if __name__ == "__main__":

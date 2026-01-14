@@ -1,8 +1,9 @@
+```python
 import os
 import glob
 from gtts import gTTS
-from moviepy.editor import ImageClip, AudioFileClip, concatenate_videoclips, CompositeVideoClip, TextClip, vfx
-from PIL import Image, ImageDraw, ImageFont, ImageFilter
+from moviepy.editor import ImageClip, AudioFileClip, concatenate_videoclips, CompositeVideoClip, TextClip, vfx, VideoFileClip
+from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageOps
 import textwrap
 from openai import OpenAI
 from dotenv import load_dotenv
@@ -105,6 +106,67 @@ def clean_text_for_tts(text):
     text = re.sub(r'\*\*([^*]+)\*\*', r'\1', text)
     text = re.sub(r'\[([^\]]+)\]\([^\)]+\)', r'\1', text)
     return text.strip()
+
+def get_ai_presenter(client):
+    """Generates a consistent AI Presenter image if it doesn't exist locally."""
+    presenter_path = "media/presenter_persona.png"
+    if os.path.exists(presenter_path):
+        return presenter_path
+    
+    if not client:
+        return None
+
+    try:
+        print("GENERATING CONSISTENT AI PERSONA...")
+        prompt = "A professional, friendly AI tutor assistant, high-quality photorealistic portrait, diverse background, wearing business casual, neutral studio background, looking into camera with a slight smile."
+        response = client.images.generate(
+            model="dall-e-3",
+            prompt=prompt,
+            size="1024x1024",
+            quality="standard",
+            n=1,
+        )
+        image_url = response.data[0].url
+        img_data = requests.get(image_url).content
+        with open(presenter_path, 'wb') as handler:
+            handler.write(img_data)
+        
+        # Make circular version for overlay
+        img = Image.open(presenter_path).convert("RGBA")
+        size = (512, 512)
+        img = img.resize(size, Image.Resampling.LANCZOS)
+        
+        mask = Image.new('L', size, 0)
+        draw = ImageDraw.Draw(mask)
+        draw.ellipse((0, 0) + size, fill=255)
+        
+        output = ImageOps.fit(img, mask.size, centering=(0.5, 0.5))
+        output.putalpha(mask)
+        
+        circular_path = "media/presenter_bubble.png"
+        output.save(circular_path)
+        return circular_path
+    except Exception as e:
+        print(f"Failed to generate persona: {e}")
+        return None
+
+def overlay_presenter(video_clip, presenter_path):
+    """Overlays the circular AI presenter in the bottom-right corner."""
+    if not presenter_path or not os.path.exists(presenter_path):
+        return video_clip
+
+    try:
+        presenter = ImageClip(presenter_path).set_duration(video_clip.duration)
+        # Resize to about 20% of the video height
+        h = video_clip.h * 0.25
+        presenter = presenter.resize(height=h)
+        # Position at bottom right with padding
+        presenter = presenter.set_position(("right", "bottom")).margin(right=30, bottom=30, opacity=0)
+        
+        return CompositeVideoClip([video_clip, presenter])
+    except Exception as e:
+        print(f"Overlay failed: {e}")
+        return video_clip
 
 def zoom_in_effect(clip, zoom_ratio=0.04):
     def effect(get_frame, t):
@@ -275,6 +337,9 @@ def generate_simple_video(lesson_title, summary_text, output_path):
         audio_clip = AudioFileClip(audio_path)
         total_duration = audio_clip.duration
         
+        # 0. PERSONA SETUP
+        presenter_bubble = get_ai_presenter(client)
+        
         # 2. GENERATE VISUAL ASSETS
         visual_clips = []
         remaining_time = total_duration
@@ -288,7 +353,6 @@ def generate_simple_video(lesson_title, summary_text, output_path):
                 # We have a video!
                 temp_files.append(sora_intro_path)
                 # Load video clip
-                from moviepy.editor import VideoFileClip
                 intro_clip = VideoFileClip(sora_intro_path)
                 # Cap at 4s or intro length
                 intro_clip = intro_clip.subclip(0, min(intro_clip.duration, 4))
@@ -348,7 +412,6 @@ def generate_simple_video(lesson_title, summary_text, output_path):
             dur = min(clip_duration, remaining_time)
             
             if asset["type"] == "video":
-                from moviepy.editor import VideoFileClip
                 v_path = asset["path"]
                 clip = VideoFileClip(v_path)
                 # Loop if needed or cut
@@ -375,9 +438,17 @@ def generate_simple_video(lesson_title, summary_text, output_path):
                 temp_files.append(temp_p)
                 
                 clip = ImageClip(temp_p).set_duration(dur)
-                clip = zoom_in_effect(clip, 0.04)
-                visual_clips.append(clip)
-                remaining_time -= dur
+                clip = zoom_in_effect(clip, 0.05)
+            
+            # Apply AI Persona Overlay
+            if presenter_bubble:
+                # Only overlay on images or intro clips, not on the main Sora demo clip 
+                # to avoid covering up the action.
+                if asset["type"] != "video":
+                     clip = overlay_presenter(clip, presenter_bubble)
+            
+            visual_clips.append(clip)
+            remaining_time -= dur
 
         # Concatenate visuals
         main_video = concatenate_videoclips(visual_clips, method="compose")

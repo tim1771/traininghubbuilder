@@ -3,6 +3,7 @@ import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
+import Simulation from "@/components/Simulation";
 
 interface Question {
     question: string;
@@ -10,7 +11,7 @@ interface Question {
     correct_index: number;
 }
 
-function QuizComponent({ content }: { content: string }) {
+function QuizComponent({ content, onComplete }: { content: string, onComplete: () => void }) {
     const [questions, setQuestions] = useState<Question[]>([]);
     const [loading, setLoading] = useState(false);
     const [score, setScore] = useState<number | null>(null);
@@ -50,19 +51,23 @@ function QuizComponent({ content }: { content: string }) {
         });
         setScore(correct);
         setShowResults(true);
+        // Mark as complete if they get at least 1 correct (or more strict logic)
+        if (correct > 0) {
+            onComplete();
+        }
     };
 
-    if (loading) return <div className="p-4 border rounded animate-pulse bg-gray-50">Generating Quiz...</div>;
+    if (loading) return <div className="p-4 border rounded animate-pulse bg-gray-50/50 dark:bg-zinc-800/50 text-white">Generating Quiz...</div>;
 
     if (questions.length === 0) {
         return (
             <div className="mt-12 border-t border-gray-200 dark:border-gray-700 pt-8">
-                <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">Test Your Knowledge</h3>
+                <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200 uppercase tracking-tight">Challenge Yourself</h3>
                 <button
                     onClick={generateQuiz}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold transition shadow-md shadow-indigo-500/30 flex items-center gap-2"
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-bold transition shadow-xl shadow-indigo-500/20 flex items-center gap-2 group"
                 >
-                    🧠 Generate Quiz for this Lesson
+                    <span className="group-hover:rotate-12 transition">🧠</span> Generate Quiz
                 </button>
             </div>
         );
@@ -70,23 +75,23 @@ function QuizComponent({ content }: { content: string }) {
 
     return (
         <div className="mt-12 border-t border-gray-200 dark:border-gray-700 pt-8 pb-12">
-            <h3 className="text-2xl font-bold mb-6 text-indigo-600 dark:text-indigo-400">Quiz Time</h3>
-            <div className="space-y-8">
+            <h3 className="text-2xl font-bold mb-6 text-indigo-600 dark:text-indigo-400">Knowledge Check</h3>
+            <div className="space-y-6">
                 {questions.map((q, i) => (
-                    <div key={i} className="bg-gray-50/50 dark:bg-zinc-800/50 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-zinc-700">
-                        <p className="font-medium text-lg mb-4 text-gray-800 dark:text-gray-200">{i + 1}. {q.question}</p>
-                        <div className="grid gap-2">
+                    <div key={i} className="bg-white/5 backdrop-blur-lg border border-white/10 p-6 rounded-2xl shadow-sm">
+                        <p className="font-semibold text-lg mb-4 text-gray-800 dark:text-gray-100">{i + 1}. {q.question}</p>
+                        <div className="grid gap-3">
                             {q.options.map((opt, j) => {
                                 const isSelected = answers[i] === j;
-                                let btnClass = "text-left p-3 rounded-lg border transition duration-200 text-sm md:text-base ";
+                                let btnClass = "text-left p-4 rounded-xl border transition-all duration-200 text-sm md:text-base ";
 
                                 if (showResults) {
-                                    if (j === q.correct_index) btnClass += "bg-green-100 border-green-500 text-green-800 dark:bg-green-900/40 dark:text-green-200 font-semibold";
-                                    else if (isSelected) btnClass += "bg-red-100 border-red-500 text-red-800 dark:bg-red-900/40 dark:text-red-200";
-                                    else btnClass += "border-gray-200 dark:border-zinc-700 opacity-60";
+                                    if (j === q.correct_index) btnClass += "bg-green-500/20 border-green-500 text-green-700 dark:text-green-300 font-bold";
+                                    else if (isSelected) btnClass += "bg-red-500/20 border-red-500 text-red-700 dark:text-red-300";
+                                    else btnClass += "border-gray-200 dark:border-zinc-700 opacity-40";
                                 } else {
-                                    if (isSelected) btnClass += "bg-indigo-100 border-indigo-500 text-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-200 font-medium transform scale-[1.01]";
-                                    else btnClass += "hover:bg-gray-100 dark:hover:bg-zinc-700 border-gray-200 dark:border-zinc-700 dark:text-gray-300";
+                                    if (isSelected) btnClass += "bg-indigo-500/10 border-indigo-500 text-indigo-700 dark:text-indigo-300 font-bold ring-2 ring-indigo-500/20";
+                                    else btnClass += "hover:bg-white/5 border-gray-200 dark:border-zinc-700 dark:text-gray-300";
                                 }
 
                                 return (
@@ -109,22 +114,98 @@ function QuizComponent({ content }: { content: string }) {
                 <button
                     onClick={submitQuiz}
                     disabled={answers.includes(-1)}
-                    className="mt-6 bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-bold disabled:opacity-50 disabled:cursor-not-allowed shadow-lg transition transform hover:scale-105"
+                    className="mt-8 bg-green-600 hover:bg-green-700 text-white px-10 py-4 rounded-2xl font-black disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-green-500/20 transition transform active:scale-95"
                 >
-                    Submit Answers
+                    Complete Quiz
                 </button>
             ) : (
-                <div className="mt-8 p-6 bg-blue-50 dark:bg-blue-900/20 rounded-xl text-center border border-blue-100 dark:border-blue-900/50">
-                    <h4 className="text-2xl font-bold mb-2 text-blue-800 dark:text-blue-300">You scored {score} / {questions.length}</h4>
-                    <p className="text-gray-600 dark:text-gray-300">
-                        {score === questions.length ? "Perfect score! 🎉" : "Good effort! Review the lesson and try again."}
+                <div className="mt-8 p-8 bg-indigo-500/10 backdrop-blur-xl rounded-3xl text-center border border-indigo-500/30">
+                    <h4 className="text-3xl font-black mb-2 text-indigo-700 dark:text-indigo-300">Score: {score} / {questions.length}</h4>
+                    <p className="text-gray-600 dark:text-gray-300 font-medium">
+                        {score === questions.length ? "Masterpiece! You've mastered this lesson. 🏆" : "Great job! Ready for the next one?"}
                     </p>
                     <button
                         onClick={() => { setQuestions([]); setShowResults(false); setScore(null); }}
-                        className="mt-4 text-blue-600 dark:text-blue-400 hover:underline font-medium"
+                        className="mt-6 text-indigo-500 hover:underline font-bold"
                     >
-                        Reset Quiz
+                        Try Again
                     </button>
+                </div>
+            )}
+        </div>
+    );
+}
+
+interface Lesson {
+    title: string;
+    description: string;
+}
+
+interface Module {
+    title: string;
+    lessons: Lesson[];
+}
+
+interface CoursePlan {
+    course_title: string;
+    description: string;
+    modules: Module[];
+}
+
+function Sidebar({
+    coursePlan,
+    currentLesson,
+    currentModule,
+    completedLessons
+}: {
+    coursePlan: CoursePlan | null,
+    currentLesson: string,
+    currentModule: string,
+    completedLessons: string[]
+}) {
+    const [collapsed, setCollapsed] = useState(false);
+
+    if (!coursePlan) return null;
+
+    return (
+        <div className={`${collapsed ? 'w-16' : 'w-80'} flex-shrink-0 bg-white/10 backdrop-blur-3xl border-r border-white/10 transition-all duration-300 h-screen sticky top-0 overflow-y-auto hidden md:block`}>
+            <div className="p-6 border-b border-white/10 flex justify-between items-center">
+                {!collapsed && (
+                    <h2 className="text-xl font-bold text-white truncate">{coursePlan.course_title}</h2>
+                )}
+                <button
+                    onClick={() => setCollapsed(!collapsed)}
+                    className="p-2 hover:bg-white/10 rounded-lg text-white"
+                >
+                    {collapsed ? "→" : "←"}
+                </button>
+            </div>
+            {!collapsed && (
+                <div className="p-4 space-y-6">
+                    {coursePlan.modules.map((m, idx) => (
+                        <div key={idx}>
+                            <h3 className="text-xs font-bold text-indigo-300 uppercase tracking-widest mb-3 px-2">
+                                {m.title}
+                            </h3>
+                            <div className="space-y-1">
+                                {m.lessons.map((l, lIdx) => {
+                                    const isActive = l.title === currentLesson;
+                                    const isCompleted = completedLessons.includes(l.title);
+                                    return (
+                                        <Link
+                                            key={lIdx}
+                                            href={`/course/lesson/view?title=${encodeURIComponent(l.title)}&module=${encodeURIComponent(m.title)}`}
+                                            className={`flex items-center gap-3 px-3 py-2 rounded-lg transition text-sm ${isActive ? 'bg-white/20 text-white font-bold' : 'text-gray-300 hover:bg-white/5 hover:text-white'}`}
+                                        >
+                                            <span className={`w-2 h-2 rounded-full ${isCompleted ? 'bg-green-400' : isActive ? 'bg-indigo-400' : 'bg-gray-600'}`}></span>
+                                            <span className="truncate">{l.title}</span>
+                                            {isCompleted && <span className="ml-auto text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded border border-green-500/30">Done</span>}
+                                        </Link>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    ))}
                 </div>
             )}
         </div>
@@ -141,17 +222,64 @@ function LessonContent() {
     const [error, setError] = useState("");
     const [videoUrl, setVideoUrl] = useState<string | null>(null);
     const [generatingVideo, setGeneratingVideo] = useState(false);
+    const [mounted, setMounted] = useState(false);
+    const [coursePlan, setCoursePlan] = useState<CoursePlan | null>(null);
+    const [completedLessons, setCompletedLessons] = useState<string[]>([]);
+    const [activeTab, setActiveTab] = useState<'lesson' | 'practice'>('lesson');
+    const [simData, setSimData] = useState<any>(null);
 
     useEffect(() => {
+        setMounted(true);
+        // Load progress from localStorage
+        const savedProgress = localStorage.getItem("training_hub_progress");
+        if (savedProgress) {
+            setCompletedLessons(JSON.parse(savedProgress));
+        }
+        fetchCourseStructure();
+    }, []);
+
+    const fetchSimulationData = async () => {
+        try {
+            const res = await fetch("/api/browser/scrape", { method: "POST" });
+            if (res.ok) {
+                const data = await res.json();
+                setSimData(data.data);
+            }
+        } catch (e) {
+            console.error("Failed to fetch simulation data:", e);
+        }
+    };
+
+    const fetchCourseStructure = async () => {
+        try {
+            const res = await fetch("/api/course/current");
+            if (res.ok) {
+                const data = await res.json();
+                setCoursePlan(data);
+            }
+        } catch (e) {
+            console.error("Failed to fetch course structure:", e);
+        }
+    };
+
+    const markAsComplete = () => {
         if (!lessonTitle) return;
+        if (!completedLessons.includes(lessonTitle)) {
+            const nextProgress = [...completedLessons, lessonTitle];
+            setCompletedLessons(nextProgress);
+            localStorage.setItem("training_hub_progress", JSON.stringify(nextProgress));
+        }
+    };
+
+    useEffect(() => {
+        if (!lessonTitle || !mounted) return;
         generateContent();
-    }, [lessonTitle]);
+        fetchSimulationData();
+    }, [lessonTitle, mounted]);
 
     const generateContent = async () => {
         setLoading(true);
         setError("");
-
-        // Reset video states when generating new content
         setVideoUrl(null);
         setGeneratingVideo(false);
 
@@ -181,12 +309,11 @@ function LessonContent() {
     const generateVideo = async () => {
         if (!content) return;
         setGeneratingVideo(true);
-        setVideoUrl(null); // Clear any existing video
+        setVideoUrl(null);
 
         try {
-            // Create abort controller with 10 minute timeout for premium video rendering
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 600000); // 600 seconds (10 mins)
+            const timeoutId = setTimeout(() => controller.abort(), 600000);
 
             const res = await fetch("/api/ai/video", {
                 method: "POST",
@@ -202,7 +329,6 @@ function LessonContent() {
 
             const data = await res.json();
             if (data.video_url) {
-                // Video is ready, display it
                 setVideoUrl(data.video_url);
             } else {
                 alert("Internal Video Error: " + (data.detail || "Unknown"));
@@ -218,131 +344,202 @@ function LessonContent() {
         }
     };
 
-    if (!lessonTitle) return <div className="p-8">Invalid Lesson Link</div>;
+    if (!mounted) return null;
+    if (!lessonTitle) return <div className="p-8 text-white">Invalid Lesson Link</div>;
+
+    // Find next lesson
+    let nextLessonPath = null;
+    if (coursePlan) {
+        let foundCurrent = false;
+        for (const m of coursePlan.modules) {
+            for (const l of m.lessons) {
+                if (foundCurrent) {
+                    nextLessonPath = `/course/lesson/view?title=${encodeURIComponent(l.title)}&module=${encodeURIComponent(m.title)}`;
+                    break;
+                }
+                if (l.title === lessonTitle) foundCurrent = true;
+            }
+            if (nextLessonPath) break;
+        }
+    }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900 p-6 md:p-12">
-            <div className="max-w-4xl mx-auto bg-white/90 dark:bg-black/80 backdrop-blur-xl rounded-2xl shadow-2xl overflow-hidden border border-white/20">
+        <div className="flex bg-gray-900 min-h-screen text-gray-100 selection:bg-indigo-500/30">
+            <Sidebar
+                coursePlan={coursePlan}
+                currentLesson={lessonTitle}
+                currentModule={moduleTitle || ""}
+                completedLessons={completedLessons}
+            />
 
-                {/* Header */}
-                <div className="p-8 border-b border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-white/5">
-                    <div className="flex justify-between items-start">
+            <div className="flex-1 overflow-y-auto h-screen relative bg-gradient-to-br from-indigo-950 via-gray-900 to-black">
+                {/* Modern Header Nav */}
+                <header className="sticky top-0 z-20 bg-black/40 backdrop-blur-xl border-b border-white/5 p-4 flex justify-between items-center transition-all duration-500">
+                    <div className="flex items-center gap-4">
+                        <Link href="/course/viewer" className="p-2 hover:bg-white/5 rounded-full transition text-gray-400 hover:text-white">
+                            ←
+                        </Link>
                         <div>
-                            <Link href="/course/viewer" className="text-indigo-600 dark:text-indigo-400 hover:underline text-sm font-semibold mb-2 block tracking-wider uppercase">
-                                &larr; Back to Course
-                            </Link>
-                            <h5 className="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-widest mb-1">{moduleTitle}</h5>
-                            <h1 className="text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300">
-                                {lessonTitle}
-                            </h1>
-                        </div>
-                        <div className="flex gap-2">
-                            {content && (
-                                <button
-                                    onClick={generateVideo}
-                                    disabled={generatingVideo || !!videoUrl}
-                                    className="bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white px-4 py-2 rounded-lg font-bold transition flex items-center gap-2 text-sm shadow-lg"
-                                >
-                                    {generatingVideo ? (
-                                        <><span>🎥</span> Creating Video...</>
-                                    ) : videoUrl ? (
-                                        <><span>✅</span> Video Ready</>
-                                    ) : (
-                                        <><span>🎬</span> Create Video</>
-                                    )}
-                                </button>
-                            )}
-                            <button
-                                onClick={generateContent}
-                                className="bg-white/20 hover:bg-white/40 p-2 rounded-full transition backdrop-blur-sm text-gray-700 dark:text-gray-200"
-                                title="Regenerate Lesson"
-                            >
-                                🔄
-                            </button>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-indigo-400 opacity-80">{moduleTitle}</p>
+                            <h1 className="text-lg font-bold truncate max-w-sm">{lessonTitle}</h1>
                         </div>
                     </div>
-                </div>
 
-                {/* Content Area */}
-                <div className="p-8 md:p-12">
+                    {/* Premium Tab Switcher */}
+                    <div className="flex bg-white/5 p-1 rounded-xl border border-white/10 shadow-inner">
+                        <button
+                            onClick={() => setActiveTab('lesson')}
+                            className={`px-6 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all duration-300 ${activeTab === 'lesson' ? 'bg-indigo-600 text-white shadow-lg' : 'text-gray-500 hover:text-gray-300'}`}
+                        >
+                            Theory
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('practice')}
+                            className={`px-6 py-2 rounded-lg text-xs font-black uppercase tracking-widest transition-all duration-300 ${activeTab === 'practice' ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/20' : 'text-gray-500 hover:text-gray-300'}`}
+                        >
+                            Practice
+                        </button>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                        {content && (
+                            <button
+                                onClick={generateVideo}
+                                disabled={generatingVideo || !!videoUrl}
+                                className="bg-white text-black hover:bg-gray-200 disabled:opacity-50 px-4 py-2 rounded-xl font-bold transition flex items-center gap-2 text-[10px] shadow-lg"
+                            >
+                                {generatingVideo ? 'Synthesizing...' : videoUrl ? 'Video Ready' : '🎬 Create Video'}
+                            </button>
+                        )}
+                        <button onClick={generateContent} className="p-2 hover:bg-white/5 rounded-xl transition text-gray-400" title="Regenerate">
+                            🔄
+                        </button>
+                    </div>
+                </header>
+
+                <main className="p-6 md:p-12 max-w-5xl mx-auto">
                     {loading ? (
-                        <div className="flex flex-col items-center justify-center py-20 space-y-6">
-                            <div className="relative">
-                                <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-                                <div className="absolute inset-0 flex items-center justify-center text-2xl">🤖</div>
-                            </div>
-                            <div className="text-center">
-                                <p className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600 animate-pulse">
-                                    AI Instructor is crafting your lesson...
-                                </p>
-                                <p className="text-sm text-gray-500 mt-2">Analyzing context & writing tutorial...</p>
-                            </div>
+                        <div className="flex flex-col items-center justify-center py-32 space-y-8">
+                            <div className="w-12 h-12 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin"></div>
+                            <p className="text-xl font-medium animate-pulse text-indigo-300 tracking-tighter">AI Instructor is building your sandbox...</p>
                         </div>
                     ) : error ? (
-                        <div className="p-8 bg-red-50/90 dark:bg-red-900/30 border border-red-200 rounded-xl text-center">
-                            <h3 className="text-xl font-bold text-red-700 dark:text-red-400 mb-2">Generation Failed</h3>
-                            <p className="text-red-600 dark:text-red-300 mb-6">{error}</p>
-                            <button onClick={generateContent} className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition shadow-lg shadow-red-500/30">
+                        <div className="p-12 bg-red-500/10 border border-red-500/30 rounded-3xl text-center shadow-2xl">
+                            <h3 className="text-2xl font-bold text-red-400 mb-4">Pipeline Break</h3>
+                            <p className="text-red-300/80 mb-8">{error}</p>
+                            <button onClick={generateContent} className="px-8 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-bold">
                                 Try Again
                             </button>
                         </div>
                     ) : (
-                        <>
-                            {/* Video Generation Loading Overlay */}
-                            {generatingVideo && (
-                                <div className="mb-12 rounded-xl overflow-hidden shadow-2xl border-4 border-purple-500/30 bg-gradient-to-br from-purple-900/90 to-indigo-900/90 p-12">
-                                    <div className="flex flex-col items-center justify-center space-y-6">
-                                        <div className="relative">
-                                            <div className="w-20 h-20 border-4 border-purple-400 border-t-transparent rounded-full animate-spin"></div>
-                                            <div className="absolute inset-0 flex items-center justify-center text-3xl">🎬</div>
+                        <div className="space-y-12">
+                            {activeTab === 'lesson' ? (
+                                <>
+                                    {/* Video Section with Glass Finish */}
+                                    {(generatingVideo || videoUrl) && (
+                                        <section className="relative group">
+                                            {generatingVideo && (
+                                                <div className="aspect-video w-full rounded-3xl overflow-hidden bg-white/5 border border-white/10 flex flex-col items-center justify-center space-y-4 animate-in fade-in zoom-in duration-500">
+                                                    <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin shadow-[0_0_30px_rgba(99,102,241,0.3)]"></div>
+                                                    <div className="text-center">
+                                                        <h3 className="text-xl font-bold text-white uppercase tracking-tighter">Synthesizing Sora Clips...</h3>
+                                                        <p className="text-indigo-300/60 text-xs">Several minutes required for high-fidelity rendering</p>
+                                                    </div>
+                                                </div>
+                                            )}
+                                            {videoUrl && !generatingVideo && (
+                                                <div className="rounded-3xl overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.5)] border border-white/10 p-1 bg-white/5">
+                                                    <video controls className="w-full aspect-video rounded-2xl bg-black shadow-inner" src={`http://localhost:8000${videoUrl}`}>
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                    <div className="p-4 flex justify-between items-center text-xs font-black uppercase tracking-widest text-gray-500">
+                                                        <span>AI-Enhanced Video Summary</span>
+                                                        <span className="text-green-500">Sora V2 High Detail</span>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </section>
+                                    )}
+
+                                    {/* Content Section */}
+                                    <article className="prose prose-invert prose-indigo max-w-none
+                                        prose-headings:font-black prose-headings:tracking-tighter
+                                        prose-h2:text-4xl prose-h2:mb-8 prose-h2:text-white
+                                        prose-p:text-gray-300 prose-p:leading-relaxed prose-lg
+                                        prose-strong:text-indigo-400
+                                        prose-code:text-pink-400 prose-code:bg-white/5 prose-code:px-2 prose-code:py-0.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none
+                                        prose-pre:bg-black/40 prose-pre:border prose-pre:border-white/5 prose-pre:rounded-3xl
+                                        prose-img:rounded-3xl prose-img:shadow-2xl
+                                    ">
+                                        <ReactMarkdown>{content || ""}</ReactMarkdown>
+                                    </article>
+
+                                    {/* Interaction Hub */}
+                                    <section className="mt-20 pt-12 border-t border-white/5">
+                                        <QuizComponent content={content || ""} onComplete={markAsComplete} />
+                                    </section>
+                                </>
+                            ) : (
+                                <section className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                    <div className="bg-indigo-500/10 border border-indigo-500/20 p-10 rounded-3xl flex items-center justify-between">
+                                        <div>
+                                            <h2 className="text-3xl font-black text-white italic tracking-tighter">Practical Sandbox</h2>
+                                            <p className="text-indigo-300/60 text-sm font-medium">Click on the dynamic hotspots to complete the workflow task.</p>
                                         </div>
-                                        <div className="text-center">
-                                            <h3 className="text-2xl font-bold text-white mb-2">Generating Your Video...</h3>
-                                            <p className="text-purple-200">Please wait while we create your AI-powered lesson video</p>
-                                            <p className="text-purple-300 text-sm mt-2">This may take 30-60 seconds</p>
+                                        <div className="hidden lg:block">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                                                <span className="text-[10px] text-green-400 px-3 py-1 rounded-full border border-green-500/30 uppercase font-black tracking-widest">Live Capture Sync</span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                    {simData ? (
+                                        <Simulation
+                                            screenshotUrl={`http://localhost:8000/${simData.screenshot}`}
+                                            hotspots={simData.interactive_elements}
+                                            onSuccess={() => {
+                                                alert("Action verified! Skill unlocked. 🎉");
+                                                markAsComplete();
+                                            }}
+                                        />
+                                    ) : (
+                                        <div className="aspect-video w-full flex flex-col items-center justify-center space-y-6 bg-white/5 rounded-3xl border border-white/10 animate-pulse border-dashed">
+                                            <div className="w-10 h-10 border-2 border-indigo-500/40 border-t-indigo-500 rounded-full animate-spin"></div>
+                                            <p className="text-indigo-300/40 text-[10px] font-black uppercase tracking-widest">Warming up the testing range...</p>
+                                        </div>
+                                    )}
+                                </section>
                             )}
-
-                            {/* Video Player Section */}
-                            {videoUrl && !generatingVideo && (
-                                <div className="mb-12 rounded-xl overflow-hidden shadow-2xl border-4 border-purple-500/30 animate-fade-in-down">
-                                    <video controls className="w-full aspect-video bg-black" src={`http://localhost:8000${videoUrl}`}>
-                                        Your browser does not support the video tag.
-                                    </video>
-                                    <div className="p-3 bg-purple-100 dark:bg-purple-900/40 text-center text-sm font-semibold text-purple-800 dark:text-purple-200">
-                                        ✨ AI-Generated Video Summary
-                                    </div>
-                                </div>
-                            )}
-
-                            <div className="prose dark:prose-invert prose-lg max-w-none 
-                                prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-gray-900 dark:prose-headings:text-gray-100
-                                prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6 prose-h2:text-indigo-600 dark:prose-h2:text-indigo-400
-                                prose-strong:font-extrabold prose-strong:text-indigo-700 dark:prose-strong:text-indigo-300
-                                prose-img:rounded-xl prose-img:shadow-lg
-                                prose-code:text-pink-600 dark:prose-code:text-pink-400 prose-code:bg-pink-50 dark:prose-code:bg-pink-900/20 prose-code:px-1 prose-code:rounded
-                                prose-pre:bg-gray-900 prose-pre:shadow-xl prose-pre:rounded-xl
-                            ">
-                                <ReactMarkdown
-                                    components={{
-                                        // Custom styling for bold steps or lists
-                                    }}
-                                >
-                                    {content || ""}
-                                </ReactMarkdown>
-                            </div>
-
-                            {/* Quiz Section */}
-                            {content && (
-                                <div className="mt-16 animate-fade-in-up">
-                                    <QuizComponent content={content} />
-                                </div>
-                            )}
-                        </>
+                        </div>
                     )}
-                </div>
+                </main>
+
+                <footer className="mt-20 flex flex-col md:flex-row gap-6 p-8 bg-white/5 border border-white/10 rounded-3xl items-center justify-between mx-6 md:mx-12 mb-12">
+                    <div className="flex items-center gap-4">
+                        <div className={`p-4 rounded-full ${completedLessons.includes(lessonTitle) ? 'bg-green-500' : 'bg-gray-800'} text-white text-2xl`}>
+                            {completedLessons.includes(lessonTitle) ? '✓' : '📖'}
+                        </div>
+                        <div>
+                            <h4 className="text-xl font-bold text-white">{completedLessons.includes(lessonTitle) ? 'Lesson Mastered!' : 'Finish this lesson'}</h4>
+                            <p className="text-gray-400 text-sm">{completedLessons.includes(lessonTitle) ? 'You’ve reached the goal for this tutorial.' : 'Complete the quiz to mark it as finished.'}</p>
+                        </div>
+                    </div>
+                    {nextLessonPath ? (
+                        <Link
+                            href={nextLessonPath}
+                            className="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-4 rounded-2xl font-black shadow-xl shadow-indigo-600/20 transition group"
+                        >
+                            Next Lesson <span className="inline-block group-hover:translate-x-2 transition ml-2">→</span>
+                        </Link>
+                    ) : (
+                        <Link
+                            href="/course/viewer"
+                            className="bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-2xl font-black transition"
+                        >
+                            Back to Dashboard
+                        </Link>
+                    )}
+                </footer>
             </div>
         </div>
     );
