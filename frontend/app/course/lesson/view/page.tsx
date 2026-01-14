@@ -240,18 +240,22 @@ function LessonContent() {
 
     const fetchSimulationData = async () => {
         try {
-            // Priority 1: Try to load cached snapshot (works without browser)
+            // Priority 1: Try live scrape (Fresh content + Full Page capture)
+            try {
+                const res = await fetch("/api/browser/scrape", { method: "POST" });
+                if (res.ok) {
+                    const data = await res.json();
+                    setSimData(data.data);
+                    return;
+                }
+            } catch (err) {
+                console.warn("Live scrape unreachable, attempting fallback...");
+            }
+
+            // Priority 2: Fallback to cached snapshot (Offline mode)
             const snapRes = await fetch("http://localhost:8000/api/browser/snapshot");
             if (snapRes.ok) {
                 const data = await snapRes.json();
-                setSimData(data.data);
-                return;
-            }
-
-            // Priority 2: Try live scrape if snapshot missing
-            const res = await fetch("/api/browser/scrape", { method: "POST" });
-            if (res.ok) {
-                const data = await res.json();
                 setSimData(data.data);
             }
         } catch (e) {
