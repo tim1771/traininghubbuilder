@@ -66,29 +66,36 @@ export default function Simulation({ screenshotUrl, hotspots, onSuccess }: Simul
 
     return (
         <div className="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-black group select-none">
-            <div className="absolute top-6 left-1/2 -translate-x-1/2 z-20 bg-black/60 backdrop-blur-md px-6 py-3 rounded-2xl border border-white/20 text-center shadow-2xl animate-bounce">
+            {/* HUD Header - Fixed */}
+            <div className="absolute top-6 left-1/2 -translate-x-1/2 z-40 bg-black/60 backdrop-blur-md px-6 py-3 rounded-2xl border border-white/20 text-center shadow-2xl animate-bounce pointer-events-none">
                 <p className="text-indigo-300 text-xs font-black uppercase tracking-widest mb-1">Practice Task</p>
                 <p className="text-white font-bold text-lg">Click on: <span className="text-indigo-400">"{target.text}"</span></p>
             </div>
 
-            <img
-                ref={imgRef}
-                src={screenshotUrl}
-                alt="Simulation"
-                className="w-full h-auto cursor-crosshair opacity-80 group-hover:opacity-100 transition duration-500"
-                onClick={handleClick}
-            />
+            {/* Scrollable Viewport */}
+            <div className="max-h-[65vh] overflow-y-auto overflow-x-hidden relative scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
+                <div className="relative">
+                    <img
+                        ref={imgRef}
+                        src={screenshotUrl}
+                        alt="Simulation"
+                        className="w-full h-auto cursor-crosshair opacity-80 group-hover:opacity-100 transition duration-500 block"
+                        onClick={handleClick}
+                    />
 
-            {feedback && (
-                <div
-                    className={`absolute w-12 h-12 rounded-full border-4 flex items-center justify-center animate-ping-once pointer-events-none z-30`}
-                    style={{ left: feedback.x - 24, top: feedback.y - 24, borderColor: feedback.type === 'success' ? '#4ade80' : '#f87171' }}
-                >
-                    <span className="text-2xl">{feedback.type === 'success' ? '✅' : '❌'}</span>
+                    {feedback && (
+                        <div
+                            className={`absolute w-12 h-12 rounded-full border-4 flex items-center justify-center animate-ping-once pointer-events-none z-30`}
+                            style={{ left: feedback.x - 24, top: feedback.y - 24, borderColor: feedback.type === 'success' ? '#4ade80' : '#f87171' }}
+                        >
+                            <span className="text-2xl">{feedback.type === 'success' ? '✅' : '❌'}</span>
+                        </div>
+                    )}
                 </div>
-            )}
+            </div>
 
-            <div className="absolute bottom-6 left-6 right-6 flex justify-between items-center opacity-0 group-hover:opacity-100 transition duration-300">
+            {/* HUD Footer - Fixed */}
+            <div className="absolute bottom-6 left-6 right-6 flex justify-between items-center opacity-0 group-hover:opacity-100 transition duration-300 z-40 bg-gradient-to-t from-black/80 to-transparent pb-2">
                 <span className="text-white/40 text-[10px] uppercase font-black tracking-widest">Interactive Sandbox Mode</span>
                 <button
                     onClick={() => {
@@ -96,7 +103,7 @@ export default function Simulation({ screenshotUrl, hotspots, onSuccess }: Simul
                             setTarget(hotspots[Math.floor(Math.random() * hotspots.length)])
                         }
                     }}
-                    className="text-indigo-400 hover:text-white text-xs font-bold transition"
+                    className="text-indigo-400 hover:text-white text-xs font-bold transition bg-black/50 px-3 py-1 rounded-lg backdrop-blur-sm border border-white/10"
                 >
                     Skip to another task
                 </button>

@@ -123,6 +123,18 @@ async def scrape_page():
             traceback.print_exc(file=f)
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.get("/api/browser/snapshot")
+async def get_snapshot():
+    output_path = os.path.join("scraped_data", "latest_scrape.json")
+    if not os.path.exists(output_path):
+        raise HTTPException(status_code=404, detail="No snapshot found")
+    try:
+        with open(output_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return {"status": "loaded", "data": data}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.post("/api/browser/save-auth")
 async def save_auth():
     if not browser_manager.context:

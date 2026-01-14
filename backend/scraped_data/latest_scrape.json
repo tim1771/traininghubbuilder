@@ -1,208 +1,772 @@
 {
-  "title": "Supabase | The Postgres Development Platform.",
-  "url": "https://supabase.com/",
-  "text_content": "Supabase | The Postgres Development Platform. Product Developers Solutions Pricing Docs Blog 96.1K Sign in Start your project Open main menu Supabase Wrapped 2025: The year in review Supabase Wrapped 2025 Build in a weekend Scale to millions Supabase is the Postgres development platform. Start your project with a Postgres database, Authentication, instant APIs, Edge Functions, Realtime subscriptions, Storage, and Vector embeddings. Start your project Request a demo Trusted by fast-growing companies worldwide Postgres Database Every project is a full Postgres database , the world's most trusted relational database. 100% portable Built-in Auth with RLS Easy to extend Authentication Add user sign ups and logins , securing your data with Row Level Security. Edge Functions Easily write custom code without deploying or scaling servers. $ supabase functions deploy Storage Store, organize, and serve large files, from videos to images. Realtime Build multiplayer experiences with real-time data synchronization. Vector Integrate your favorite ML-models to store, index and search vector embeddings . OpenAI logo OpenAI Hugging Face logo Hugging Face Data APIs Instant ready-to-use Restful APIs . Use one or all. Best of breed products. Integrated as a platform. Use Supabase with any framework Customer Stories Trusted by the world’s most innovative companies. See how Supabase empowers companies of all sizes to accelerate their growth and streamline their work. View all stories View Events Maergo's Express Delivery: How Supabase Helped Achieve Scalability, Speed, and Cost Saving Bootstrapped founder builds an AI app with Supabase and scales to $1M in 5 months. Scaling securely: one million users in 7 months protected with Supabase Auth Maergo's Express Delivery: How Supabase Helped Achieve Scalability, Speed, and Cost Saving Bootstrapped founder builds an AI app with Supabase and scales to $1M in 5 months. Scaling securely: one million users in 7 months protected with Supabase Auth Maergo's Express Delivery: How Supabase Helped Achieve Scalability, Speed, and Cost Saving Bootstrapped founder builds an AI app with Supabase and scales to $1M in 5 months. Scaling securely: one million users in 7 months protected with Supabase Auth Start building in seconds Kickstart your next project with templates built by us and our community. View all examples Official GitHub library Next.js logo Stripe logo Vercel logo Stripe Subscriptions Starter The all-in-one subscription starter kit for high-performance SaaS applications, powered by Stripe, Supabase, and Vercel. View Template Next.js logo Vercel logo Next.js Starter A Next.js App Router template configured with cookie-based auth using Supabase, TypeScript and Tailwind CSS. View Template Next.js logo OpenAI logo Vercel logo AI Chatbot An open-source AI chatbot app template built with Next.js, the Vercel AI SDK, OpenAI, and Supabase. View Template LangChain logo Next.js logo LangChain + Next.js Starter Starter template and example use-cases for LangChain projects in Next.js, including chat, agents, and retrieval. View Template Flutter logo Flutter User Management Get started with Supabase and Flutter by building a user management app with auth, file storage, and database. View Template Expo logo Expo React Native Starter An extended version of create-t3-turbo implementing authentication on both the web and mobile applications. View Template Next.js logo Stripe logo Vercel logo Stripe Subscriptions Starter The all-in-one subscription starter kit for high-performance SaaS applications, powered by Stripe, Supabase, and Vercel. View Template Next.js logo Vercel logo Next.js Starter A Next.js App Router template configured with cookie-based auth using Supabase, TypeScript and Tailwind CSS. View Template Next.js logo OpenAI logo Vercel logo AI Chatbot An open-source AI chatbot app template built with Next.js, the Vercel AI SDK, OpenAI, and Supabase. View Template LangChain logo Next.js logo LangChain + Next.js Starter Starter template and example use-cases for LangChain projects in Next.js, including chat, agents, and retrieval. View Template Flutter logo Flutter User Management Get started with Supabase and Flutter by building a user management app with auth, file storage, and database. View Template Expo logo Expo React Native Starter An extended version of create-t3-turbo implementing authentication on both the web and mobile applications. View Template Stay productive and manage your app without leaving the dashboard Table Editor SQL Editor RLS Policies Full CRUD Materialized Views Foreign Tables Partitioned Tables Easy as a spreadsheet Join the community Discover what our community has to say about their Supabase experience. Join us on Discord @nerdburn It’s fun, feels lightweight, and really quick to spin up user auth and a few tables. Almost too easy! Highly recommend. @patrickc Very impressed by @supabase's growth. For new startups, they seem to have gone from \"promising\" to \"standard\" in remarkably short order. @Aliahsan_sfv Okay, I finally tried Supabase today and wow... why did I wait so long? 😅 Went from 'how do I even start' to having auth + database + real-time updates working in like 20 minutes. Sometimes the hype is actually justified! #Supabase @yatsiv_yuriy Supabase is the best product experience I've had in years.\nNot just tech - taste.\nFrom docs to latency to the URL structure that makes you think \"oh, that's obvious\"\nFeels like every other platform should study how they built it\n@supabase I love you @adeelibr @supabase shout out, their MCP is awesome. It's helping me create better row securities and telling me best practises for setting up a supabase app @TyronBache Really impressed with @supabase's Assistant.\n\nIt has helped me troubleshoot and solve complex CORS Configuration issues on Pinger. @MinimEditor I’ve always used Supabase just as a database.\n\nYesterday, I helped debug a founder’s vibe-coding project built with React + React Router — no backend server.\nThe “backend” was entirely Supabase Edge Functions as the API.\nFirst time using Supabase this way.\nImpressive. @orlandopedro_ Love @supabase custom domains\n\nmakes the auth so much better @sdusteric Loving #Supabase MCP. Claude Code would not only plan what data we should save but also figure out a migration script by checking what the schema looks like on Supabase via MCP. @SteinlageScott I love @supabase's built-in Advisors. The security and performance linters improve everything and boost my confidence in what I'm building! @BowTiedQilin Working with @supabase has been one of the best dev experiences I've had lately.\n\nIncredibly easy to set up, great documentation, and so many fewer hoops to jump through than the competition.\n\nI definitely plan to use it on any and all future projects. @adm_lawson Love supabse edge functions. Cursor+Supabase+MCP+Docker desktop is all I need @gokul_i First time running @supabase in local. It just works. Very good DX imo. @dadooos_ Run supabase locally and just wow in silence! I am impressed! This is the kind of tooling I would want for my team. @Rodrigo66799141 After a week of diving deep into Supabase for my new SaaS project, I'm really impressed with its Auth and RLS features. It makes security much simpler for solo founders. #buildinpublic #SaaS @xthemadgeniusx Lately been using Supabase over AWS/ GCP for products to save on costs and rapid builds(Vibe Code) that do not need all the Infra and the hefty costs that come with AWS/ GCP out the door. Great solution overall. @pontusab I love everything about Supabase. @viratt_mankali Love how Supabase makes full stack features this easy. Using it with Next.js and loving the experience! @nerdburn It’s fun, feels lightweight, and really quick to spin up user auth and a few tables. Almost too easy! Highly recommend. @patrickc Very impressed by @supabase's growth. For new startups, they seem to have gone from \"promising\" to \"standard\" in remarkably short order. @Aliahsan_sfv Okay, I finally tried Supabase today and wow... why did I wait so long? 😅 Went from 'how do I even start' to having auth + database + real-time updates working in like 20 minutes. Sometimes the hype is actually justified! #Supabase @yatsiv_yuriy Supabase is the best product experience I've had in years.\nNot just tech - taste.\nFrom docs to latency to the URL structure that makes you think \"oh, that's obvious\"\nFeels like every other platform should study how they built it\n@supabase I love you @adeelibr @supabase shout out, their MCP is awesome. It's helping me create better row securities and telling me best practises for setting up a supabase app @TyronBache Really impressed with @supabase's Assistant.\n\nIt has helped me troubleshoot and solve complex CORS Configuration issues on Pinger. @MinimEditor I’ve always used Supabase just as a database.\n\nYesterday, I helped debug a founder’s vibe-coding project built with React + React Router — no backend server.\nThe “backend” was entirely Supabase Edge Functions as the API.\nFirst time using Supabase this way.\nImpressive. @orlandopedro_ Love @supabase custom domains\n\nmakes the auth so much better @sdusteric Loving #Supabase MCP. Claude Code would not only plan what data we should save but also figure out a migration script by checking what the schema looks like on Supabase via MCP. @SteinlageScott I love @supabase's built-in Advisors. The security and performance linters improve everything and boost my confidence in what I'm building! @BowTiedQilin Working with @supabase has been one of the best dev experiences I've had lately.\n\nIncredibly easy to set up, great documentation, and so many fewer hoops to jump through than the competition.\n\nI definitely plan to use it on any and all future projects. @adm_lawson Love supabse edge functions. Cursor+Supabase+MCP+Docker desktop is all I need @gokul_i First time running @supabase in local. It just works. Very good DX imo. @dadooos_ Run supabase locally and just wow in silence! I am impressed! This is the kind of tooling I would want for my team. @Rodrigo66799141 After a week of diving deep into Supabase for my new SaaS project, I'm really impressed with its Auth and RLS features. It makes security much simpler for solo founders. #buildinpublic #SaaS @xthemadgeniusx Lately been using Supabase over AWS/ GCP for products to save on costs and rapid builds(Vibe Code) that do not need all the Infra and the hefty costs that come with AWS/ GCP out the door. Great solution overall. @pontusab I love everything about Supabase. @viratt_mankali Love how Supabase makes full stack features this easy. Using it with Next.js and loving the experience! @nerdburn It’s fun, feels lightweight, and really quick to spin up user auth and a few tables. Almost too easy! Highly recommend. @patrickc Very impressed by @supabase's growth. For new startups, they seem to have gone from \"promising\" to \"standard\" in remarkably short order. @Aliahsan_sfv Okay, I finally tried Supabase today and wow... why did I wait so long? 😅 Went from 'how do I even start' to having auth + database + real-time updates working in like 20 minutes. Sometimes the hype is actually justified! #Supabase @yatsiv_yuriy Supabase is the best product experience I've had in years.\nNot just tech - taste.\nFrom docs to latency to the URL structure that makes you think \"oh, that's obvious\"\nFeels like every other platform should study how they built it\n@supabase I love you @adeelibr @supabase shout out, their MCP is awesome. It's helping me create better row securities and telling me best practises for setting up a supabase app @TyronBache Really impressed with @supabase's Assistant.\n\nIt has helped me troubleshoot and solve complex CORS Configuration issues on Pinger. @MinimEditor I’ve always used Supabase just as a database.\n\nYesterday, I helped debug a founder’s vibe-coding project built with React + React Router — no backend server.\nThe “backend” was entirely Supabase Edge Functions as the API.\nFirst time using Supabase this way.\nImpressive. @orlandopedro_ Love @supabase custom domains\n\nmakes the auth so much better @sdusteric Loving #Supabase MCP. Claude Code would not only plan what data we should save but also figure out a migration script by checking what the schema looks like on Supabase via MCP. @SteinlageScott I love @supabase's built-in Advisors. The security and performance linters improve everything and boost my confidence in what I'm building! @BowTiedQilin Working with @supabase has been one of the best dev experiences I've had lately.\n\nIncredibly easy to set up, great documentation, and so many fewer hoops to jump through than the competition.\n\nI definitely plan to use it on any and all future projects. @adm_lawson Love supabse edge functions. Cursor+Supabase+MCP+Docker desktop is all I need @gokul_i First time running @supabase in local. It just works. Very good DX imo. @dadooos_ Run supabase locally and just wow in silence! I am impressed! This is the kind of tooling I would want for my team. @Rodrigo66799141 After a week of diving deep into Supabase for my new SaaS project, I'm really impressed with its Auth and RLS features. It makes security much simpler for solo founders. #buildinpublic #SaaS @xthemadgeniusx Lately been using Supabase over AWS/ GCP for products to save on costs and rapid builds(Vibe Code) that do not need all the Infra and the hefty costs that come with AWS/ GCP out the door. Great solution overall. @pontusab I love everything about Supabase. @viratt_mankali Love how Supabase makes full stack features this easy. Using it with Next.js and loving the experience! @nerdburn It’s fun, feels lightweight, and really quick to spin up user auth and a few tables. Almost too easy! Highly recommend. @patrickc Very impressed by @supabase's growth. For new startups, they seem to have gone from \"promising\" to \"standard\" in remarkably short order. @Aliahsan_sfv Okay, I finally tried Supabase today and wow... why did I wait so long? 😅 Went from 'how do I even start' to having auth + database + real-time updates working in like 20 minutes. Sometimes the hype is actually justified! #Supabase @yatsiv_yuriy Supabase is the best product experience I've had in years.\nNot just tech - taste.\nFrom docs to latency to the URL structure that makes you think \"oh, that's obvious\"\nFeels like every other platform should study how they built it\n@supabase I love you @adeelibr @supabase shout out, their MCP is awesome. It's helping me create better row securities and telling me best practises for setting up a supabase app @TyronBache Really impressed with @supabase's Assistant.\n\nIt has helped me troubleshoot and solve complex CORS Configuration issues on Pinger. @MinimEditor I’ve always used Supabase just as a database.\n\nYesterday, I helped debug a founder’s vibe-coding project built with React + React Router — no backend server.\nThe “backend” was entirely Supabase Edge Functions as the API.\nFirst time using Supabase this way.\nImpressive. @orlandopedro_ Love @supabase custom domains\n\nmakes the auth so much better @sdusteric Loving #Supabase MCP. Claude Code would not only plan what data we should save but also figure out a migration script by checking what the schema looks like on Supabase via MCP. @SteinlageScott I love @supabase's built-in Advisors. The security and performance linters improve everything and boost my confidence in what I'm building! @BowTiedQilin Working with @supabase has been one of the best dev experiences I've had lately.\n\nIncredibly easy to set up, great documentation, and so many fewer hoops to jump through than the competition.\n\nI definitely plan to use it on any and all future projects. @adm_lawson Love supabse edge functions. Cursor+Supabase+MCP+Docker desktop is all I need @gokul_i First time running @supabase in local. It just works. Very good DX imo. @dadooos_ Run supabase locally and just wow in silence! I am impressed! This is the kind of tooling I would want for my team. @Rodrigo66799141 After a week of diving deep into Supabase for my new SaaS project, I'm really impressed with its Auth and RLS features. It makes security much simpler for solo founders. #buildinpublic #SaaS @xthemadgeniusx Lately been using Supabase over AWS/ GCP for products to save on costs and rapid builds(Vibe Code) that do not need all the Infra and the hefty costs that come with AWS/ GCP out the door. Great solution overall. @pontusab I love everything about Supabase. @viratt_mankali Love how Supabase makes full stack features this easy. Using it with Next.js and loving the experience! Open source from day one Supabase is built in the open because we believe great developer tools should be transparent, inspectable, and owned by the community. Read, contribute, self-host. You're never locked in, and always in control. @supabase 96.1K Top 100 GitHub repos Build in a weekend, scale to millions Start your project Request a demo Footer We protect your data. More on Security SOC2 Type 2 Certified HIPAA Compliant Twitter GitHub Discord Youtube Product Database Auth Functions Realtime Storage Vector Cron Pricing Launch Week Solutions AI Builders No Code Beginners Developers Postgres Devs Vibe Coders Hackathon Contestants Startups Agencies Enterprise Innovation Teams Resources Blog Support System Status Become a Partner Integrations Brand Assets Security & Compliance DPA SOC2 HIPAA Developers Documentation Supabase UI Changelog Careers Contributing Open Source SupaSquad DevTo RSS Company Company General Availability Terms of Service Privacy Policy Privacy Settings Acceptable Use Policy Support Policy Service Level Agreement Humans.txt Lawyers.txt Security.txt © Supabase Inc Toggle theme",
-  "screenshot": "scraped_data\\screenshot_1768416398.png",
-  "links": [
+  "title": "Crawler API - unstoppable crawling at scale | Scrapfly",
+  "url": "https://scrapfly.io/crawler-api",
+  "text_content": "Crawler API - unstoppable crawling at scale | Scrapfly 🚀 We are hiring! See open positions Products Features Integrations Products Web Scraping API Data Extraction API Screenshot API Proxy Saver NEW MCP Server NEW Crawler API NEW Antibot Detector NEW Features Unblocker Smart Proxy Rotation Datacenter & Residential Proxies Real-Time Monitoring & Alerts JavaScript & SPA Rendering AI-Powered Data Extraction SDKs Python SDK TypeScript SDK Golang SDK Scrapy SDK No-Code Platforms Zapier Make n8n Webhooks LLM & RAG Apps LlamaIndex LangChain CrewAI See all integrations Solutions By Challenge By Target By Industry Technical Challenges Overcome anti-bot systems and bypass protections Bypass Cloudflare Bypass Imperva Bypass DataDome Bypass PerimeterX Bypass Kasada Bypass Akamai View All Anti-Bots Manage Proxies JS Rendering Popular Targets Pre-built solutions for scraping major platforms and websites Real Estate Idealista Immoscout24 Realtor Redfin Zillow Zoopla eCommerce Aliexpress Amazon eBay Etsy Leboncoin Walmart Social Media Instagram Reddit TikTok Twitter YouTube Company & Reviews Crunchbase G2 YellowPages Yelp Zoominfo Jobs Glassdoor Indeed LinkedIn Search & SEO Bing Google Search Similarweb Fashion Nordstrom StockX Travel & Hotels Booking Tripadvisor Industry Solutions Tailored web scraping solutions for specific business verticals and use cases AI Training Images, videos & user generated content eCommerce Products, reviews & brand awareness Fraud Detection Detect fraud & counterfeit activity Lead Generation Profiles & contact details News & Media Articles, headlines & news feeds SERP & SEO Search results & keywords Travel Hotels, reviews & prices Compliance Validate compliance and security Financial Services Stock, shipping & financial data Jobs Data Job listings, salaries & career data Logistics Shipping, tracking & container prices Real Estate Property listings & market data Social Media Profiles, posts & engagement Resources Developer Resources API Documentation Complete API reference Proxy Documentation Datacenter & residential proxies ScrapFly Scrapers Production-ready scrapers on GitHub Free Tools JA3, CSS, XPath tools Learn Free Blog Latest guides and insights Web Scraping Academy Learn from scratch Knowledge Base FAQ and answers Why Us? Pricing Sign up Login Crawler API Crawl Entire Websites Automatically with One API Call Recursively crawl entire domains, discover links automatically, and collect structured data from thousands of pages without writing complex spider logic. Built to bypass the toughest anti-bot protections at enterprise scale. Recursive Domain Crawling - Automatically discover and crawl entire websites. Configure depth limits, URL patterns, and content filters to collect exactly what you need. Bypass Anti-Bot Protection Automatically - Defeat fingerprinting, CAPTCHAs, and behavior-based detection with advanced browser stealth technology. No manual intervention required. Real Browser Rendering - Crawl React, Vue, and Angular SPAs with full JavaScript execution. Automatically waits for dynamic content, handles AJAX requests, and captures lazy-loaded data. 120+ Country Proxy Pool - Automatic IP rotation across residential and datacenter proxies. Smart session management prevents bans and bypasses geo-restrictions. LLM-Powered Data Extraction - Transform raw HTML into clean JSON, markdown, or structured data. No XPath or CSS selectors needed. Trusted by 30,000+ Developers Worldwide Start Crawling Free - 1,000 Credits Included No credit card required • 5-minute setup Start Crawling in 5 Minutes Setup Execute Collect Define Your Own Crawl Limits Select what to crawl, what to ignore and how many pages to collect. Your browser does not support the video tag. Select Output Formats That Fit You Get multiple format, from raw html, cleaned html, text, markdown or directly the extracted data. You can combine multiple formats. Your browser does not support the video tag. Use Real Web Browsers Enable crawling using real web browsers and wait for dynamic content to load for collection\n                                    and don't miss any data. Your browser does not support the video tag. Use Scrapfly Cache for Repeat Actions Let Scrapfly store your crawl results for faster re-crawls directly from scrapfly cache. Your browser does not support the video tag. Inspect Live Results in Dashboard Use Scrapfly's monitoring dashboard to see every detail of your crawl scrapes and have\n                                    the ability to modify and replay each scrape. Your browser does not support the video tag. Collect Results in Industry Standard Formats Collect all results in industry standard warc and har page formats complete\n                                    with all the metadata and extra page information. See all the metadata and rerun on demand! Your browser does not support the video tag. Attach Webhooks to Every Step of the Process Use webhooks to stay informed of every step of you crawling process: collect real time results, track failures and final data. Your browser does not support the video tag. Your browser does not support the video tag. Your browser does not support the video tag. Your browser does not support the video tag. Your browser does not support the video tag. Your browser does not support the video tag. Your browser does not support the video tag. Your browser does not support the video tag. We got Your Industry Covered! Built to work with top industry targets AI Training Crawl the latest images, videos and user generated content for AI training. Instagram Youtube Compliance Crawl online presence to validate compliance and security. Github Pastebin eCommerce Crawl products, reviews and more to enhance your eCommerce and brand awareness. Amazon eBay Financial Service Crawl the latest stock, shipping and financial data to enhance your finance datasets. Marketwatch wsj Fraud Detection Crawl products and listings to detect fraud and counterfeit activity. eBay Craigslist Jobs Data Crawl the latest job listings, salaries and more to enhance your job search. Glassdoor Indeed Lead Generation Crawl online profiles and contact details to enhance your lead generation. LinkedIn Crunchbase Logistics Crawl logistics data like shipping, tracking, container prices to enhance your deliveries. Maersk Hapag-lloyd Explore More Use Cases Developer-First Experience We made Scrapfly for ourselves in 2017 and opened it to public in 2020. In that time, we focused on working on the best developer experience possible. Master Web Data with our Docs and Tools Access a complete ecosystem of documentation, tools, and resources designed to accelerate your data journey and help you get the most out of Scrapfly. Learn with Scrapfly Academy Learn everything about data retrieval and web scraping with our interactive courses. Develop with Scrapfly Tools Streamline your web data development with our web tools designed to enhance every step of the process. Stay Up-To-Date with our Newsletter and Blog Stay updated with the latest trends and insights in web data with our monthly newsletter weekly blog posts. Join the Newsletter Explore the Docs Seamlessly Integrate with Frameworks & Platforms Easily integrate Scrapfly with your favorite tools and platforms, or customize workflows with our Python and TypeScript SDKs. Zapier Make N8N Automate workflows with no-code platforms LlamaIndex LangChain CrewAI Build LLM and RAG Applications Python SDK First class Python package Typescript SDK Access in NodeJS, Deno, Bun More Learn more about integrations Powerful Web UI One-stop shop to configure, control and observe all of your Scrapfly activity. Experiment with Web API Player Use our Web API player for easy testing, experimenting and sharing for collaboration and seamless integration. Manage Multiple Projects Manage multiple projects with ease - complete with built-in testing environements for full control and flexibility. Attach Webhooks & Throttlers Upgrade your API calls with webhooks for true asynchronous architecture and throttlers to control your usage. What Do Our Users Say? \"Scrapfly’s Web Scraping API has completely transformed our data collection process.\n                        The automatic proxy rotation and anti-bot bypass are game-changers . We no longer have to worry about scraping blocks,\n                        and the setup was incredibly easy. Within minutes, we had a reliable scraping system pulling the data we needed.\n                        I highly recommend this API for any serious developer!\" John M. - Senior Data Engineer \"We’ve tried multiple scraping tools, but Scrapfly’s Web Scraping API stands out for its reliability and speed .\n                        With the cloud browser functionality, we were able to scrape dynamic content from JavaScript-heavy websites seamlessly.\n                        The real-time data collection helped us make faster, more informed decisions, and the 99.99% uptime is just unmatched.\" Samantha C. - CTO \"Scalability was a major concern for us as our data scraping needs grew.\n                        Scrapfly’s Web Scraping API not only handled our increased requests but did so without a hitch.\n                         The proxy rotation across 120+ countries ensured we could access data from any region,\n                         and their comprehensive documentation made implementation a breeze. It's the most robust API we’ve used .\" Alex T. - Founder Frequently Asked Questions What is a Crawler API? Crawler API is a service for recursively crawling all desired pages of a given domain. Crawl jobs can be configured with various\n                            crawling rules like what pages to crawl and what to ignore, and when completed the results are returned in a structured format.\n                            Crawler API also supports automatic scraper blocking bypass, headless browsers, AI-driven data extraction and many other features. What's the difference between Crawler API and Scraping API? Scraping API retrieves single pages you specify. Crawler API automatically discovers and crawls entire websites by following links recursively.\n                            Use Scraping API for targeted page extraction. Use Crawler API for domain-wide data collection, website indexing, or when you don't know all the URLs upfront. How can I access Crawler API? Crawler API is accessed through Scrapfly Dashboard or directly through the API.\n\t\t\t\t\t\t\t                            For first-class support we offer Python , Typescript and Golang SDKs. Is web crawling legal? Yes, generally web crawling is legal in most places around the world.\n\t\t\t\t\t\t\t                            For more see our in-depth web scraping laws article. Does Crawler API use AI for web scraping? Yes, Scrapfly incorporate some of AI and machine learning algorithms to successfully retrieve web pages.\n\t\t\t\t\t\t\t                            Scrapfly cloud browsers are configured with real browser fingerprints that ensure all\n\t\t\t\t\t\t\t                            collected data is retrieved as it appears on the web. How long does it take to get results from the Crawler API? Crawl duration varies based on crawled domain and full crawl can take just from few seconds to several minutes depending\n\t\t\t\t\t\t\t                            on your crawl configuration and throttling limits. What Data Formats Does Crawler API Support? Crawler API returns results in industry standard WARC and HAR formats. The data formats themselves can be configured\n                            from raw HTML, to clean markdown, JSON, text, and PDF. This makes it perfect for AI training datasets, website indexing, and content analysis. Can I convert entire websites to markdown for AI/LLM training? Yes! Crawler API can automatically convert entire websites to clean markdown format, perfect for LLM training datasets and RAG (Retrieval-Augmented Generation) systems.\n                            Simply set content_formats=['markdown'] in your crawl configuration, and the API will recursively crawl all pages and return them in AI-ready markdown format.\n                            This is ideal for building documentation datasets, knowledge bases, or training data from websites. Can I use Crawler API to index entire websites for search? Absolutely! Crawler API is perfect for website indexing. It automatically discovers all pages on a domain, extracts content in structured formats,\n                            and can be configured to respect crawl rules and path restrictions. Use it to build search indexes, create sitemaps, monitor content changes,\n                            or archive entire websites. The webhook integration allows you to process pages in real-time as they're crawled. How many pages can I crawl in one job? There's no hard limit on pages per crawl job. You control the scope with max depth, page count limits, and URL patterns.\n                            Our customers regularly crawl 10,000+ pages in single jobs. Larger crawls can be split across multiple jobs or run with higher concurrency on Enterprise plans.\n                            Use the page_limit parameter to cap the maximum number of pages crawled. Can I crawl JavaScript-heavy single-page applications? Yes! Enable render_js=True to crawl React, Vue, Angular, and other JavaScript frameworks.\n                            Our headless Chrome browsers execute JavaScript, wait for dynamic content, and extract the fully rendered page.\n                            You can configure custom wait times with rendering_delay and JavaScript execution for complex SPAs. The ultimate data collection APIs for developers. Scrape, capture, and extract web data with battle-tested tools that scale. Company Careers Why Scrapfly? Pricing Status Resources API Docs Academy Blog Tools FAQ Alternatives Legal Terms of Service Privacy Policy DPA KYC Integrations Zapier Make N8n LlamaIndex LangChain CrewAI Learn Web Scraping Python NodeJS PHP Ruby Scrapy Puppeteer Use Cases AI Training eCommerce Real Estate Finance SERP & SEO Travel Popular Tools cURL to Python JA3 Fingerprint HTTP2 Fingerprint Selector Tester Antibot Detector Unblocker Anti-Bot Bypass Cloudflare Akamai DataDome Incapsula PerimeterX View All © 2026 Scrapfly. The Best Web Scraping API For Developers. Is Web Scraping Legal? • Open Source Scrapers ×",
+  "screenshot": "scraped_data\\screenshot_1768419650.png",
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "interactive_elements": [
     {
-      "text": "",
-      "href": "/"
+      "text": "See open positions",
+      "type": "a",
+      "x": 637.734375,
+      "y": 9,
+      "width": 134.171875,
+      "height": 21
+    },
+    {
+      "text": "unnamed",
+      "type": "a",
+      "x": 31,
+      "y": 52,
+      "width": 172,
+      "height": 40
+    },
+    {
+      "text": "Start Crawling Free - 1,000 Credits Included",
+      "type": "a",
+      "x": 77.9375,
+      "y": 876.375,
+      "width": 430.40625,
+      "height": 50
+    },
+    {
+      "text": "unnamed",
+      "type": "a",
+      "x": 532.34375,
+      "y": 833.1875,
+      "width": 136.359375,
+      "height": 132.375
+    },
+    {
+      "text": "Start Crawling in 5 Minutes",
+      "type": "a",
+      "x": 338.171875,
+      "y": 1058.5625,
+      "width": 603.640625,
+      "height": 60
+    },
+    {
+      "text": "We got Your Industry Covered!",
+      "type": "a",
+      "x": 298.90625,
+      "y": 1674.5625,
+      "width": 682.171875,
+      "height": 60
+    },
+    {
+      "text": "AI Training\n\nCrawl the latest images, videos and user generated content for AI training.\n\nInstagram\nYoutube",
+      "type": "a",
+      "x": 15,
+      "y": 1800.5625,
+      "width": 407.328125,
+      "height": 160.1875
+    },
+    {
+      "text": "Compliance\n\nCrawl online presence to validate compliance and security.\n\nGithub\nPastebin",
+      "type": "a",
+      "x": 436.328125,
+      "y": 1800.5625,
+      "width": 407.328125,
+      "height": 160.1875
+    },
+    {
+      "text": "eCommerce\n\nCrawl products, reviews and more to enhance your eCommerce and brand awareness.\n\nAmazon\neBay",
+      "type": "a",
+      "x": 857.65625,
+      "y": 1800.5625,
+      "width": 407.34375,
+      "height": 160.1875
+    },
+    {
+      "text": "Financial Service\n\nCrawl the latest stock, shipping and financial data to enhance your finance datasets.\n\nMarketwatch\nwsj",
+      "type": "a",
+      "x": 15,
+      "y": 1988.75,
+      "width": 407.328125,
+      "height": 160.1875
+    },
+    {
+      "text": "Fraud Detection\n\nCrawl products and listings to detect fraud and counterfeit activity.\n\neBay\nCraigslist",
+      "type": "a",
+      "x": 436.328125,
+      "y": 1988.75,
+      "width": 407.328125,
+      "height": 160.1875
+    },
+    {
+      "text": "Jobs Data\n\nCrawl the latest job listings, salaries and more to enhance your job search.\n\nGlassdoor\nIndeed",
+      "type": "a",
+      "x": 857.65625,
+      "y": 1988.75,
+      "width": 407.34375,
+      "height": 160.1875
+    },
+    {
+      "text": "Lead Generation\n\nCrawl online profiles and contact details to enhance your lead generation.\n\nLinkedIn\nCrunchbase",
+      "type": "a",
+      "x": 15,
+      "y": 2176.9375,
+      "width": 407.328125,
+      "height": 160.1875
+    },
+    {
+      "text": "Logistics\n\nCrawl logistics data like shipping, tracking, container prices to enhance your deliveries.\n\nMaersk\nHapag-lloyd",
+      "type": "a",
+      "x": 436.328125,
+      "y": 2176.9375,
+      "width": 407.328125,
+      "height": 160.1875
+    },
+    {
+      "text": "Explore\nMore\nUse Cases",
+      "type": "a",
+      "x": 857.65625,
+      "y": 2176.9375,
+      "width": 407.34375,
+      "height": 160.1875
+    },
+    {
+      "text": "Master Web Data with our Docs and Tools",
+      "type": "a",
+      "x": 177.40625,
+      "y": 2676.125,
+      "width": 925.1875,
+      "height": 60
+    },
+    {
+      "text": "unnamed",
+      "type": "a",
+      "x": 35,
+      "y": 3067.1875,
+      "width": 463.3125,
+      "height": 21
+    },
+    {
+      "text": "our interactive courses.",
+      "type": "a",
+      "x": 976.40625,
+      "y": 3005.1875,
+      "width": 147.140625,
+      "height": 19
+    },
+    {
+      "text": "our web tools",
+      "type": "a",
+      "x": 874.921875,
+      "y": 3095.375,
+      "width": 87.203125,
+      "height": 19
+    },
+    {
+      "text": "monthly newsletter weekly blog posts.",
+      "type": "a",
+      "x": 589.921875,
+      "y": 3239.5625,
+      "width": 611.421875,
+      "height": 47
+    },
+    {
+      "text": "Explore the Docs",
+      "type": "a",
+      "x": 661.703125,
+      "y": 3386.625,
+      "width": 172.578125,
+      "height": 41
+    },
+    {
+      "text": "Seamlessly Integrate with Frameworks & Platforms",
+      "type": "a",
+      "x": 75.875,
+      "y": 3544.625,
+      "width": 1128.25,
+      "height": 60
+    },
+    {
+      "text": "Zapier",
+      "type": "a",
+      "x": 272,
+      "y": 3787.625,
+      "width": 120,
+      "height": 125.578125
+    },
+    {
+      "text": "Make",
+      "type": "a",
+      "x": 392,
+      "y": 3787.625,
+      "width": 120,
+      "height": 125.578125
+    },
+    {
+      "text": "N8N",
+      "type": "a",
+      "x": 512,
+      "y": 3787.625,
+      "width": 120,
+      "height": 125.578125
+    },
+    {
+      "text": "LlamaIndex",
+      "type": "a",
+      "x": 648,
+      "y": 3787.625,
+      "width": 120,
+      "height": 125.578125
+    },
+    {
+      "text": "LangChain",
+      "type": "a",
+      "x": 768,
+      "y": 3787.625,
+      "width": 120,
+      "height": 125.578125
+    },
+    {
+      "text": "CrewAI",
+      "type": "a",
+      "x": 888,
+      "y": 3787.625,
+      "width": 120,
+      "height": 125.578125
+    },
+    {
+      "text": "Python SDK\nFirst class Python package",
+      "type": "a",
+      "x": 444,
+      "y": 3981.390625,
+      "width": 120,
+      "height": 163.953125
+    },
+    {
+      "text": "Typescript SDK\nAccess in NodeJS, Deno, Bun",
+      "type": "a",
+      "x": 580,
+      "y": 3981.390625,
+      "width": 120,
+      "height": 163.953125
+    },
+    {
+      "text": "More\nLearn more about integrations",
+      "type": "a",
+      "x": 716,
+      "y": 3981.390625,
+      "width": 120,
+      "height": 163.953125
+    },
+    {
+      "text": "Powerful Web UI",
+      "type": "a",
+      "x": 453.484375,
+      "y": 4214.34375,
+      "width": 373.015625,
+      "height": 60
+    },
+    {
+      "text": "unnamed",
+      "type": "a",
+      "x": 781.65625,
+      "y": 4553.390625,
+      "width": 463.3125,
+      "height": 21
+    },
+    {
+      "text": "Web API player",
+      "type": "a",
+      "x": 109.328125,
+      "y": 4466.6875,
+      "width": 97.4375,
+      "height": 19
+    },
+    {
+      "text": "multiple projects with ease",
+      "type": "a",
+      "x": 112.046875,
+      "y": 4556.875,
+      "width": 170.328125,
+      "height": 19
+    },
+    {
+      "text": "with webhooks",
+      "type": "a",
+      "x": 204.703125,
+      "y": 4701.0625,
+      "width": 95.953125,
+      "height": 19
+    },
+    {
+      "text": "throttlers",
+      "type": "a",
+      "x": 554.875,
+      "y": 4701.0625,
+      "width": 59.15625,
+      "height": 19
+    },
+    {
+      "text": "What Do Our Users Say?",
+      "type": "a",
+      "x": 373.140625,
+      "y": 4870.421875,
+      "width": 533.703125,
+      "height": 60
+    },
+    {
+      "text": "unnamed",
+      "type": "a",
+      "x": 583.8125,
+      "y": 5623.421875,
+      "width": 136.359375,
+      "height": 48.53125
+    },
+    {
+      "text": "Frequently Asked Questions",
+      "type": "a",
+      "x": 332.015625,
+      "y": 5812.953125,
+      "width": 615.96875,
+      "height": 60
+    },
+    {
+      "text": "unnamed",
+      "type": "a",
+      "x": 15,
+      "y": 7391.890625,
+      "width": 42,
+      "height": 42
+    },
+    {
+      "text": "unnamed",
+      "type": "a",
+      "x": 69,
+      "y": 7391.890625,
+      "width": 42,
+      "height": 42
+    },
+    {
+      "text": "unnamed",
+      "type": "a",
+      "x": 123,
+      "y": 7391.890625,
+      "width": 42,
+      "height": 42
+    },
+    {
+      "text": "unnamed",
+      "type": "a",
+      "x": 177,
+      "y": 7391.890625,
+      "width": 42,
+      "height": 42
+    },
+    {
+      "text": "Careers",
+      "type": "a",
+      "x": 441.65625,
+      "y": 7283.265625,
+      "width": 72.0625,
+      "height": 22.796875
+    },
+    {
+      "text": "Why Scrapfly?",
+      "type": "a",
+      "x": 441.65625,
+      "y": 7319.65625,
+      "width": 115.984375,
+      "height": 22.796875
     },
     {
       "text": "Pricing",
-      "href": "/pricing"
+      "type": "a",
+      "x": 441.65625,
+      "y": 7356.046875,
+      "width": 67.734375,
+      "height": 22.796875
     },
     {
-      "text": "Docs",
-      "href": "/docs"
+      "text": "Status",
+      "type": "a",
+      "x": 441.65625,
+      "y": 7392.4375,
+      "width": 62.671875,
+      "height": 22.796875
+    },
+    {
+      "text": "API Docs",
+      "type": "a",
+      "x": 726.09375,
+      "y": 7283.265625,
+      "width": 81.5625,
+      "height": 22.796875
+    },
+    {
+      "text": "Academy",
+      "type": "a",
+      "x": 726.09375,
+      "y": 7319.65625,
+      "width": 83.90625,
+      "height": 22.796875
     },
     {
       "text": "Blog",
-      "href": "/blog"
+      "type": "a",
+      "x": 726.09375,
+      "y": 7356.046875,
+      "width": 52.265625,
+      "height": 22.796875
     },
     {
-      "text": "96.1K",
-      "href": "https://github.com/supabase/supabase"
+      "text": "Tools",
+      "type": "a",
+      "x": 726.09375,
+      "y": 7392.4375,
+      "width": 56.4375,
+      "height": 22.796875
     },
     {
-      "text": "Sign in",
-      "href": "https://supabase.com/dashboard"
+      "text": "FAQ",
+      "type": "a",
+      "x": 726.09375,
+      "y": 7428.828125,
+      "width": 49.796875,
+      "height": 22.796875
     },
     {
-      "text": "Start your project",
-      "href": "https://supabase.com/dashboard"
+      "text": "Alternatives",
+      "type": "a",
+      "x": 726.09375,
+      "y": 7465.21875,
+      "width": 100.71875,
+      "height": 22.796875
     },
     {
-      "text": "Supabase Wrapped 2025: The year in reviewSupabase Wrapped 2025",
-      "href": "/wrapped"
+      "text": "Terms of Service",
+      "type": "a",
+      "x": 1010.53125,
+      "y": 7283.265625,
+      "width": 130.5,
+      "height": 22.796875
     },
     {
-      "text": "Start your project",
-      "href": "https://supabase.com/dashboard"
+      "text": "Privacy Policy",
+      "type": "a",
+      "x": 1010.53125,
+      "y": 7319.65625,
+      "width": 111.640625,
+      "height": 22.796875
     },
     {
-      "text": "Request a demo",
-      "href": "/contact/sales"
+      "text": "DPA",
+      "type": "a",
+      "x": 1010.53125,
+      "y": 7356.046875,
+      "width": 49.9375,
+      "height": 22.796875
     },
     {
-      "text": "Postgres DatabaseEvery project isa full Postgres database, the world's most trusted relational database.100% portableBuilt-in Auth with RLSEasy to extend",
-      "href": "/database"
+      "text": "KYC",
+      "type": "a",
+      "x": 1010.53125,
+      "y": 7392.4375,
+      "width": 48.34375,
+      "height": 22.796875
     },
     {
-      "text": "AuthenticationAdd user sign ups and logins,securing your data with Row Level Security.",
-      "href": "/auth"
+      "text": "Zapier",
+      "type": "a",
+      "x": 15,
+      "y": 7638.25,
+      "width": 40.03125,
+      "height": 21.609375
     },
     {
-      "text": "Edge FunctionsEasily write custom codewithout deploying or scaling servers.$supabasefunctionsdeploy",
-      "href": "/edge-functions"
+      "text": "Make",
+      "type": "a",
+      "x": 15,
+      "y": 7670.25,
+      "width": 34.953125,
+      "height": 21.609375
     },
     {
-      "text": "StorageStore, organize, and servelarge files, from videos to images.",
-      "href": "/storage"
+      "text": "N8n",
+      "type": "a",
+      "x": 15,
+      "y": 7702.25,
+      "width": 26.6875,
+      "height": 21.609375
     },
     {
-      "text": "RealtimeBuild multiplayer experienceswith real-time data synchronization.",
-      "href": "/realtime"
+      "text": "LlamaIndex",
+      "type": "a",
+      "x": 15,
+      "y": 7734.25,
+      "width": 71.9375,
+      "height": 21.609375
     },
     {
-      "text": "VectorIntegrate your favorite ML-models tostore, index and search vector embeddings.OpenAI logoOpenAIHugging Face logoHugging Face",
-      "href": "/modules/vector"
+      "text": "LangChain",
+      "type": "a",
+      "x": 15,
+      "y": 7766.25,
+      "width": 66.765625,
+      "height": 21.609375
     },
     {
-      "text": "Data APIsInstant ready-to-useRestful APIs.",
-      "href": "https://supabase.com/docs/guides/api"
+      "text": "CrewAI",
+      "type": "a",
+      "x": 15,
+      "y": 7798.25,
+      "width": 44.984375,
+      "height": 21.609375
     },
     {
-      "text": "",
-      "href": "https://supabase.com/docs/guides/getting-started/quickstarts/reactjs"
+      "text": "Python",
+      "type": "a",
+      "x": 441.65625,
+      "y": 7638.25,
+      "width": 44.65625,
+      "height": 21.609375
     },
     {
-      "text": "",
-      "href": "https://supabase.com/docs/guides/getting-started/quickstarts/nextjs"
+      "text": "NodeJS",
+      "type": "a",
+      "x": 441.65625,
+      "y": 7670.25,
+      "width": 48.015625,
+      "height": 21.609375
     },
     {
-      "text": "",
-      "href": "https://supabase.com/docs/guides/getting-started/quickstarts/redwoodjs"
+      "text": "PHP",
+      "type": "a",
+      "x": 441.65625,
+      "y": 7702.25,
+      "width": 26.359375,
+      "height": 21.609375
     },
     {
-      "text": "",
-      "href": "https://supabase.com/docs/guides/getting-started/quickstarts/flutter"
+      "text": "Ruby",
+      "type": "a",
+      "x": 441.65625,
+      "y": 7734.25,
+      "width": 32.203125,
+      "height": 21.609375
     },
     {
-      "text": "",
-      "href": "https://supabase.com/docs/guides/getting-started/quickstarts/kotlin"
+      "text": "Scrapy",
+      "type": "a",
+      "x": 441.65625,
+      "y": 7766.25,
+      "width": 42.078125,
+      "height": 21.609375
     },
     {
-      "text": "",
-      "href": "https://supabase.com/docs/guides/getting-started/quickstarts/sveltekit"
+      "text": "Puppeteer",
+      "type": "a",
+      "x": 441.65625,
+      "y": 7798.25,
+      "width": 65.625,
+      "height": 21.609375
     },
     {
-      "text": "",
-      "href": "https://supabase.com/docs/guides/getting-started/quickstarts/solidjs"
+      "text": "AI Training",
+      "type": "a",
+      "x": 868.3125,
+      "y": 7638.25,
+      "width": 67.453125,
+      "height": 21.609375
     },
     {
-      "text": "",
-      "href": "https://supabase.com/docs/guides/getting-started/quickstarts/vue"
+      "text": "eCommerce",
+      "type": "a",
+      "x": 868.3125,
+      "y": 7670.25,
+      "width": 76.421875,
+      "height": 21.609375
     },
     {
-      "text": "",
-      "href": "https://supabase.com/docs/guides/getting-started/quickstarts/nuxtjs"
+      "text": "Real Estate",
+      "type": "a",
+      "x": 868.3125,
+      "y": 7702.25,
+      "width": 68.5,
+      "height": 21.609375
     },
     {
-      "text": "",
-      "href": "https://supabase.com/docs/guides/getting-started/quickstarts/refine"
+      "text": "Finance",
+      "type": "a",
+      "x": 868.3125,
+      "y": 7734.25,
+      "width": 48.328125,
+      "height": 21.609375
     },
     {
-      "text": "View all stories",
-      "href": "/customers"
+      "text": "SERP & SEO",
+      "type": "a",
+      "x": 868.3125,
+      "y": 7766.25,
+      "width": 76.828125,
+      "height": 21.609375
     },
     {
-      "text": "View Events",
-      "href": "/events"
+      "text": "Travel",
+      "type": "a",
+      "x": 868.3125,
+      "y": 7798.25,
+      "width": 36.546875,
+      "height": 21.609375
     },
     {
-      "text": "",
-      "href": "/customers/next-door-lending"
+      "text": "cURL to Python",
+      "type": "a",
+      "x": 15,
+      "y": 7896.484375,
+      "width": 97.796875,
+      "height": 21.609375
     },
     {
-      "text": "Maergo's Express Delivery: How Supabase Helped Achieve Scalability, Speed, and Cost Saving",
-      "href": "/customers/maergo"
+      "text": "JA3 Fingerprint",
+      "type": "a",
+      "x": 15,
+      "y": 7928.484375,
+      "width": 95.46875,
+      "height": 21.609375
     },
     {
-      "text": "",
-      "href": "/customers/shotgun"
+      "text": "HTTP2 Fingerprint",
+      "type": "a",
+      "x": 15,
+      "y": 7960.484375,
+      "width": 115.046875,
+      "height": 21.609375
     },
     {
-      "text": "Bootstrapped founder builds an AI app with Supabase and scales to $1M in 5 months.",
-      "href": "/customers/chatbase"
+      "text": "Selector Tester",
+      "type": "a",
+      "x": 15,
+      "y": 7992.484375,
+      "width": 92.328125,
+      "height": 21.609375
     },
     {
-      "text": "",
-      "href": "/customers/mobbin"
+      "text": "Antibot Detector",
+      "type": "a",
+      "x": 15,
+      "y": 8024.484375,
+      "width": 106.546875,
+      "height": 21.609375
     },
     {
-      "text": "",
-      "href": "/customers/happyteams"
+      "text": "Unblocker",
+      "type": "a",
+      "x": 15,
+      "y": 8056.484375,
+      "width": 64.78125,
+      "height": 21.609375
     },
     {
-      "text": "Scaling securely: one million users in 7 months protected with Supabase Auth",
-      "href": "/customers/pebblely"
+      "text": "Cloudflare",
+      "type": "a",
+      "x": 655,
+      "y": 7896.484375,
+      "width": 65.328125,
+      "height": 21.609375
     },
     {
-      "text": "",
-      "href": "/customers/next-door-lending"
+      "text": "Akamai",
+      "type": "a",
+      "x": 655,
+      "y": 7928.484375,
+      "width": 47,
+      "height": 21.609375
     },
     {
-      "text": "Maergo's Express Delivery: How Supabase Helped Achieve Scalability, Speed, and Cost Saving",
-      "href": "/customers/maergo"
+      "text": "DataDome",
+      "type": "a",
+      "x": 655,
+      "y": 7960.484375,
+      "width": 68.109375,
+      "height": 21.609375
     },
     {
-      "text": "",
-      "href": "/customers/shotgun"
+      "text": "Incapsula",
+      "type": "a",
+      "x": 655,
+      "y": 7992.484375,
+      "width": 59.5,
+      "height": 21.609375
     },
     {
-      "text": "Bootstrapped founder builds an AI app with Supabase and scales to $1M in 5 months.",
-      "href": "/customers/chatbase"
+      "text": "PerimeterX",
+      "type": "a",
+      "x": 655,
+      "y": 8024.484375,
+      "width": 69.40625,
+      "height": 21.609375
     },
     {
-      "text": "",
-      "href": "/customers/mobbin"
+      "text": "View All",
+      "type": "a",
+      "x": 655,
+      "y": 8056.484375,
+      "width": 50.578125,
+      "height": 21.609375
     },
     {
-      "text": "",
-      "href": "/customers/happyteams"
+      "text": "Is Web Scraping Legal?",
+      "type": "a",
+      "x": 939.71875,
+      "y": 8217.484375,
+      "width": 145.9375,
+      "height": 20
     },
     {
-      "text": "Scaling securely: one million users in 7 months protected with Supabase Auth",
-      "href": "/customers/pebblely"
+      "text": "Open Source Scrapers",
+      "type": "a",
+      "x": 1124.9375,
+      "y": 8217.484375,
+      "width": 140.0625,
+      "height": 20
     },
     {
-      "text": "",
-      "href": "/customers/next-door-lending"
+      "text": "unnamed",
+      "type": "button",
+      "x": 1193,
+      "y": 48,
+      "width": 56,
+      "height": 48
     },
     {
-      "text": "Maergo's Express Delivery: How Supabase Helped Achieve Scalability, Speed, and Cost Saving",
-      "href": "/customers/maergo"
+      "text": "Setup",
+      "type": "button",
+      "x": 34,
+      "y": 1157.5625,
+      "width": 180,
+      "height": 44
     },
     {
-      "text": "",
-      "href": "/customers/shotgun"
+      "text": "Execute",
+      "type": "button",
+      "x": 230,
+      "y": 1157.5625,
+      "width": 180,
+      "height": 44
     },
     {
-      "text": "Bootstrapped founder builds an AI app with Supabase and scales to $1M in 5 months.",
-      "href": "/customers/chatbase"
+      "text": "Collect",
+      "type": "button",
+      "x": 426,
+      "y": 1157.5625,
+      "width": 180,
+      "height": 44
     },
     {
-      "text": "",
-      "href": "/customers/mobbin"
-    },
-    {
-      "text": "",
-      "href": "/customers/happyteams"
-    },
-    {
-      "text": "Scaling securely: one million users in 7 months protected with Supabase Auth",
-      "href": "/customers/pebblely"
+      "text": "Join the Newsletter",
+      "type": "button",
+      "x": 445.71875,
+      "y": 3386.625,
+      "width": 183.984375,
+      "height": 41
     }
   ]
 }

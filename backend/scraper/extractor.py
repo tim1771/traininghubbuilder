@@ -28,7 +28,7 @@ class ContentExtractor:
         if screenshot:
             filename = f"screenshot_{int(time.time())}.png"
             screenshot_path = os.path.join(self.output_dir, filename)
-            await page.screenshot(path=screenshot_path)
+            await page.screenshot(path=screenshot_path, full_page=True)
 
         # Extract interactive elements with coordinates
         interactive_elements = []

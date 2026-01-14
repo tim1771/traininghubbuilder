@@ -1,60 +1,69 @@
 {
-  "course_title": "Building Scalable Applications with Supabase",
-  "description": "Learn how to build scalable applications using Supabase, a Postgres development platform that provides a suite of tools for building robust and secure applications.",
+  "course_title": "Web Scraping with Scrapfly API",
+  "description": "Learn how to use the Scrapfly API to crawl entire websites, extract data, and bypass anti-bot protections. This course will cover the basics of web scraping, how to use the Scrapfly API, and advanced techniques for data extraction and processing.",
   "modules": [
     {
-      "title": "Introduction to Supabase",
+      "title": "Introduction to Web Scraping",
       "lessons": [
         {
-          "title": "What is Supabase?",
-          "description": "Introduction to Supabase, its features, and benefits"
+          "title": "What is Web Scraping?",
+          "description": "Introduction to the concept of web scraping, its applications, and the benefits of using the Scrapfly API"
         },
         {
-          "title": "Setting up a Supabase Project",
-          "description": "Step-by-step guide to setting up a new Supabase project"
+          "title": "Web Scraping Laws and Ethics",
+          "description": "Overview of the legal and ethical considerations when it comes to web scraping, including the importance of respecting website terms of service"
         }
       ]
     },
     {
-      "title": "Supabase Core Features",
+      "title": "Getting Started with Scrapfly API",
       "lessons": [
         {
-          "title": "Postgres Database",
-          "description": "Understanding the Postgres database in Supabase, including data modeling and schema design"
+          "title": "Setting Up Your First Crawl",
+          "description": "Step-by-step guide on how to create a new crawl job, configure crawling rules, and retrieve results using the Scrapfly API"
         },
         {
-          "title": "Authentication and Authorization",
-          "description": "Implementing user authentication and authorization using Supabase's built-in auth features"
-        },
-        {
-          "title": "Edge Functions",
-          "description": "Building serverless functions using Supabase Edge Functions"
+          "title": "Understanding API Documentation and Tools",
+          "description": "Introduction to the Scrapfly API documentation, tools, and resources available to help developers get started"
         }
       ]
     },
     {
-      "title": "Advanced Supabase Topics",
+      "title": "Data Extraction and Processing",
       "lessons": [
         {
-          "title": "Realtime Data Synchronization",
-          "description": "Implementing real-time data synchronization using Supabase's Realtime features"
+          "title": "Using LLM-Powered Data Extraction",
+          "description": "How to use the Scrapfly API's LLM-powered data extraction feature to transform raw HTML into clean JSON, markdown, or structured data"
         },
         {
-          "title": "Vector Embeddings and Machine Learning",
-          "description": "Using Supabase's vector embeddings and machine learning capabilities to build intelligent applications"
+          "title": "Handling JavaScript-Heavy Websites",
+          "description": "Techniques for crawling and extracting data from JavaScript-heavy websites using the Scrapfly API's headless browser capabilities"
         }
       ]
     },
     {
-      "title": "Building Applications with Supabase",
+      "title": "Advanced Techniques and Best Practices",
       "lessons": [
         {
-          "title": "Building a User Management System",
-          "description": "Step-by-step guide to building a user management system using Supabase"
+          "title": "Bypassing Anti-Bot Protections",
+          "description": "Strategies for bypassing anti-bot protections, including fingerprinting, CAPTCHAs, and behavior-based detection using the Scrapfly API"
         },
         {
-          "title": "Integrating Supabase with Other Tools and Services",
-          "description": "Integrating Supabase with popular frameworks and libraries, such as Next.js and React"
+          "title": "Optimizing Crawl Performance and Efficiency",
+          "description": "Tips and best practices for optimizing crawl performance, including configuring crawl rules, handling errors, and monitoring progress"
+        }
+      ]
+    },
+    {
+      "title": "Use Cases and Applications",
+      "lessons": [
+        {
+          "title": "Using Scrapfly API for AI Training",
+          "description": "How to use the Scrapfly API to collect data for AI training, including crawling websites for images, videos, and user-generated content"
+        },
+        {
+          "title": "Web Scraping for E-commerce and Marketing",
+          "description": "Applications of web scraping in e-commerce and marketing, including product research, competitor analysis, and social media monitoring"
         }
       ]
     }
