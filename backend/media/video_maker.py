@@ -14,8 +14,18 @@ import numpy as np # Needed for array manipulation in moviepy usually, but Pillo
 load_dotenv()
 
 def download_image(url, save_path):
-    response = requests.get(url)
-    img = Image.open(BytesIO(response.content))
+    # Security: enforce timeout and size cap to prevent DoS from slow/huge responses
+    MAX_BYTES = 20 * 1024 * 1024  # 20 MB
+    response = requests.get(url, timeout=30, stream=True)
+    response.raise_for_status()
+    chunks = []
+    received = 0
+    for chunk in response.iter_content(chunk_size=65536):
+        received += len(chunk)
+        if received > MAX_BYTES:
+            raise ValueError(f"Image download exceeded size limit ({MAX_BYTES} bytes)")
+        chunks.append(chunk)
+    img = Image.open(BytesIO(b"".join(chunks)))
     img.save(save_path)
     return save_path
 
@@ -126,7 +136,12 @@ def get_ai_presenter(client):
             n=1,
         )
         image_url = response.data[0].url
-        img_data = requests.get(image_url).content
+        # Security: enforce timeout and size cap on AI image download
+        img_resp = requests.get(image_url, timeout=30)
+        img_resp.raise_for_status()
+        img_data = img_resp.content
+        if len(img_data) > 20 * 1024 * 1024:
+            raise ValueError("Presenter image exceeded size limit")
         with open(presenter_path, 'wb') as handler:
             handler.write(img_data)
         

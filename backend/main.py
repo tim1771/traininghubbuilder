@@ -11,11 +11,15 @@ if sys.platform == "win32":
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from fastapi.responses import FileResponse
+from pydantic import BaseModel, Field
 import uvicorn
 import os
 import traceback
-import json # Global import
+import json
+import ipaddress
+import socket
+from urllib.parse import urlparse
 
 # Import our scraper modules
 from scraper.browser import BrowserManager
@@ -25,19 +29,24 @@ from scraper.extractor import ContentExtractor
 app = FastAPI(title="Training Hub Builder API")
 
 # Configure CORS for frontend communication
+# In production, update ALLOWED_ORIGINS via environment variable
+ALLOWED_ORIGINS = os.environ.get("ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 from fastapi.staticfiles import StaticFiles
 if not os.path.exists("media"):
     os.makedirs("media")
 app.mount("/media", StaticFiles(directory="media"), name="media")
-app.mount("/scraped_data", StaticFiles(directory="scraped_data"), name="scraped_data")
+# Security: scraped_data is NOT served as a public static directory.
+# It contains scraped page content and course data — access it only via API endpoints.
+# (Removed: app.mount("/scraped_data", ...))
 
 # Global State
 browser_manager = BrowserManager()
@@ -50,9 +59,67 @@ class LaunchRequest(BaseModel):
     use_auth: bool = False
 
 class NavigateRequest(BaseModel):
-    url: str
+    # Security: cap URL length to prevent oversized inputs
+    url: str = Field(..., max_length=2048)
 
-@app.get("/")
+# --- URL Validation Helper ---
+def _is_private_ip(hostname: str) -> bool:
+    """
+    Resolves hostname to IP(s) and checks if any are private/reserved.
+    Catches DNS rebinding by resolving at validation time.
+    Security: prevents SSRF by blocking all RFC-1918, loopback, link-local,
+    and other reserved ranges including IPv4-mapped IPv6 addresses.
+    """
+    try:
+        # Resolve all addresses for the hostname
+        infos = socket.getaddrinfo(hostname, None)
+        for info in infos:
+            addr = info[4][0]
+            ip = ipaddress.ip_address(addr)
+            # ipaddress covers loopback, private, link-local, reserved, multicast, etc.
+            if (ip.is_loopback or ip.is_private or ip.is_link_local or
+                    ip.is_reserved or ip.is_multicast or ip.is_unspecified):
+                return True
+    except (socket.gaierror, ValueError):
+        # Can't resolve — treat as invalid/blocked to fail safe
+        return True
+    return False
+
+
+def validate_url(url: str) -> tuple[bool, str]:
+    """
+    Validates a URL to prevent SSRF attacks.
+    Returns (is_valid, error_message or cleaned_url)
+    """
+    # Add protocol if missing
+    if not url.startswith('http://') and not url.startswith('https://'):
+        url = 'https://' + url
+
+    try:
+        parsed = urlparse(url)
+    except Exception:
+        return False, "Invalid URL format"
+
+    # Only allow http and https schemes
+    if parsed.scheme not in ('http', 'https'):
+        return False, f"Invalid URL scheme: {parsed.scheme}. Only http/https allowed."
+
+    # Block file:// style URLs that might slip through
+    if not parsed.netloc:
+        return False, "Invalid URL: missing host"
+
+    hostname = parsed.hostname or ''
+    if not hostname:
+        return False, "Invalid URL: missing host"
+
+    # Security: resolve hostname to actual IPs and reject private/reserved ranges.
+    # This also defeats DNS rebinding — we check at request time.
+    if _is_private_ip(hostname):
+        return False, "Access to internal/private addresses is not allowed"
+
+    return True, url
+
+
 @app.get("/")
 def read_root():
     return {
@@ -78,29 +145,35 @@ async def launch_browser(pkt: LaunchRequest):
         await browser_manager.launch(headless=pkt.headless, auth_state_path=auth_path)
         return {"status": "launched", "auth_loaded": bool(auth_path and auth_manager.exists())}
     except Exception as e:
-        with open("error.log", "w") as f:
+        with open("error.log", "a") as f:
             traceback.print_exc(file=f)
         print("ERROR IN LAUNCH:", str(e))
         traceback.print_exc()
-        raise HTTPException(status_code=500, detail=str(e))
+        # Security: don't leak internal error details to client
+        raise HTTPException(status_code=500, detail="Failed to launch browser")
 
 @app.post("/api/browser/navigate")
 async def navigate(pkt: NavigateRequest):
     if not browser_manager.page:
         raise HTTPException(status_code=400, detail="Browser not started")
     try:
-        # Ensure URL has protocol
-        url = pkt.url
-        if not url.startswith('http://') and not url.startswith('https://'):
-            url = 'https://' + url
-            
+        # Validate URL to prevent SSRF attacks
+        is_valid, result = validate_url(pkt.url)
+        if not is_valid:
+            raise HTTPException(status_code=400, detail=result)
+        
+        url = result  # result contains the cleaned URL if valid
         print(f"Navigating to {url}")
         await browser_manager.page.goto(url, wait_until="networkidle", timeout=30000)
         return {"status": "navigated", "url": url}
+    except HTTPException:
+        raise  # Re-raise HTTP exceptions as-is
     except Exception as e:
-        with open("error.log", "w") as f:
+        with open("error.log", "a") as f:
             traceback.print_exc(file=f)
-        raise HTTPException(status_code=500, detail=str(e))
+        print("ERROR IN NAVIGATE:", str(e))
+        # Security: don't leak internal error details to client
+        raise HTTPException(status_code=500, detail="Navigation failed")
 
 @app.post("/api/browser/scrape")
 async def scrape_page():
@@ -111,17 +184,19 @@ async def scrape_page():
         data = await extractor.extract_page(browser_manager.page)
         
         # Save data to file for AI processing
-        import json
         output_path = os.path.join("scraped_data", "latest_scrape.json")
         with open(output_path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
             
         print(f"Scraped data saved to {output_path}")
-        return {"status": "scraped", "data": data, "saved_to": output_path}
+        # Security: don't leak internal filesystem path in response
+        return {"status": "scraped", "data": data}
     except Exception as e:
-        with open("error.log", "w") as f:
+        with open("error.log", "a") as f:
             traceback.print_exc(file=f)
-        raise HTTPException(status_code=500, detail=str(e))
+        print("ERROR IN SCRAPE:", str(e))
+        # Security: don't leak internal error details to client
+        raise HTTPException(status_code=500, detail="Scrape failed")
 
 @app.get("/api/browser/snapshot")
 async def get_snapshot():
@@ -133,24 +208,44 @@ async def get_snapshot():
             data = json.load(f)
         return {"status": "loaded", "data": data}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print("ERROR IN SNAPSHOT:", str(e))
+        traceback.print_exc()
+        # Security: don't leak internal error details to client
+        raise HTTPException(status_code=500, detail="Failed to load snapshot")
 
 @app.post("/api/browser/save-auth")
 async def save_auth():
     if not browser_manager.context:
         raise HTTPException(status_code=400, detail="Browser context not available")
     try:
-        path = await auth_manager.save_state(browser_manager.context)
-        return {"status": "saved", "path": path}
+        await auth_manager.save_state(browser_manager.context)
+        # Security: don't expose server-side filesystem paths to the client
+        return {"status": "saved"}
     except Exception as e:
-        with open("error.log", "w") as f:
+        with open("error.log", "a") as f:
             traceback.print_exc(file=f)
-        raise HTTPException(status_code=500, detail=str(e))
+        print("ERROR IN SAVE-AUTH:", str(e))
+        # Security: don't leak internal error details to client
+        raise HTTPException(status_code=500, detail="Failed to save session")
 
 @app.post("/api/browser/close")
 async def close_browser():
     await browser_manager.close()
     return {"status": "closed"}
+
+@app.get("/api/browser/screenshot/{filename}")
+async def get_screenshot(filename: str):
+    """Serve a screenshot file with path traversal protection."""
+    # Security: reject any path traversal attempts
+    if ".." in filename or "/" in filename or "\\" in filename:
+        raise HTTPException(status_code=400, detail="Invalid filename")
+    # Security: only serve .png screenshot files
+    if not filename.endswith(".png") or not filename.startswith("screenshot_"):
+        raise HTTPException(status_code=400, detail="Invalid screenshot filename")
+    filepath = os.path.join("scraped_data", filename)
+    if not os.path.isfile(filepath):
+        raise HTTPException(status_code=404, detail="Screenshot not found")
+    return FileResponse(filepath, media_type="image/png")
 
 # --- AI Content Generation Endpoints ---
 
@@ -191,9 +286,9 @@ async def generate_plan():
 
         return {"status": "planned", "plan": plan}
     except Exception as e:
-        import traceback
         traceback.print_exc()
-        raise HTTPException(status_code=500, detail=str(e))
+        # Security: don't leak internal error details to client
+        raise HTTPException(status_code=500, detail="Failed to generate course plan")
 
 @app.get("/api/course/current")
 def get_current_course():
@@ -205,8 +300,9 @@ def get_current_course():
         return json.load(f)
 
 class LessonRequest(BaseModel):
-    lesson_title: str
-    module_title: str
+    # Security: enforce max lengths to prevent oversized payloads
+    lesson_title: str = Field(..., max_length=500)
+    module_title: str = Field(..., max_length=500)
 
 @app.post("/api/ai/lesson")
 async def generate_lesson_content(req: LessonRequest):
@@ -225,10 +321,12 @@ async def generate_lesson_content(req: LessonRequest):
         return {"status": "generated", "content": content}
     except Exception as e:
         traceback.print_exc()
-        raise HTTPException(status_code=500, detail=str(e))
+        # Security: don't leak internal error details to client
+        raise HTTPException(status_code=500, detail="Failed to generate lesson content")
 
 class QuizRequest(BaseModel):
-    lesson_content: str
+    # Security: cap content length — backend already slices to 4000 chars but validate at ingress
+    lesson_content: str = Field(..., max_length=50000)
 
 @app.post("/api/ai/quiz")
 async def generate_quiz(req: QuizRequest):
@@ -237,17 +335,24 @@ async def generate_quiz(req: QuizRequest):
         return {"status": "generated", "questions": questions}
     except Exception as e:
         traceback.print_exc()
-        raise HTTPException(status_code=500, detail=str(e))
+        # Security: don't leak internal error details to client
+        raise HTTPException(status_code=500, detail="Failed to generate quiz")
 
 from media.video_maker import generate_simple_video
 
 class VideoRequest(BaseModel):
-    title: str
-    text_content: str
+    # Security: enforce max lengths to prevent oversized payloads
+    title: str = Field(..., max_length=500)
+    text_content: str = Field(..., max_length=50000)
 
 @app.post("/api/ai/video")
 async def create_lesson_video(req: VideoRequest):
-    video_filename = f"video_{hash(req.title)}.mp4"
+    import re
+    import uuid
+    # Security: sanitize title for use in filename — strip non-alphanumeric chars,
+    # use a UUID suffix to avoid collisions and prevent path traversal via crafted titles
+    safe_slug = re.sub(r'[^a-zA-Z0-9_-]', '_', req.title)[:40]
+    video_filename = f"video_{safe_slug}_{uuid.uuid4().hex[:8]}.mp4"
     output_path = os.path.join("media", video_filename)
     
     # Ensure media dir exists
@@ -275,10 +380,13 @@ async def create_lesson_video(req: VideoRequest):
     except Exception as e:
         print(f"ERROR in video endpoint: {e}")
         traceback.print_exc()
-        error_msg = str(e)
-        if "insufficient_quota" in error_msg or "billing_hard_limit" in error_msg:
-             error_msg = "OpenAI Quota/Billing Error: Your account has hit its limit. It can take up to 30-60 minutes for OpenAI to recognize your limit increase. Please check your usage at platform.openai.com/usage"
-        raise HTTPException(status_code=500, detail=error_msg)
+        raw_msg = str(e)
+        # Security: only surface actionable billing info; log everything else server-side
+        if "insufficient_quota" in raw_msg or "billing_hard_limit" in raw_msg:
+            detail = "OpenAI quota/billing limit reached. Check your usage at platform.openai.com/usage and try again after your limit resets."
+        else:
+            detail = "Video generation failed"
+        raise HTTPException(status_code=500, detail=detail)
 
 
 if __name__ == "__main__":

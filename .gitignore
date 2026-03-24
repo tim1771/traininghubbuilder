@@ -1,6 +1,10 @@
 # Environment variables
 backend/.env
 
+# Auth state (contains browser session cookies — never commit)
+backend/auth_state.json
+auth_state.json
+
 # Python
 __pycache__/
 *.py[cod]
@@ -22,6 +26,12 @@ backend/media/*.png
 
 # Scraped data
 backend/scraped_data/
+
+# Logs (may contain API responses and internal paths)
+backend/error.log
+backend/sora_trace.log
+error.log
+sora_trace.log
 
 # OS
 .DS_Store

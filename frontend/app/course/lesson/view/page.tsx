@@ -253,7 +253,8 @@ function LessonContent() {
             }
 
             // Priority 2: Fallback to cached snapshot (Offline mode)
-            const snapRes = await fetch("http://localhost:8000/api/browser/snapshot");
+            // Use relative path — Next.js rewrites proxy it to the backend
+            const snapRes = await fetch("/api/browser/snapshot");
             if (snapRes.ok) {
                 const data = await snapRes.json();
                 setSimData(data.data);
@@ -462,7 +463,7 @@ function LessonContent() {
                                             )}
                                             {videoUrl && !generatingVideo && (
                                                 <div className="rounded-3xl overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.5)] border border-white/10 p-1 bg-white/5">
-                                                    <video controls className="w-full aspect-video rounded-2xl bg-black shadow-inner" src={`http://localhost:8000${videoUrl}`}>
+                                                    <video controls className="w-full aspect-video rounded-2xl bg-black shadow-inner" src={videoUrl}>
                                                         Your browser does not support the video tag.
                                                     </video>
                                                     <div className="p-4 flex justify-between items-center text-xs font-black uppercase tracking-widest text-gray-500">
@@ -508,7 +509,7 @@ function LessonContent() {
                                     </div>
                                     {simData ? (
                                         <Simulation
-                                            screenshotUrl={`http://localhost:8000/${simData.screenshot}`}
+                                            screenshotUrl={`/api/browser/screenshot/${simData.screenshot?.split('/').pop() || ''}`}
                                             hotspots={simData.interactive_elements}
                                             onSuccess={() => {
                                                 alert("Action verified! Skill unlocked. 🎉");
