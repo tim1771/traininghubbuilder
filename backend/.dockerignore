@@ -1,0 +1,16 @@
+venv/
+__pycache__/
+.env
+*.pyc
+scraped_data/
+media/*.mp4
+media/*.mp3
+media/*.png
+error.log
+sora_trace.log
+sora_debug.log
+auth_state.json
+test_client.py
+refresh_snapshot.py
+launch.json
+navigate.json

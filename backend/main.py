@@ -392,6 +392,9 @@ async def create_lesson_video(req: VideoRequest):
 if __name__ == "__main__":
     if sys.platform == "win32":
         asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
+    # Railway provides PORT env var; fallback to 8000 for local dev
+    port = int(os.environ.get("PORT", 8000))
+    host = os.environ.get("HOST", "127.0.0.1")
     # reload=False is required on Windows for Playwright to work with asyncio loop policy
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=False, loop="asyncio")
+    uvicorn.run("main:app", host=host, port=port, reload=False, loop="asyncio")
 
