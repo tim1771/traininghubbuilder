@@ -82,8 +82,10 @@ class CoursePlanner:
         Include:
         - A clear introduction
         - Step-by-step concepts or instructions
-        - Code snippets if relevant (use ```blocks)
         - A "Key Takeaways" summary at the end.
+
+        Do NOT include any code snippets, programming examples, or technical implementation details.
+        Focus purely on explaining the subject matter conceptually.
         
         Do NOT output JSON. Output pure Markdown with proper punctuation.
         """

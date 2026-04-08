@@ -33,6 +33,9 @@ backend/sora_trace.log
 error.log
 sora_trace.log
 
+# Claude Code
+.claude/
+
 # OS
 .DS_Store
 Thumbs.db

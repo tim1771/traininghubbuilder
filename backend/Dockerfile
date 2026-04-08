@@ -21,5 +21,5 @@ COPY . .
 # Create required directories
 RUN mkdir -p media scraped_data
 
-# Railway provides PORT env var
+# Render provides PORT env var (default 10000), fallback 8000 for local
 CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000} --loop asyncio

@@ -1,10 +1,11 @@
 fastapi
 uvicorn
 playwright
-moviepy
+moviepy==1.0.3
 beautifulsoup4
 requests
 python-multipart
 jinja2
 python-dotenv
 openai
+groq

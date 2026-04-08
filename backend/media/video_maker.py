@@ -307,37 +307,35 @@ def generate_sora_clip(client, prompt, output_path):
 
 def generate_simple_video(lesson_title, summary_text, output_path):
     """
-    Creates a 'Sora-Powered' Explainer Video:
-    1. AI Script Rewrite (Enthusiastic)
-    2. Sora v2 Video Clips (Intro + Concepts)
-    3. Screenshots (Evidence)
-    4. Neural Audio (Shimmer)
+    Creates an AI-narrated slideshow video:
+    1. AI script rewrite + TTS audio (OpenAI Shimmer or gTTS fallback)
+    2. Title slide + screenshot slides + content slides
+    3. Optional presenter overlay via DALL-E
     """
-    
-    clips = []
+
     temp_files = []
     audio_clip = None
     final_video = None
-    
+
     client = None
     if os.getenv("OPENAI_API_KEY"):
         try:
             client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-            print("Using OpenAI for Premium Video")
+            print("Using OpenAI for premium audio + presenter")
         except:
             client = None
 
     try:
-        # 1. SCRIPTING & AUDIO
+        # 1. GENERATE AUDIO
         script_text = summary_text
         if client:
             script_text = generate_engaging_script(client, lesson_title, summary_text)
             script_text = clean_text_for_tts(script_text)
-            
+
             audio_path = output_path.replace(".mp4", ".mp3")
             temp_files.append(audio_path)
-            
-            print("Generating Neural Audio (Shimmer)...")
+
+            print("Generating neural audio (Shimmer)...")
             response = client.audio.speech.create(
                 model="tts-1", voice="shimmer", input=script_text[:4096]
             )
@@ -345,128 +343,79 @@ def generate_simple_video(lesson_title, summary_text, output_path):
         else:
             clean = clean_text_for_tts(summary_text)
             audio_path = output_path.replace(".mp4", ".mp3")
+            temp_files.append(audio_path)
             tts = gTTS(text=clean, lang='en')
             tts.save(audio_path)
-        
+
         audio_clip = AudioFileClip(audio_path)
         total_duration = audio_clip.duration
-        
-        # 0. PERSONA SETUP
+
+        # 2. OPTIONAL PRESENTER OVERLAY
         presenter_bubble = get_ai_presenter(client)
-        
-        # 2. GENERATE VISUAL ASSETS
+
+        # 3. BUILD VISUAL SLIDES
         visual_clips = []
         remaining_time = total_duration
-        
-        # A. Intro with Sora (Concept Art in Motion)
-        # Generate a video clip instead of a static image for the title/intro
-        if client:
-            sora_intro_path = output_path.replace(".mp4", "_sora_intro.mp4")
-            # Prompt: Professional cinematic intro
-            if generate_sora_clip(client, f"Cinematic product shot of a digital training hub interface showing '{lesson_title}', glowing screens, modern tech office background, 4k", sora_intro_path):
-                # We have a video!
-                temp_files.append(sora_intro_path)
-                # Load video clip
-                intro_clip = VideoFileClip(sora_intro_path)
-                # Cap at 4s or intro length
-                intro_clip = intro_clip.subclip(0, min(intro_clip.duration, 4))
-                
-                # Overlay Title Text?
-                # For simplicity, let's just use the Sora video as the visual and overlay text if we wanted, 
-                # but let's assume the prompt handling puts text in or we just use it as background.
-                # Actually, let's overlay the title using our existing logic but transparently?
-                # Or just put the title slide *after*?
-                # Let's use the Sora clip as the BACKGROUND for the title slide.
-                
-                # Create transparent title image
-                title_img = create_title_slide(lesson_title) # This has solid bg currently
-                # Let's just use the Sora clip alone for 4s as an "establishing shot"
-                visual_clips.append(intro_clip)
-                remaining_time -= intro_clip.duration
-                
-        if not visual_clips:
-            # Fallback to static title
-            title_img = create_title_slide(lesson_title)
-            title_p = output_path.replace(".mp4", "_title.png")
-            title_img.save(title_p)
-            temp_files.append(title_p)
-            clip = ImageClip(title_p).set_duration(3)
-            clip = zoom_in_effect(clip, 0.05)
-            visual_clips.append(clip)
-            remaining_time -= 3
-        
-        # B. Main Content
+
+        # A. Title slide (3 seconds)
+        title_img = create_title_slide(lesson_title)
+        title_p = output_path.replace(".mp4", "_title.png")
+        title_img.save(title_p)
+        temp_files.append(title_p)
+        title_dur = min(3, remaining_time)
+        clip = ImageClip(title_p).set_duration(title_dur)
+        clip = zoom_in_effect(clip, 0.05)
+        visual_clips.append(clip)
+        remaining_time -= title_dur
+
+        # B. Collect content assets (screenshots + text slides)
         assets = []
         screenshots = get_screenshots()
-        
-        # 1. Add Screenshots
         for s in screenshots:
             assets.append({"type": "screenshot", "path": s})
-            
-        # 2. Add Sora Concept Clip (Middle of video)
-        if client and remaining_time > 10:
-            sora_concept_path = output_path.replace(".mp4", "_sora_concept.mp4")
-            # Prompt based on title
-            if generate_sora_clip(client, f"A realistic tutorial presenter demonstrating {lesson_title} on a laptop, over the shoulder shot, detailed screen, office environment", sora_concept_path):
-                 assets.insert(1, {"type": "video", "path": sora_concept_path})
-                 temp_files.append(sora_concept_path)
 
-        # 3. Add Evidence/Text
-        # ... (Same as before)
+        # Add a text summary slide if we have few screenshots
+        if len(assets) < 2:
+            assets.append({"type": "text_slide", "text": summary_text[:300]})
 
         if not assets:
-             slide_img = create_text_slide("Listen closely...", title=lesson_title)
-             assets.append({"type": "image", "path": "fallback"}) # logic handles generation
-        
-        clip_duration = remaining_time / len(assets)
-        
-        for asset in assets:
-            if remaining_time <= 0: break
-            
+            assets.append({"type": "text_slide", "text": lesson_title})
+
+        # C. Distribute remaining time across assets
+        clip_duration = remaining_time / max(len(assets), 1)
+
+        for i, asset in enumerate(assets):
+            if remaining_time <= 0:
+                break
+
             dur = min(clip_duration, remaining_time)
-            
-            if asset["type"] == "video":
-                v_path = asset["path"]
-                clip = VideoFileClip(v_path)
-                # Loop if needed or cut
-                if clip.duration < dur:
-                    clip = clip.loop(duration=dur)
-                else:
-                    clip = clip.subclip(0, dur)
-                visual_clips.append(clip)
-                remaining_time -= dur
-                
-            else:
-                # Image/Screenshot logic (same as before)
-                img_path = asset["path"]
-                if asset["type"] == "image" and img_path == "fallback":
-                     p = output_path.replace(".mp4", "_fallback.png")
-                     create_text_slide(lesson_title).save(p)
-                     img_path = p
-                     temp_files.append(p)
-                
-                img = Image.open(img_path)
+
+            if asset["type"] == "screenshot":
+                img = Image.open(asset["path"])
                 img = img.resize((1280, 720), Image.Resampling.LANCZOS)
-                temp_p = output_path.replace(".mp4", f"_asset_{len(visual_clips)}.png")
+                temp_p = output_path.replace(".mp4", f"_slide_{i}.png")
                 img.save(temp_p)
                 temp_files.append(temp_p)
-                
                 clip = ImageClip(temp_p).set_duration(dur)
-                clip = zoom_in_effect(clip, 0.05)
-            
-            # Apply AI Persona Overlay
+                clip = zoom_in_effect(clip, 0.03)
+            else:
+                slide_img = create_text_slide(asset["text"], title=lesson_title)
+                temp_p = output_path.replace(".mp4", f"_slide_{i}.png")
+                slide_img.save(temp_p)
+                temp_files.append(temp_p)
+                clip = ImageClip(temp_p).set_duration(dur)
+                clip = zoom_in_effect(clip, 0.03)
+
+            # Apply presenter overlay on slides
             if presenter_bubble:
-                # Only overlay on images or intro clips, not on the main Sora demo clip 
-                # to avoid covering up the action.
-                if asset["type"] != "video":
-                     clip = overlay_presenter(clip, presenter_bubble)
-            
+                clip = overlay_presenter(clip, presenter_bubble)
+
             visual_clips.append(clip)
             remaining_time -= dur
 
-        # Concatenate visuals
+        # 4. COMPOSE FINAL VIDEO
         main_video = concatenate_videoclips(visual_clips, method="compose")
-        
+
         if main_video.duration < total_duration:
             main_video = main_video.set_duration(total_duration)
         else:
@@ -475,16 +424,16 @@ def generate_simple_video(lesson_title, summary_text, output_path):
         final_video = main_video.set_audio(audio_clip)
         final_video.fps = 24
 
-        print(f"Writing Sora-Enhanced Video to {output_path}...")
+        print(f"Writing video to {output_path}...")
         final_video.write_videofile(
-            output_path, 
-            codec="libx264", 
+            output_path,
+            codec="libx264",
             audio_codec="aac",
             fps=24,
             preset='ultrafast',
             threads=4
         )
-        
+
     except Exception as e:
         print(f"ERROR: {e}")
         import traceback
@@ -492,14 +441,16 @@ def generate_simple_video(lesson_title, summary_text, output_path):
         raise
     finally:
         try:
-            if final_video: final_video.close()
-            if audio_clip: audio_clip.close()
-            # Close clips?
+            if final_video:
+                final_video.close()
+            if audio_clip:
+                audio_clip.close()
         except:
             pass
-        # Cleanup temps
         for f in temp_files:
-            try: os.remove(f)
-            except: pass
-            
+            try:
+                os.remove(f)
+            except:
+                pass
+
     return output_path

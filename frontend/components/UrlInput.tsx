@@ -58,21 +58,36 @@ export default function UrlInput() {
         setStatus("Starting scraper...");
         try {
             // Launch headless with auth
-            await fetch("/api/browser/launch", {
+            const launchRes = await fetch("/api/browser/launch", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ headless: true, use_auth: true }),
             });
+            if (!launchRes.ok) {
+                const err = await launchRes.json().catch(() => ({ detail: "Browser launch failed" }));
+                setStatus("Error: " + (err.detail || "Browser launch failed"));
+                return;
+            }
 
             setStatus("Navigating...");
-            await fetch("/api/browser/navigate", {
+            const navRes = await fetch("/api/browser/navigate", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ url }),
             });
+            if (!navRes.ok) {
+                const err = await navRes.json().catch(() => ({ detail: "Navigation failed" }));
+                setStatus("Error: " + (err.detail || "Navigation failed"));
+                return;
+            }
 
             setStatus("Scraping content...");
             const res = await fetch("/api/browser/scrape", { method: "POST" });
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({ detail: "Scrape failed" }));
+                setStatus("Error: " + (err.detail || "Scrape failed"));
+                return;
+            }
             const data = await res.json();
 
             console.log("Scraped Data:", data);

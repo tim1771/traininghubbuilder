@@ -79,7 +79,7 @@ function QuizComponent({ content, onComplete }: { content: string, onComplete: (
             <div className="space-y-6">
                 {questions.map((q, i) => (
                     <div key={i} className="bg-white/5 backdrop-blur-lg border border-white/10 p-6 rounded-2xl shadow-sm">
-                        <p className="font-semibold text-lg mb-4 text-gray-800 dark:text-gray-100">{i + 1}. {q.question}</p>
+                        <p className="font-semibold text-lg mb-4 text-lime-400">{i + 1}. {q.question}</p>
                         <div className="grid gap-3">
                             {q.options.map((opt, j) => {
                                 const isSelected = answers[i] === j;
@@ -509,7 +509,7 @@ function LessonContent() {
                                     </div>
                                     {simData ? (
                                         <Simulation
-                                            screenshotUrl={`/api/browser/screenshot/${simData.screenshot?.split('/').pop() || ''}`}
+                                            screenshotUrl={`/api/browser/screenshot/${simData.screenshot?.split(/[/\\]/).pop() || ''}`}
                                             hotspots={simData.interactive_elements}
                                             onSuccess={() => {
                                                 alert("Action verified! Skill unlocked. 🎉");
