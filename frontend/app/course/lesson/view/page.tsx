@@ -341,6 +341,13 @@ function LessonContent() {
 
             clearTimeout(timeoutId);
 
+            const contentType = res.headers.get("content-type") || "";
+            if (!contentType.includes("application/json")) {
+                const text = await res.text();
+                alert("Video Error: Server returned non-JSON response. " + (res.status !== 200 ? `Status: ${res.status}` : text.slice(0, 200)));
+                return;
+            }
+
             const data = await res.json();
             if (data.video_url) {
                 setVideoUrl(data.video_url);

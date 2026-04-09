@@ -74,9 +74,10 @@ class CoursePlanner:
         {context[:8000]}
 
         CRITICAL FORMATTING REQUIREMENTS:
-        - EVERY sentence MUST end with proper punctuation (. ! or ?)
-        - Write in complete, grammatically correct sentences
-        - Use markdown formatting for headers (##), bold (**text**), and lists
+        - Every sentence must end with a period.
+        - Do not use exclamation marks. Use calm, professional tone throughout.
+        - Write in complete, grammatically correct sentences.
+        - Use markdown formatting for headers (##), bold (**text**), and lists.
         
         Format the output in clean Markdown.
         Include:
@@ -128,8 +129,10 @@ class CoursePlanner:
                 fixed_lines.append(line)
                 continue
             
-            # For regular text lines, ensure they end with punctuation
+            # For regular text lines, normalize punctuation to periods
             line = line.rstrip()
+            if line and line.endswith('!'):
+                line = line[:-1] + '.'
             if line and not re.search(r'[.!?]$', line):
                 # Don't add period if line ends with a colon (might be before a list)
                 if not line.endswith(':'):

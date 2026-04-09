@@ -11,7 +11,7 @@ if sys.platform == "win32":
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel, Field
 import uvicorn
 import os
@@ -386,7 +386,8 @@ async def create_lesson_video(req: VideoRequest):
             detail = "OpenAI quota/billing limit reached. Check your usage at platform.openai.com/usage and try again after your limit resets."
         else:
             detail = "Video generation failed"
-        raise HTTPException(status_code=500, detail=detail)
+        # Return JSONResponse directly to guarantee valid JSON even on failure
+        return JSONResponse(status_code=500, content={"status": "error", "detail": detail})
 
 
 if __name__ == "__main__":
