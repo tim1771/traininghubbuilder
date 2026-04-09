@@ -40,6 +40,10 @@ app.add_middleware(
     allow_headers=["Content-Type", "Authorization"],
 )
 
+import mimetypes
+mimetypes.add_type("video/mp4", ".mp4")
+mimetypes.add_type("audio/mpeg", ".mp3")
+
 from fastapi.staticfiles import StaticFiles
 if not os.path.exists("media"):
     os.makedirs("media")
