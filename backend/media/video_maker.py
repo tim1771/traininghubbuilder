@@ -312,6 +312,10 @@ def generate_simple_video(lesson_title, summary_text, output_path):
     2. Title slide + screenshot slides + content slides
     3. Optional presenter overlay via DALL-E
     """
+    print(f"[VIDEO] === Starting video generation ===")
+    print(f"[VIDEO] Title: {lesson_title}")
+    print(f"[VIDEO] Output: {output_path}")
+    print(f"[VIDEO] Text length: {len(summary_text)} chars")
 
     temp_files = []
     audio_clip = None
@@ -321,39 +325,52 @@ def generate_simple_video(lesson_title, summary_text, output_path):
     if os.getenv("OPENAI_API_KEY"):
         try:
             client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-            print("Using OpenAI for premium audio + presenter")
-        except:
+            print("[VIDEO] OpenAI client initialized for premium audio + presenter")
+        except Exception as e:
+            print(f"[VIDEO] OpenAI client init failed: {e}")
             client = None
+    else:
+        print("[VIDEO] No OPENAI_API_KEY found, using gTTS fallback")
 
     try:
         # 1. GENERATE AUDIO
+        print("[VIDEO] Step 1: Generating audio...")
         script_text = summary_text
         if client:
+            print("[VIDEO] Rewriting script via GPT-4...")
             script_text = generate_engaging_script(client, lesson_title, summary_text)
             script_text = clean_text_for_tts(script_text)
+            print(f"[VIDEO] Script ready ({len(script_text)} chars)")
 
             audio_path = output_path.replace(".mp4", ".mp3")
             temp_files.append(audio_path)
 
-            print("Generating neural audio (Shimmer)...")
+            print("[VIDEO] Generating TTS audio (Shimmer)...")
             response = client.audio.speech.create(
                 model="tts-1", voice="shimmer", input=script_text[:4096]
             )
             response.stream_to_file(audio_path)
+            print(f"[VIDEO] TTS audio saved to {audio_path}")
         else:
             clean = clean_text_for_tts(summary_text)
             audio_path = output_path.replace(".mp4", ".mp3")
             temp_files.append(audio_path)
+            print("[VIDEO] Generating gTTS audio...")
             tts = gTTS(text=clean, lang='en')
             tts.save(audio_path)
+            print(f"[VIDEO] gTTS audio saved to {audio_path}")
 
         audio_clip = AudioFileClip(audio_path)
         total_duration = audio_clip.duration
+        print(f"[VIDEO] Audio duration: {total_duration:.1f}s")
 
         # 2. OPTIONAL PRESENTER OVERLAY
+        print("[VIDEO] Step 2: Getting AI presenter...")
         presenter_bubble = get_ai_presenter(client)
+        print(f"[VIDEO] Presenter: {'ready' if presenter_bubble else 'skipped'}")
 
         # 3. BUILD VISUAL SLIDES
+        print("[VIDEO] Step 3: Building visual slides...")
         visual_clips = []
         remaining_time = total_duration
 
@@ -414,6 +431,7 @@ def generate_simple_video(lesson_title, summary_text, output_path):
             remaining_time -= dur
 
         # 4. COMPOSE FINAL VIDEO
+        print(f"[VIDEO] Step 4: Composing final video ({len(visual_clips)} clips)...")
         main_video = concatenate_videoclips(visual_clips, method="compose")
 
         if main_video.duration < total_duration:
@@ -424,7 +442,7 @@ def generate_simple_video(lesson_title, summary_text, output_path):
         final_video = main_video.set_audio(audio_clip)
         final_video.fps = 24
 
-        print(f"Writing video to {output_path}...")
+        print(f"[VIDEO] Writing video to {output_path}...")
         final_video.write_videofile(
             output_path,
             codec="libx264",
@@ -433,9 +451,10 @@ def generate_simple_video(lesson_title, summary_text, output_path):
             preset='ultrafast',
             threads=4
         )
+        print(f"[VIDEO] === Video generation complete ===")
 
     except Exception as e:
-        print(f"ERROR: {e}")
+        print(f"[VIDEO] ERROR: {e}")
         import traceback
         traceback.print_exc()
         raise

@@ -339,55 +339,69 @@ async def generate_quiz(req: QuizRequest):
         raise HTTPException(status_code=500, detail="Failed to generate quiz")
 
 from media.video_maker import generate_simple_video
+import re as _re
+import uuid as _uuid
+import threading
+
+# In-memory video job tracker
+video_jobs: dict[str, dict] = {}
 
 class VideoRequest(BaseModel):
     # Security: enforce max lengths to prevent oversized payloads
     title: str = Field(..., max_length=500)
     text_content: str = Field(..., max_length=50000)
 
-@app.post("/api/ai/video")
-async def create_lesson_video(req: VideoRequest):
-    import re
-    import uuid
-    # Security: sanitize title for use in filename — strip non-alphanumeric chars,
-    # use a UUID suffix to avoid collisions and prevent path traversal via crafted titles
-    safe_slug = re.sub(r'[^a-zA-Z0-9_-]', '_', req.title)[:40]
-    video_filename = f"video_{safe_slug}_{uuid.uuid4().hex[:8]}.mp4"
-    output_path = os.path.join("media", video_filename)
-    
-    # Ensure media dir exists
-    if not os.path.exists("media"):
-        os.makedirs("media")
-
+def _run_video_job(job_id: str, title: str, script: str, output_path: str, video_filename: str):
+    """Runs video generation in a background thread and updates job status."""
     try:
-        # Use more content for longer videos (aim for ~3 minutes)
-        # Average TTS speed is ~150 words per minute, so 450 words = 3 minutes
-        # Roughly 2000-2500 characters = 400-500 words
-        script = req.text_content[:2500] if len(req.text_content) > 2500 else req.text_content
-        
-        print(f"Starting video generation for: {req.title}")
-        
-        # Run in threadpool to avoid blocking async loop with heavy processing
-        await asyncio.to_thread(generate_simple_video, req.title, script, output_path)
-        
-        print(f"Video generation finished! File: {output_path}")
-        print(f"Returning video URL: /media/{video_filename}")
-        
-        # Return URL (we need to mount static files)
-        response = {"status": "created", "video_url": f"/media/{video_filename}"}
-        print(f"Response: {response}")
-        return response
+        video_jobs[job_id]["status"] = "processing"
+        generate_simple_video(title, script, output_path)
+        video_jobs[job_id]["status"] = "complete"
+        video_jobs[job_id]["video_url"] = f"/media/{video_filename}"
+        print(f"[JOB {job_id}] Video complete: /media/{video_filename}")
     except Exception as e:
-        print(f"ERROR in video endpoint: {e}")
+        print(f"[JOB {job_id}] Video failed: {e}")
         traceback.print_exc()
         raw_msg = str(e)
-        # Security: only surface actionable billing info; log everything else server-side
         if "insufficient_quota" in raw_msg or "billing_hard_limit" in raw_msg:
             detail = "OpenAI quota/billing limit reached. Check your usage at platform.openai.com/usage and try again after your limit resets."
         else:
             detail = "Video generation failed"
-        # Return JSONResponse directly to guarantee valid JSON even on failure
-        return JSONResponse(status_code=500, content={"status": "error", "detail": detail})
+        video_jobs[job_id]["status"] = "failed"
+        video_jobs[job_id]["detail"] = detail
+
+@app.post("/api/ai/video")
+async def create_lesson_video(req: VideoRequest):
+    # Security: sanitize title for use in filename — strip non-alphanumeric chars,
+    # use a UUID suffix to avoid collisions and prevent path traversal via crafted titles
+    safe_slug = _re.sub(r'[^a-zA-Z0-9_-]', '_', req.title)[:40]
+    job_id = _uuid.uuid4().hex[:12]
+    video_filename = f"video_{safe_slug}_{job_id}.mp4"
+    output_path = os.path.join("media", video_filename)
+
+    # Ensure media dir exists
+    if not os.path.exists("media"):
+        os.makedirs("media")
+
+    script = req.text_content[:2500] if len(req.text_content) > 2500 else req.text_content
+
+    # Register job and launch in background thread
+    video_jobs[job_id] = {"status": "queued", "title": req.title}
+    thread = threading.Thread(target=_run_video_job, args=(job_id, req.title, script, output_path, video_filename), daemon=True)
+    thread.start()
+
+    print(f"[JOB {job_id}] Video job started for: {req.title}")
+    return {"status": "accepted", "job_id": job_id}
+
+@app.get("/api/ai/video/status/{job_id}")
+async def get_video_status(job_id: str):
+    # Security: validate job_id format (hex only, 12 chars)
+    if not _re.fullmatch(r'[0-9a-f]{12}', job_id):
+        raise HTTPException(status_code=400, detail="Invalid job ID")
+    job = video_jobs.get(job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+    return job
 
 
 if __name__ == "__main__":

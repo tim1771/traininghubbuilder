@@ -326,9 +326,7 @@ function LessonContent() {
         setVideoUrl(null);
 
         try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 600000);
-
+            // 1. Submit the job
             const res = await fetch("/api/ai/video", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -336,10 +334,7 @@ function LessonContent() {
                     title: lessonTitle,
                     text_content: content
                 }),
-                signal: controller.signal
             });
-
-            clearTimeout(timeoutId);
 
             const contentType = res.headers.get("content-type") || "";
             if (!contentType.includes("application/json")) {
@@ -348,18 +343,33 @@ function LessonContent() {
                 return;
             }
 
-            const data = await res.json();
-            if (data.video_url) {
-                setVideoUrl(data.video_url);
-            } else {
-                alert("Internal Video Error: " + (data.detail || "Unknown"));
+            const startData = await res.json();
+            if (!startData.job_id) {
+                alert("Video Error: " + (startData.detail || "Failed to start job"));
+                return;
             }
+
+            // 2. Poll for completion
+            const jobId = startData.job_id;
+            const maxPolls = 120; // 10 minutes at 5s intervals
+            for (let i = 0; i < maxPolls; i++) {
+                await new Promise(r => setTimeout(r, 5000));
+                const pollRes = await fetch(`/api/ai/video/status/${jobId}`);
+                if (!pollRes.ok) continue;
+                const job = await pollRes.json();
+
+                if (job.status === "complete" && job.video_url) {
+                    setVideoUrl(job.video_url);
+                    return;
+                }
+                if (job.status === "failed") {
+                    alert("Video Error: " + (job.detail || "Generation failed"));
+                    return;
+                }
+            }
+            alert("Video generation timed out. Please try again.");
         } catch (e: any) {
-            if (e.name === 'AbortError') {
-                alert("Video generation timed out. Please try again with shorter content.");
-            } else {
-                alert("Video generation failed: " + e);
-            }
+            alert("Video generation failed: " + e);
         } finally {
             setGeneratingVideo(false);
         }
