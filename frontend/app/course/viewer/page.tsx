@@ -33,6 +33,23 @@ export default function CourseViewer() {
             .finally(() => setLoading(false));
     }, []);
 
+    const handleDownloadJson = () => {
+        if (!course) return;
+        const slug = course.course_title
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-|-$/g, "") || "course";
+        const blob = new Blob([JSON.stringify(course, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${slug}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    };
+
     if (loading) return <div className="p-10 text-center">Loading Course...</div>;
     if (!course) return (
         <div className="min-h-screen flex flex-col items-center justify-center p-8 space-y-4">
@@ -80,8 +97,11 @@ export default function CourseViewer() {
                 </div>
 
                 <div className="mt-12 text-center">
-                    <button className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg shadow transition transform hover:scale-105">
-                        Download JSON (Coming Soon)
+                    <button
+                        onClick={handleDownloadJson}
+                        className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg shadow transition transform hover:scale-105 focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:outline-none"
+                    >
+                        Download JSON
                     </button>
                 </div>
             </div>
