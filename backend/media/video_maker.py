@@ -139,6 +139,40 @@ def fit_to_canvas(img, size=(1280, 720), bg_color=(15, 15, 20)):
     canvas.paste(scaled.convert("RGB"), (0, y_offset))
     return canvas
 
+
+def split_tall_screenshot(img, size=(1280, 720), max_slides=5, bg_color=(15, 15, 20)):
+    """Slice a full-page screenshot into a series of viewport-sized slides.
+
+    A one-minute video over a single static frame feels dead; full-page
+    screenshots are usually tall enough to show several distinct sections
+    (hero, features, pricing, footer, etc). We scale by width, then sample
+    evenly-spaced crops down the page so the video "walks" through the page.
+    Short screenshots fall back to a single fit_to_canvas slide.
+    """
+    canvas_w, canvas_h = size
+    src_w, src_h = img.size
+    if src_w == 0 or src_h == 0:
+        return [Image.new("RGB", size, color=bg_color)]
+
+    scale = canvas_w / src_w
+    new_w = canvas_w
+    new_h = max(1, int(round(src_h * scale)))
+
+    # Not tall enough to benefit from slicing — keep the simpler path.
+    if new_h <= int(canvas_h * 1.3):
+        return [fit_to_canvas(img, size=size, bg_color=bg_color)]
+
+    scaled = img.resize((new_w, new_h), Image.Resampling.LANCZOS).convert("RGB")
+    coverage = new_h / canvas_h
+    n_slides = min(max_slides, max(2, int(round(coverage))))
+
+    slides = []
+    max_start = new_h - canvas_h
+    for i in range(n_slides):
+        y = int(round((max_start * i) / (n_slides - 1))) if n_slides > 1 else 0
+        slides.append(scaled.crop((0, y, canvas_w, y + canvas_h)))
+    return slides
+
 def clean_text_for_tts(text):
     import re
     text = re.sub(r'#{1,6}\s*', '', text)
@@ -147,17 +181,27 @@ def clean_text_for_tts(text):
     return text.strip()
 
 def get_ai_presenter(client):
-    """Generates a consistent AI Presenter image if it doesn't exist locally."""
-    presenter_path = "media/presenter_persona.png"
-    if os.path.exists(presenter_path):
-        return presenter_path
-    
+    """Generates a consistent AI Presenter image if it doesn't exist locally.
+
+    The filenames include "_female_v1" so that bumping the persona (gender,
+    style, etc) invalidates the cache automatically without requiring a
+    manual file delete on every host.
+    """
+    presenter_path = "media/presenter_persona_female_v1.png"
+    circular_path = "media/presenter_bubble_female_v1.png"
+    if os.path.exists(circular_path):
+        return circular_path
+
     if not client:
         return None
 
     try:
         print("GENERATING CONSISTENT AI PERSONA...")
-        prompt = "A professional, friendly AI tutor assistant, high-quality photorealistic portrait, diverse background, wearing business casual, neutral studio background, looking into camera with a slight smile."
+        prompt = (
+            "A professional, friendly female AI tutor assistant, "
+            "high-quality photorealistic portrait, wearing business casual, "
+            "neutral studio background, looking into camera with a slight smile."
+        )
         response = client.images.generate(
             model="dall-e-3",
             prompt=prompt,
@@ -174,20 +218,19 @@ def get_ai_presenter(client):
             raise ValueError("Presenter image exceeded size limit")
         with open(presenter_path, 'wb') as handler:
             handler.write(img_data)
-        
+
         # Make circular version for overlay
         img = Image.open(presenter_path).convert("RGBA")
         size = (512, 512)
         img = img.resize(size, Image.Resampling.LANCZOS)
-        
+
         mask = Image.new('L', size, 0)
         draw = ImageDraw.Draw(mask)
         draw.ellipse((0, 0) + size, fill=255)
-        
+
         output = ImageOps.fit(img, mask.size, centering=(0.5, 0.5))
         output.putalpha(mask)
-        
-        circular_path = "media/presenter_bubble.png"
+
         output.save(circular_path)
         return circular_path
     except Exception as e:
@@ -383,9 +426,9 @@ def generate_simple_video(lesson_title, summary_text, output_path):
             audio_path = output_path.replace(".mp4", ".mp3")
             temp_files.append(audio_path)
 
-            print("[VIDEO] Generating TTS audio (Shimmer)...")
+            print("[VIDEO] Generating TTS audio (Nova)...")
             response = client.audio.speech.create(
-                model="tts-1", voice="shimmer", input=script_text[:4096]
+                model="tts-1", voice="nova", input=script_text[:4096]
             )
             response.stream_to_file(audio_path)
             print(f"[VIDEO] TTS audio saved to {audio_path}")
@@ -421,41 +464,45 @@ def generate_simple_video(lesson_title, summary_text, output_path):
         visual_clips.append(ImageClip(title_p).set_duration(title_dur))
         remaining_time -= title_dur
 
-        # B. Collect content assets (screenshots + text slides)
-        assets = []
+        # B. Expand assets into PIL slides. A tall full-page screenshot
+        # becomes several viewport-height slides so the video "walks"
+        # down the page instead of sitting on a single static frame.
+        slide_images = []
         screenshots = get_screenshots()
+        # Share the 5-slide budget across however many screenshots we have
+        # so more screenshots -> fewer slices each, keeping total pace sane.
+        per_screenshot_cap = max(2, 5 // max(1, len(screenshots)))
         for s in screenshots:
-            assets.append({"type": "screenshot", "path": s})
+            try:
+                with Image.open(s) as raw:
+                    slide_images.extend(split_tall_screenshot(
+                        raw, size=(1280, 720), max_slides=per_screenshot_cap
+                    ))
+            except Exception as e:
+                print(f"[VIDEO] Skipping unreadable screenshot {s}: {e}")
 
-        # Add a text summary slide if we have few screenshots
-        if len(assets) < 2:
-            assets.append({"type": "text_slide", "text": summary_text[:300]})
+        if len(slide_images) < 2:
+            slide_images.append(create_text_slide(summary_text[:300], title=lesson_title))
 
-        if not assets:
-            assets.append({"type": "text_slide", "text": lesson_title})
+        if not slide_images:
+            slide_images.append(create_text_slide(lesson_title, title=lesson_title))
 
-        # C. Distribute remaining time across assets
-        clip_duration = remaining_time / max(len(assets), 1)
+        # C. Distribute remaining time evenly across all slides.
+        slide_duration = remaining_time / max(len(slide_images), 1)
 
-        for i, asset in enumerate(assets):
+        for i, slide_img in enumerate(slide_images):
             if remaining_time <= 0:
                 break
 
-            dur = min(clip_duration, remaining_time)
-
-            if asset["type"] == "screenshot":
-                img = Image.open(asset["path"])
-                img = fit_to_canvas(img, size=(1280, 720))
-            else:
-                img = create_text_slide(asset["text"], title=lesson_title)
+            dur = min(slide_duration, remaining_time)
 
             # Bake the presenter bubble into the slide once (PIL) rather than
             # overlaying a CompositeVideoClip during encoding.
             if presenter_bubble:
-                img = paste_presenter(img, presenter_bubble, canvas_size=(1280, 720))
+                slide_img = paste_presenter(slide_img, presenter_bubble, canvas_size=(1280, 720))
 
             temp_p = output_path.replace(".mp4", f"_slide_{i}.png")
-            img.save(temp_p)
+            slide_img.save(temp_p)
             temp_files.append(temp_p)
             visual_clips.append(ImageClip(temp_p).set_duration(dur))
             remaining_time -= dur
