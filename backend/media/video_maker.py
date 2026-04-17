@@ -194,23 +194,31 @@ def get_ai_presenter(client):
         print(f"Failed to generate persona: {e}")
         return None
 
-def overlay_presenter(video_clip, presenter_path):
-    """Overlays the circular AI presenter in the bottom-right corner."""
-    if not presenter_path or not os.path.exists(presenter_path):
-        return video_clip
+def paste_presenter(slide_img, presenter_path, canvas_size=(1280, 720), padding=30):
+    """Bakes the circular AI presenter onto a PIL slide.
 
+    We composite once at PIL level rather than layering a CompositeVideoClip
+    during encoding, because per-frame alpha compositing in moviepy is one of
+    the slowest steps in the pipeline.
+    """
+    if not presenter_path or not os.path.exists(presenter_path):
+        return slide_img
     try:
-        presenter = ImageClip(presenter_path).set_duration(video_clip.duration)
-        # Resize to about 20% of the video height
-        h = video_clip.h * 0.25
-        presenter = presenter.resize(height=h)
-        # Position at bottom right with padding
-        presenter = presenter.set_position(("right", "bottom")).margin(right=30, bottom=30, opacity=0)
-        
-        return CompositeVideoClip([video_clip, presenter])
+        canvas_w, canvas_h = canvas_size
+        bubble = Image.open(presenter_path).convert("RGBA")
+        target_h = int(canvas_h * 0.25)
+        scale = target_h / bubble.height
+        target_w = max(1, int(bubble.width * scale))
+        bubble = bubble.resize((target_w, target_h), Image.Resampling.LANCZOS)
+
+        base = slide_img if slide_img.mode == "RGBA" else slide_img.convert("RGBA")
+        x = canvas_w - target_w - padding
+        y = canvas_h - target_h - padding
+        base.paste(bubble, (x, y), bubble)
+        return base.convert("RGB")
     except Exception as e:
-        print(f"Overlay failed: {e}")
-        return video_clip
+        print(f"Paste presenter failed: {e}")
+        return slide_img
 
 def zoom_in_effect(clip, zoom_ratio=0.04):
     def effect(get_frame, t):
@@ -228,13 +236,13 @@ def zoom_in_effect(clip, zoom_ratio=0.04):
     return clip.fl(effect)
 
 def generate_engaging_script(client, title, raw_text):
-    """Rewrites content into a high-energy YouTuber style script."""
+    """Rewrites content into a punchy narration script."""
     try:
         print("Rewriting script for high energy...")
         response = client.chat.completions.create(
-            model="gpt-4",  # or gpt-3.5-turbo if 4 not available
+            model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": "You are an expert video scriptwriter for a high-energy tech education channel. Rewrite the provided text into a short, punchy, enthusiastic script for a spoken video. Use rhetorical questions, excitement, and clear calls to action. Keep it under 250 words. Do NOT include visual directions like [Curtain Up]. Just the spoken text."},
+                {"role": "system", "content": "You are a video scriptwriter for a tech education channel. Rewrite the provided text into a punchy, clear spoken script. Keep it under 150 words. Do NOT include visual directions like [Curtain Up]. Just the spoken text."},
                 {"role": "user", "content": f"Topic: {title}\n\nContent: {raw_text[:2000]}"}
             ]
         )
@@ -404,15 +412,13 @@ def generate_simple_video(lesson_title, summary_text, output_path):
         visual_clips = []
         remaining_time = total_duration
 
-        # A. Title slide (3 seconds)
+        # A. Title slide (3 seconds, no presenter bubble)
         title_img = create_title_slide(lesson_title)
         title_p = output_path.replace(".mp4", "_title.png")
         title_img.save(title_p)
         temp_files.append(title_p)
         title_dur = min(3, remaining_time)
-        clip = ImageClip(title_p).set_duration(title_dur)
-        clip = zoom_in_effect(clip, 0.05)
-        visual_clips.append(clip)
+        visual_clips.append(ImageClip(title_p).set_duration(title_dur))
         remaining_time -= title_dur
 
         # B. Collect content assets (screenshots + text slides)
@@ -440,29 +446,24 @@ def generate_simple_video(lesson_title, summary_text, output_path):
             if asset["type"] == "screenshot":
                 img = Image.open(asset["path"])
                 img = fit_to_canvas(img, size=(1280, 720))
-                temp_p = output_path.replace(".mp4", f"_slide_{i}.png")
-                img.save(temp_p)
-                temp_files.append(temp_p)
-                clip = ImageClip(temp_p).set_duration(dur)
-                clip = zoom_in_effect(clip, 0.03)
             else:
-                slide_img = create_text_slide(asset["text"], title=lesson_title)
-                temp_p = output_path.replace(".mp4", f"_slide_{i}.png")
-                slide_img.save(temp_p)
-                temp_files.append(temp_p)
-                clip = ImageClip(temp_p).set_duration(dur)
-                clip = zoom_in_effect(clip, 0.03)
+                img = create_text_slide(asset["text"], title=lesson_title)
 
-            # Apply presenter overlay on slides
+            # Bake the presenter bubble into the slide once (PIL) rather than
+            # overlaying a CompositeVideoClip during encoding.
             if presenter_bubble:
-                clip = overlay_presenter(clip, presenter_bubble)
+                img = paste_presenter(img, presenter_bubble, canvas_size=(1280, 720))
 
-            visual_clips.append(clip)
+            temp_p = output_path.replace(".mp4", f"_slide_{i}.png")
+            img.save(temp_p)
+            temp_files.append(temp_p)
+            visual_clips.append(ImageClip(temp_p).set_duration(dur))
             remaining_time -= dur
 
-        # 4. COMPOSE FINAL VIDEO
+        # 4. COMPOSE FINAL VIDEO — method="chain" is much faster than "compose"
+        # when all clips share the same size, which is the case after fit_to_canvas.
         print(f"[VIDEO] Step 4: Composing final video ({len(visual_clips)} clips)...")
-        main_video = concatenate_videoclips(visual_clips, method="compose")
+        main_video = concatenate_videoclips(visual_clips, method="chain")
 
         if main_video.duration < total_duration:
             main_video = main_video.set_duration(total_duration)

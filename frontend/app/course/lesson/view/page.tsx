@@ -365,11 +365,14 @@ function LessonContent() {
                 return;
             }
 
-            // 2. Poll for completion
+            // 2. Poll for completion with a ~15 min budget.
+            // Start at 3s for snappier feedback, back off to 10s to cut load.
             const jobId = startData.job_id;
-            const maxPolls = 120; // 10 minutes at 5s intervals
-            for (let i = 0; i < maxPolls; i++) {
-                await new Promise(r => setTimeout(r, 5000));
+            const deadline = Date.now() + 15 * 60 * 1000;
+            let wait = 3000;
+            while (Date.now() < deadline) {
+                await new Promise(r => setTimeout(r, wait));
+                wait = Math.min(wait + 1000, 10000);
                 const pollRes = await fetch(`/api/ai/video/status/${jobId}`);
                 if (!pollRes.ok) continue;
                 const job = await pollRes.json();
