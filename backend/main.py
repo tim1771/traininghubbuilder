@@ -137,12 +137,29 @@ def health_check():
 
 # --- Browser Control Endpoints ---
 
+async def ensure_browser(headless: bool = True, use_auth: bool = True):
+    """Launches the browser lazily if nothing is up yet.
+
+    Hosted runtimes (Render) can evict a long-lived browser subprocess between
+    requests; if that happens, the explicit /launch call the frontend made
+    earlier is effectively gone. This lets navigate/scrape self-heal instead
+    of bubbling up "Browser not started" to the user.
+    """
+    if browser_manager.is_ready:
+        return
+    auth_path = auth_manager.storage_path if (use_auth and auth_manager.exists()) else None
+    print(f"[ensure_browser] auto-launching (headless={headless}, auth={'yes' if auth_path else 'no'})")
+    await browser_manager.launch(headless=headless, auth_state_path=auth_path)
+
+@app.get("/api/browser/status")
+async def browser_status():
+    return {"ready": browser_manager.is_ready}
+
 @app.post("/api/browser/launch")
 async def launch_browser(pkt: LaunchRequest):
     try:
-        # If running, close first? Or allow reuse? For now, close if exists.
-        if browser_manager.browser:
-            await browser_manager.close()
+        # Always close first so we don't leak a stale browser or page reference.
+        await browser_manager.close()
 
         auth_path = auth_manager.storage_path if pkt.use_auth else None
         print(f"Launching browser (Headless: {pkt.headless}, Auth: {auth_path})")
@@ -158,14 +175,13 @@ async def launch_browser(pkt: LaunchRequest):
 
 @app.post("/api/browser/navigate")
 async def navigate(pkt: NavigateRequest):
-    if not browser_manager.page:
-        raise HTTPException(status_code=400, detail="Browser not started")
     try:
+        await ensure_browser()
         # Validate URL to prevent SSRF attacks
         is_valid, result = validate_url(pkt.url)
         if not is_valid:
             raise HTTPException(status_code=400, detail=result)
-        
+
         url = result  # result contains the cleaned URL if valid
         print(f"Navigating to {url}")
         await browser_manager.page.goto(url, wait_until="networkidle", timeout=30000)
@@ -181,9 +197,8 @@ async def navigate(pkt: NavigateRequest):
 
 @app.post("/api/browser/scrape")
 async def scrape_page():
-    if not browser_manager.page:
-        raise HTTPException(status_code=400, detail="Browser not started")
     try:
+        await ensure_browser()
         print("Scraping page...")
         data = await extractor.extract_page(browser_manager.page)
         
