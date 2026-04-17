@@ -101,13 +101,43 @@ def create_title_slide(title, size=(1280, 720)):
     
     return img
 
-def get_screenshots():
-    """Get screenshots."""
+def get_screenshots(limit=5):
+    """Return the most recently captured screenshots, newest first."""
     screenshot_dir = os.path.join(os.path.dirname(__file__), "..", "scraped_data")
-    if os.path.exists(screenshot_dir):
-        screenshots = glob.glob(os.path.join(screenshot_dir, "*.png"))
-        return screenshots[:5]
-    return []
+    if not os.path.exists(screenshot_dir):
+        return []
+    screenshots = glob.glob(os.path.join(screenshot_dir, "screenshot_*.png"))
+    screenshots.sort(key=os.path.getmtime, reverse=True)
+    return screenshots[:limit]
+
+
+def fit_to_canvas(img, size=(1280, 720), bg_color=(15, 15, 20)):
+    """Fit an image into a fixed canvas without distortion.
+
+    Full-page webpage screenshots are typically very tall (e.g. 1920x5000+).
+    We scale by width to preserve aspect; if the scaled image is still taller
+    than the canvas we crop to the top viewport (the most informative region).
+    Images shorter than the canvas get letterboxed on a dark background.
+    """
+    canvas_w, canvas_h = size
+    src_w, src_h = img.size
+    if src_w == 0 or src_h == 0:
+        return Image.new("RGB", size, color=bg_color)
+
+    scale = canvas_w / src_w
+    new_w = canvas_w
+    new_h = max(1, int(round(src_h * scale)))
+    scaled = img.resize((new_w, new_h), Image.Resampling.LANCZOS)
+
+    if new_h >= canvas_h:
+        # Crop to top viewport — that's what a human sees first on a webpage.
+        scaled = scaled.crop((0, 0, canvas_w, canvas_h))
+        return scaled.convert("RGB")
+
+    canvas = Image.new("RGB", size, color=bg_color)
+    y_offset = (canvas_h - new_h) // 2
+    canvas.paste(scaled.convert("RGB"), (0, y_offset))
+    return canvas
 
 def clean_text_for_tts(text):
     import re
@@ -409,7 +439,7 @@ def generate_simple_video(lesson_title, summary_text, output_path):
 
             if asset["type"] == "screenshot":
                 img = Image.open(asset["path"])
-                img = img.resize((1280, 720), Image.Resampling.LANCZOS)
+                img = fit_to_canvas(img, size=(1280, 720))
                 temp_p = output_path.replace(".mp4", f"_slide_{i}.png")
                 img.save(temp_p)
                 temp_files.append(temp_p)
