@@ -68,7 +68,7 @@ export default function CourseViewer() {
                                         </div>
                                         <Link
                                             href={`/course/lesson/view?title=${encodeURIComponent(lesson.title)}&module=${encodeURIComponent(mod.title)}`}
-                                            className="px-4 py-2 bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 rounded text-sm font-semibold opacity-0 group-hover:opacity-100 transition"
+                                            className="px-4 py-2 bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 rounded text-sm font-semibold transition focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:outline-none"
                                         >
                                             Start Lesson
                                         </Link>

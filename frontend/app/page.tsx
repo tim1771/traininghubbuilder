@@ -3,10 +3,14 @@ import { useEffect, useState } from "react";
 
 
 import UrlInput from "@/components/UrlInput";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-zinc-50 font-sans dark:bg-black text-black dark:text-white p-8">
+    <div className="relative flex min-h-screen flex-col items-center justify-center bg-zinc-50 font-sans dark:bg-black text-black dark:text-white p-8">
+      <div className="absolute top-4 right-4 z-10">
+        <ThemeToggle />
+      </div>
       <div className="max-w-2xl w-full space-y-8">
         <StatusCheck />
         <UrlInput />

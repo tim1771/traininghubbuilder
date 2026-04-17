@@ -59,15 +59,15 @@ export default function Simulation({ screenshotUrl, hotspots, onSuccess }: Simul
     };
 
     if (!target) return (
-        <div className="p-12 text-center bg-white/5 rounded-3xl border border-white/10 space-y-4">
-            <p className="text-gray-400">Waiting for simulation coordinates...</p>
+        <div className="p-12 text-center bg-gray-50 dark:bg-white/5 rounded-3xl border border-gray-200 dark:border-white/10 space-y-4">
+            <p className="text-gray-500 dark:text-gray-400">Waiting for simulation coordinates...</p>
             <div className="w-8 h-8 border-2 border-indigo-500/40 border-t-indigo-500 rounded-full animate-spin mx-auto"></div>
         </div>
     );
 
     if (imgError) return (
-        <div className="p-12 text-center bg-white/5 rounded-3xl border border-white/10 space-y-4 min-h-[400px] flex flex-col items-center justify-center">
-            <p className="text-red-400 font-bold">Screenshot failed to load</p>
+        <div className="p-12 text-center bg-gray-50 dark:bg-white/5 rounded-3xl border border-gray-200 dark:border-white/10 space-y-4 min-h-[400px] flex flex-col items-center justify-center">
+            <p className="text-red-600 dark:text-red-400 font-bold">Screenshot failed to load</p>
             <p className="text-gray-500 text-sm">Try scraping the page again from the home screen.</p>
         </div>
     );
@@ -112,7 +112,7 @@ export default function Simulation({ screenshotUrl, hotspots, onSuccess }: Simul
             </div>
 
             {/* HUD Footer - Fixed */}
-            <div className="absolute bottom-6 left-6 right-6 flex justify-between items-center opacity-0 group-hover:opacity-100 transition duration-300 z-40 bg-gradient-to-t from-black/80 to-transparent pb-2">
+            <div className="absolute bottom-6 left-6 right-6 flex justify-between items-center transition duration-300 z-40 bg-gradient-to-t from-black/80 to-transparent pb-2">
                 <span className="text-white/40 text-[10px] uppercase font-black tracking-widest">Interactive Sandbox Mode</span>
                 <button
                     onClick={() => {
